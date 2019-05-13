@@ -1,0 +1,20 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" 
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<Script file="classbar.lua"/>
+	<Script file="shadoworbs.lua"/>
+	<Script file="soulshards.lua"/>
+	<Script file="embers.lua"/>
+	<Script file="demonicpower.lua"/>
+	<Script file="eclipse.lua"/>
+	<Script file="rune.lua"/>
+	<Script file="combopoints.lua"/>
+	<Script file="holypower.lua"/>
+	<Script file="chi.lua"/>
+	<!-- <Script file="shamantotembar.lua"/> -->
+	<Script file="maelstorm.lua"/>
+	<Script file="insanity.lua"/>
+	<Script file="arcanecharges.lua"/>
+	<Script file="stagger.lua"/>
+</Ui>

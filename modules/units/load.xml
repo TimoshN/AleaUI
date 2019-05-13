@@ -1,0 +1,13 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" 
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<Script file="player.lua"/>
+	<Script file="target.lua"/>
+	<Script file="focus.lua"/>
+	<Script file="pet.lua"/>
+	<Script file="bosses.lua"/>
+	<Script file="arenas.lua"/>
+	<Script file="targettarget.lua"/>
+	<Script file="tank.lua"/>
+</Ui>

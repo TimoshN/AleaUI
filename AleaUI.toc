@@ -1,0 +1,32 @@
+## Interface: 80100
+## Title: AleaUI
+## Version: 143
+## Author: Alea
+## SavedVariables: AleaUIDB, AleaUIDB_2, AleaUI_AuraWidgets, AleaUIDB_Sync
+## SavedVariablesPerCharacter: AleaUIDB_PC
+## OptionalDeps: Alea_TestAddon, AleaUI_NamePlates, AleaFancyPlates
+
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+Libs\LibSharedMedia-3.0\LibSharedMedia-3.0.lua
+Libs\LibChatAnims\LibChatAnims.xml
+
+Libs\LibUIDropDownMenu\UIDropDownMenu.xml
+
+
+Libs\LibAleaUI-1.0\load.xml
+
+locale\load.xml
+
+core\load.xml
+load.xml
+modules\load.xml
+modules\classbars\load.xml
+modules\units\load.xml
+modules\actionbars\load.xml
+modules\misc\load.xml
+modules\datatext\load.xml
+debug\debug.lua
+skins\load.xml
+skins\blizzard\load.xml
+skins\addons\load.xml
