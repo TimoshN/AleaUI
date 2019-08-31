@@ -17,10 +17,6 @@ local function SetFont(obj, font, size, style, r, g, b, sr, sg, sb, sox, soy)
 --	FixFontShadow(obj)
 end
 
-
-local PlateSizer = CreateFrame('Frame', nil, nil, 'SecureHandlerStateTemplate')
-
-
 function E:UpdateBlizzardFont()
 	
 	local ZONE		 = E.media.default_font2

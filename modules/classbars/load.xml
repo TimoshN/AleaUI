@@ -17,4 +17,5 @@
 	<Script file="insanity.lua"/>
 	<Script file="arcanecharges.lua"/>
 	<Script file="stagger.lua"/>
+	<Script file="frostmage.lua"/>
 </Ui>

@@ -799,6 +799,126 @@ function AB:PositionAndSizeBar(barName)
 		bar:Show()
 		RegisterStateDriver(bar, "visibility", E.db.actionbars[barName].visibility); -- this is ghetto
 		RegisterStateDriver(bar, "page", page);
+		bar:SetFrameRef("MainMenuBarArtFrame", MainMenuBarArtFrame)
+
+		if barName == 'bar1' then
+			-- RegisterStateDriver(bar, "vehicleFix", "[vehicleui] true;false")
+			-- bar:SetAttribute("_onstate-vehicleFix", [[
+			-- 	print('vehicleFix', newstate, HasVehicleActionBar(), GetVehicleBarIndex() )
+
+			-- 	if ( HasVehicleActionBar() ) then 
+			-- 		local index = GetVehicleBarIndex()
+			-- 		self:SetAttribute("state", index)
+			-- 		self:ChildUpdate("state", index)
+			-- 		self:GetFrameRef("MainMenuBarArtFrame"):SetAttribute("actionpage", index)
+			-- 	end
+			-- ]])
+
+			RegisterStateDriver(bar, "overridebarFix", "[overridebar] true;false")
+			bar:SetAttribute("_onstate-overridebarFix", [[
+				--print('overridebarFix', newstate, HasOverrideActionBar(), GetOverrideBarIndex())
+
+				if ( HasOverrideActionBar() ) then 
+					local index = GetOverrideBarIndex()
+					self:SetAttribute("state", index)
+					self:ChildUpdate("state", index)
+					self:GetFrameRef("MainMenuBarArtFrame"):SetAttribute("actionpage", index)
+				end
+			]])	
+
+			-- RegisterStateDriver(bar, "possessbarFix", "[possessbar] 1;0")
+			-- bar:SetAttribute("_onstate-possessbarFix", [[
+			-- 	print('possessbarFix', newstate, HasOverrideActionBar(), GetOverrideBarIndex())
+
+			-- ]])
+
+			-- RegisterStateDriver(bar, "pagerFix", "[vehicleui] vehicle; [possessbar] possess; [overridebar] override; none;")
+			-- bar:SetAttribute("_onstate-pagerFix", [[
+			-- 	print('pagerFix', newstate)
+
+			-- 	if ( newstate == 'vehicle') then
+			-- 		local index = GetVehicleBarIndex()
+			-- 		self:SetAttribute("state", index)
+			-- 		self:ChildUpdate("state", index)
+			-- 		self:GetFrameRef("MainMenuBarArtFrame"):SetAttribute("actionpage", index)
+			-- 	elseif ( possess == 'possess' ) then
+
+			-- 	elseif ( override == 'override'  ) then
+			-- 		local index = GetOverrideBarIndex()
+			-- 		self:SetAttribute("state", index)
+			-- 		self:ChildUpdate("state", index)
+			-- 		self:GetFrameRef("MainMenuBarArtFrame"):SetAttribute("actionpage", index)
+			-- 	else
+			-- 		local newCondition = self:GetAttribute("newCondition")
+			-- 		if newCondition then
+			-- 			local index = SecureCmdOptionParse(newCondition)
+			-- 			self:SetAttribute("state", index)
+			-- 			self:ChildUpdate("state", index)
+			-- 			self:GetFrameRef("MainMenuBarArtFrame"):SetAttribute("actionpage", index)
+			-- 		end
+			-- 	end
+			-- ]])
+		end 
+
+		-- RegisterStateDriver(bar, "overridebarFix", "[overridebar] 1;0")
+		-- bar:SetAttribute("_onstate-overridebarFix", [[
+
+		-- bar:SetFrameRef("MainMenuBarArtFrame", MainMenuBarArtFrame)
+		-- if barName == "bar1" then
+		-- 	RegisterStateDriver(bar, "vehicleFix", "[vehicleui] 1;0")
+		-- 	bar:SetAttribute("_onstate-vehicleFix", [[
+
+		-- 		print(UnitHasVehicleUI('player'))
+
+		-- 		local bar = self
+		-- 		local ParsedText = SecureCmdOptionParse(self:GetAttribute("page"))
+
+		-- 		if newstate == 1 then
+		-- 			if(HasVehicleActionBar()) then
+		-- 				local index = GetVehicleBarIndex() -- This should update the bar correctly for King's Rest now.
+		-- 				bar:SetAttribute("state", index)
+		-- 				bar:ChildUpdate("state", index)
+		-- 				self:GetFrameRef("MainMenuBarArtFrame"):SetAttribute("actionpage", index) -- Update MainMenuBarArtFrame too.
+		-- 			else
+		-- 				if HasTempShapeshiftActionBar() and self:GetAttribute("hasTempBar") then
+		-- 					ParsedText = GetTempShapeshiftBarIndex() or ParsedText
+		-- 				end
+
+		-- 				if ParsedText ~= 0 then
+		-- 					bar:SetAttribute("state", ParsedText)
+		-- 					bar:ChildUpdate("state", ParsedText)
+		-- 					self:GetFrameRef("MainMenuBarArtFrame"):SetAttribute("actionpage", ParsedText)
+		-- 				else
+		-- 					local newCondition = bar:GetAttribute("newCondition")
+		-- 					if newCondition then
+		-- 						newstate = SecureCmdOptionParse(newCondition)
+		-- 						bar:SetAttribute("state", newstate)
+		-- 						bar:ChildUpdate("state", newstate)
+		-- 						self:GetFrameRef("MainMenuBarArtFrame"):SetAttribute("actionpage", newstate)
+		-- 					end
+		-- 				end
+		-- 			end
+		-- 		else
+		-- 			if HasTempShapeshiftActionBar() and self:GetAttribute("hasTempBar") then
+		-- 				ParsedText = GetTempShapeshiftBarIndex() or ParsedText
+		-- 			end
+
+		-- 			if ParsedText ~= 0 then
+		-- 				bar:SetAttribute("state", ParsedText)
+		-- 				bar:ChildUpdate("state", ParsedText)
+		-- 				self:GetFrameRef("MainMenuBarArtFrame"):SetAttribute("actionpage", ParsedText)
+		-- 			else
+		-- 				local newCondition = bar:GetAttribute("newCondition")
+		-- 				if newCondition then
+		-- 					newstate = SecureCmdOptionParse(newCondition)
+		-- 					bar:SetAttribute("state", newstate)
+		-- 					bar:ChildUpdate("state", newstate)
+		-- 					self:GetFrameRef("MainMenuBarArtFrame"):SetAttribute("actionpage", newstate)
+		-- 				end
+		-- 			end
+		-- 		end
+		-- 	]])
+		-- end
 
 		if not bar.initialized then
 			bar.initialized = true;

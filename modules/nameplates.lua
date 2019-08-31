@@ -636,7 +636,7 @@ for k,v in pairs(defaultSpells1) do
 	if GetSpellInfo(v) then
 		defaults.spelllist[GetSpellInfo(v)] = specific_defaultSpellsOpts[v] or { show = 4, spellID = v, checkID = false, size = 2, filter = 2, }
 	else
-		print('defaultSpells1', v, 'is Unknown')
+	--	print('<AleaUI:NPAuralist>defaultSpells1', v, 'is Unknown')
 	end
 end
 wipe(defaultSpells1)
@@ -644,7 +644,7 @@ for k,v in pairs(defaultSpells2) do
 	if GetSpellInfo(v) then
 		defaults.spelllist[GetSpellInfo(v)] = specific_defaultSpellsOpts[v] or { show = 4, spellID = v, checkID = false, size = 1.5, filter = 2, }
 	else
-		print('defaultSpells2', v, 'is Unknown')
+	--	print('<AleaUI:NPAuralist>defaultSpells2', v, 'is Unknown')
 	end
 end
 wipe(defaultSpells2)
@@ -652,7 +652,7 @@ for k,v in pairs(bannedspells) do
 	if GetSpellInfo(k) then
 		defaults.blacklist[GetSpellInfo(k)] = specific_defaultSpellsOpts[v] or { show = 2, spellID = k, checkID = false, size = 1, filter = 2, }
 	else
-		print('bannedspells', k, 'is Unknown')
+	--	print('<AleaUI:NPAuralist>bannedspells', k, 'is Unknown')
 	end
 end
 wipe(bannedspells)
@@ -674,8 +674,6 @@ NP:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE")
 NP:RegisterEvent('QUEST_LOG_UPDATE')
 NP:RegisterEvent('QUEST_WATCH_UPDATE')
 NP:RegisterEvent('CURSOR_UPDATE')
-
-
 
 local questGUIDs = {}
 local questLog = {}
@@ -710,10 +708,22 @@ function NP.IsUnitQuestFlagged(unit)
 		local left = _G[E.scantip:GetName().."TextLeft"..i]:GetText()
 
 		if left and questLog[left] then
-	--		print('Assigned quest', left, 'with', npcID)
+			print('Assigned quest', left, 'with', npcID)
+			
+			local questText = _G[E.scantip:GetName().."TextLeft"..(i+1)]:GetText()
+			local a1, a2, a3, a4 = string.find(questText, '(%d+)/(%d+)')
+
+			local per1, per2, per3, per4 = string.find(questText, '(%d+)%%')
+
+			print(' Quest text:', questText, a3, a4, per3, per3 == '100' )
+
 			questGUIDs[npcID] = true
 
-			return true
+			if ( ( a3 and a3 == a4 ) or per3 == '100' ) then
+				return false
+			else
+				return true
+			end
 		end
 	end
 
@@ -726,9 +736,6 @@ end
 local lastNumQuest = -1
 local lastNumQuestComplete = -1
 function NP:QUEST_LOG_UPDATE(event, ...)
-
---	print(event, ...)
-
 	questLog = {}
 
 	local questCurrent = 0
@@ -1563,12 +1570,12 @@ local function FillAuraFrame(frame, unit, filter, nameplate, auratype)
 				
 				f.icon:SetTexture(texture)
 
-				if not nameplate.isFriend and filter == "HARMFUL" and not isMine then
+				if not nameplate.isFriend and auratype == "debuffs" and not isMine then
 					f.icon:SetDesaturated(true)	
-				elseif isMine and filter == "HARMFUL" then
+				elseif isMine and auratype == "debuffs" then
 					f.icon:SetDesaturated(false)
 				else
-					f.icon:SetDesaturated(false)
+					f.icon:SetDesaturated(true)
 				end
 	
 				if E.db.nameplates.showpurge and isStealable then
@@ -1878,36 +1885,38 @@ function NP:RegisterEvents()
 
 	self:UnregisterAllEvents()
 
-	if self.disableBars then
-		self:RegisterEvent('UNIT_AURA')
-		self:RegisterEvent('UNIT_NAME_UPDATE')
-		self:RegisterEvent('UNIT_FACTION')
-		self:RegisterEvent('UNIT_FLAGS')
-	else
-		self:RegisterEvent('UNIT_AURA')
+	--print('NAMEPLATES', self.unit)
 
-		self:RegisterEvent("UNIT_SPELLCAST_CHANNEL_START")
-		self:RegisterEvent("UNIT_SPELLCAST_CHANNEL_STOP")
-		self:RegisterEvent("UNIT_SPELLCAST_CHANNEL_UPDATE")
-		self:RegisterEvent("UNIT_SPELLCAST_START")
-		self:RegisterEvent("UNIT_SPELLCAST_DELAYED")
-		self:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED")
-		self:RegisterEvent("UNIT_SPELLCAST_STOP")
-		self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
-		self:RegisterEvent("UNIT_SPELLCAST_INTERRUPTIBLE")
-		self:RegisterEvent("UNIT_SPELLCAST_NOT_INTERRUPTIBLE")
+	if self.disableBars then
+		self:RegisterUnitEvent('UNIT_AURA', self.unit)
+		self:RegisterUnitEvent('UNIT_NAME_UPDATE', self.unit)
+		self:RegisterUnitEvent('UNIT_FACTION', self.unit)
+		self:RegisterUnitEvent('UNIT_FLAGS', self.unit)
+	else
+		self:RegisterUnitEvent('UNIT_AURA', self.unit)
+
+		self:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_START", self.unit)
+		self:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_STOP", self.unit)
+		self:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_UPDATE", self.unit)
+		self:RegisterUnitEvent("UNIT_SPELLCAST_START", self.unit)
+		self:RegisterUnitEvent("UNIT_SPELLCAST_DELAYED", self.unit)
+		self:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTED", self.unit)
+		self:RegisterUnitEvent("UNIT_SPELLCAST_STOP", self.unit)
+		self:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", self.unit)
+		self:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTIBLE", self.unit)
+		self:RegisterUnitEvent("UNIT_SPELLCAST_NOT_INTERRUPTIBLE", self.unit)
 	--	self:RegisterEvent("UNIT_SPELLCAST_FAILED")
 
-		self:RegisterEvent('UNIT_HEALTH_FREQUENT')
-		self:RegisterEvent('UNIT_MAXHEALTH')
+		self:RegisterUnitEvent('UNIT_HEALTH_FREQUENT', self.unit)
+		self:RegisterUnitEvent('UNIT_MAXHEALTH', self.unit)
 
-		self:RegisterEvent('UNIT_ABSORB_AMOUNT_CHANGED')
-		self:RegisterEvent('UNIT_HEAL_PREDICTION')
-		self:RegisterEvent('UNIT_HEAL_ABSORB_AMOUNT_CHANGED')
+		self:RegisterUnitEvent('UNIT_ABSORB_AMOUNT_CHANGED', self.unit)
+		self:RegisterUnitEvent('UNIT_HEAL_PREDICTION', self.unit)
+		self:RegisterUnitEvent('UNIT_HEAL_ABSORB_AMOUNT_CHANGED', self.unit)
 
-		self:RegisterEvent('UNIT_NAME_UPDATE')
-		self:RegisterEvent('UNIT_FACTION')
-		self:RegisterEvent('UNIT_FLAGS')
+		self:RegisterUnitEvent('UNIT_NAME_UPDATE', self.unit)
+		self:RegisterUnitEvent('UNIT_FACTION', self.unit)
+		self:RegisterUnitEvent('UNIT_FLAGS', self.unit)
 	end
 end
 
@@ -2964,7 +2973,7 @@ function NP:CreateNamePlateFrame(frame)
 	plate.nameText_Friendly:SetJustifyH('LEFT')
 	plate.nameText_Friendly:SetWordWrap(false)
 	plate.nameText_Friendly:Hide()
-
+	
 	plate.UpdateLevel = NP.UpdateLevel
 	plate.UpdateFaction = NP.UpdateFaction
 	plate.UpdateName = NP.UpdateName
@@ -3316,6 +3325,11 @@ end
 
 function NP.OnInit()
 	NP:UpdateBasePlateSize()
+
+	SystemFont_LargeNamePlateFixed:SetFont(STANDARD_TEXT_FONT, 10, 'OUTLINE') 
+	SystemFont_NamePlateFixed:SetFont(STANDARD_TEXT_FONT, 10, 'OUTLINE') 
+	SystemFont_LargeNamePlate:SetFont(STANDARD_TEXT_FONT, 10, 'OUTLINE') 
+	SystemFont_NamePlate:SetFont(STANDARD_TEXT_FONT, 10, 'OUTLINE') 
 end
 
 function NP:UpdateProfileSettings()

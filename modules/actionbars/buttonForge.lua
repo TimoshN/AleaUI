@@ -1524,7 +1524,7 @@ Action.GetSpellId              = function(self)
 		return id
 	elseif actionType == "macro" then
 		local _, _, spellId = GetMacroSpell(id)
-		return spellId
+		return GetMacroSpell(id) --spellId
 	end
 end
 Action.GetLossOfControlCooldown = function(self) return GetActionLossOfControlCooldown(self._state_action) end

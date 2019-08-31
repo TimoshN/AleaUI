@@ -897,12 +897,17 @@ end
 
 function AM:GARRISON_RANDOM_MISSION_ADDED(event, missionID)
 	local missionInfo = C_Garrison.GetBasicMissionInfo(missionID);
-	local level = missionInfo.level
-	local iLevel = "(" .. missionInfo.iLevel .. ")"
-	local isRare = missionInfo.isRare
-	local name = missionInfo.name
-	
-	ALEAUI_GetAlertFrame('QUEST', 'GARRISON_RANDOM_MISSION_ADDED1', L['Complete']..' "'..name..'"')
+
+	if not missionInfo then
+		print('Cant get GetBasicMissionInfo for', missionID)
+	else 
+		local level = missionInfo.level
+		local iLevel = "(" .. missionInfo.iLevel .. ")"
+		local isRare = missionInfo.isRare
+		local name = missionInfo.name
+		
+		ALEAUI_GetAlertFrame('QUEST', 'GARRISON_RANDOM_MISSION_ADDED1', L['Complete']..' "'..name..'"')
+	end
 end
 
 local proffLastValue = {}
@@ -1085,7 +1090,7 @@ hooksecurefunc('LootWonAlertFrame_SetUp', function(self, rewardLink, rewardQuant
 		return 
 	end
 	
-	ALEAUI_GetAlertFrame("ITEM", nil, E.RGBToHex(r*255, g*255, b*255)..itemName..itemLevel , itemTexture, rewardLink, 0)
+	ALEAUI_GetAlertFrame("ITEM", nil, E.RGBToHex(r*255, g*255, b*255)..itemName..(itemLevel or '') , itemTexture, rewardLink, 0)
 	
 	AlertFrame:UpdateAnchors();
 end)

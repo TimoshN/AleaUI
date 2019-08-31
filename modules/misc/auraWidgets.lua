@@ -34,7 +34,7 @@ local ANCHOR_GROW = {
 local default_size = 60
 
 local none = "None"
-local none1 = "Interface\Quiet.ogg"
+local none1 = "Interface\\Quiet.ogg"
 
 local function CustomPlaySound(sound)
 

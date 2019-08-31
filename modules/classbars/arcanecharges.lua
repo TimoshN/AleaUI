@@ -18,7 +18,7 @@ local function ArcaneChanges()
 	f.eventlist = {
 		["UNIT_POWER_FREQUENT"]		= "player",
 		["UNIT_DISPLAYPOWER"]		= "player",
-		}
+	}
 	
 	f:SetSize(maxw, 10)
 		
@@ -143,5 +143,5 @@ local function ArcaneChanges()
 end
 
 CBF:AddClassBar("MAGE", 1, ArcaneChanges)
---CBF:AddClassBar("MAGE", 2, SouldShards)
---CBF:AddClassBar("MAGE", 3, SouldShards)
+--CBF:AddClassBar("MAGE", 2, ArcaneChanges)
+CBF:AddClassBar("MAGE", 3, ArcaneChanges)

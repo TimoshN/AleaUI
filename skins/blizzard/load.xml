@@ -25,7 +25,7 @@
 	<Script file="garrison.lua"/>
 	<Script file="tradeskillframe.lua"/>
 	<Script file="collectionjournal.lua"/>
-	<Script file="lootframe.lua"/>
+	<!-- <Script file="lootframe.lua"/> -->
 	<Script file="worldmap.lua"/>
 	<Script file="encounterjournal.lua"/>
 	<Script file="friendsframe.lua"/>

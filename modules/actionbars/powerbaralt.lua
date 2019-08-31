@@ -18,6 +18,7 @@ local function PositionAltPowerBar()
 	ReparentAltPowerBar()
 	
 	E:Mover(holder, "powerbarFrame")
+	PlayerPowerBarAlt.ignoreFramePositionManager = true
 	PlayerPowerBarAlt:SetScale(E.db.Frames["powerbarFrame"].scale or 1)
 	
 	hooksecurefunc(PlayerPowerBarAlt, 'SetPoint', function(self, a1, a2, a3, a4, a5)	

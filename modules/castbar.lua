@@ -6,10 +6,10 @@ local w, h
 
 local pingWorkAround = true
 
-CB.rightTextPattern_channel = " %.1f | %.1f + %.1f "
-CB.rightTextPattern_cast = " %.1f | %.1f "
-CB.rightTextPatternMS_channel = " |cFFFF0000ms:%d|r %.1f | %.1f + %.1f "
-CB.rightTextPatternMS_cast = " |cFFFF0000ms:%d|r %.1f | %.1f "
+CB.rightTextPattern_channel = " %s | %s + %.1f "
+CB.rightTextPattern_cast = " %s | %s "
+CB.rightTextPatternMS_channel = " |cFFFF0000ms:%d|r %s | %s + %.1f "
+CB.rightTextPatternMS_cast = " |cFFFF0000ms:%d|r %s | %s "
 
 local deafult_texture = "Interface\\AddOns\\AleaUI\\media\\Minimalist.tga"
 
@@ -239,15 +239,15 @@ local function CastBarOnUpdate(f, elapsed)
 
 	if not f.showTextLatency and f.unit == "player" then --f.opts.ping
 		if difTime > 0 then
-			f.rightText:SetFormattedText(CB.rightTextPatternMS_channel, f.ping*1000, curdur, f.duration, difTime)
+			f.rightText:SetFormattedText(CB.rightTextPatternMS_channel, f.ping*1000, E.FormatTime(5, curdur), E.FormatTime(5, f.duration), difTime)
 		else
-			f.rightText:SetFormattedText(CB.rightTextPatternMS_cast, f.ping*1000, curdur, f.duration)
+			f.rightText:SetFormattedText(CB.rightTextPatternMS_cast, f.ping*1000, E.FormatTime(5, curdur), E.FormatTime(5, f.duration))
 		end
 	else
 		if difTime > 0 then
-			f.rightText:SetFormattedText(CB.rightTextPattern_channel, curdur, f.duration, difTime)
+			f.rightText:SetFormattedText(CB.rightTextPattern_channel, E.FormatTime(5, curdur), E.FormatTime(5, f.duration), difTime)
 		else
-			f.rightText:SetFormattedText(CB.rightTextPattern_cast, curdur, f.duration)
+			f.rightText:SetFormattedText(CB.rightTextPattern_cast, E.FormatTime(5, curdur), E.FormatTime(5, f.duration))
 		end
 	end
 	
@@ -289,9 +289,9 @@ local function CustomCastBar(f, unit, name, texture, startTime, endTime, notInte
 	
 	if pingWorkAround then
 		local bandwidthIn, bandwidthOut, latencyHome, latencyWorld = GetNetStats()
-		f.ping			= f.castTime_Start and latencyWorld*0.001 or 0
+		f.ping		= f.castTime_Start and latencyWorld*0.001 or 0
 	else
-		f.ping			= f.castTime_Start and ( f.startTime - f.castTime_Start ) or 0
+		f.ping		= f.castTime_Start and ( f.startTime - f.castTime_Start ) or 0
 	end
 
 	if false and f.curTarget then -- f.opts.target_name

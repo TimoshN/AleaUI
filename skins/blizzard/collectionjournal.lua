@@ -61,10 +61,12 @@ local function SkinCollectionUI()
 	
 	for i=1, 12 do
 		local button = _G['MountJournalListScrollFrameButton'..i]
-	
-		button.icon:SetTexCoord(unpack(AleaUI.media.texCoord))
-		button.background:SetTexCoord(unpack(AleaUI.media.texCoord))
-		button.selectedTexture:SetTexCoord(0.02, 0.98, 0.07, 0.93)
+		
+		if ( button ) then
+			button.icon:SetTexCoord(unpack(AleaUI.media.texCoord))
+			button.background:SetTexCoord(unpack(AleaUI.media.texCoord))
+			button.selectedTexture:SetTexCoord(0.02, 0.98, 0.07, 0.93)
+		end
 	end
 
 	Skins.ThemeDropdown('HeirloomsJournalClassDropDown')

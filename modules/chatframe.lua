@@ -600,14 +600,17 @@ do
 		
 		local left, parent, right, xoffset, yoffset = ChatFrame1:GetPoint()
 		
-		if left ~= leftDef or right ~= rightDef or xoffset ~= E.db.chatPanel.xOffset or yoffsetDef ~= E.db.chatPanel.yOffset then
-			
-	
+		if left ~= leftDef or right ~= rightDef or Round(xoffset) ~= E.db.chatPanel.xOffset or Round(yoffset) ~= E.db.chatPanel.yOffset then
+			-- print('Update chat position')
+			-- print('    ', left, parent, right, xoffset, yoffset)
+			-- print('    ', leftDef, parentDef, rightDef, E.db.chatPanel.xOffset, E.db.chatPanel.yOffset)
+			-- print('    ',  left ~= leftDef, right ~= rightDef, xoffset ~= E.db.chatPanel.xOffset, yoffset ~= E.db.chatPanel.yOffset)
+
 			ChatFrame1:ClearAllPoints()
 			ChatFrame1:SetPoint(leftDef, parentDef, rightDef, E.db.chatPanel.xOffset, E.db.chatPanel.yOffset)
 			ChatFrame1:SetHeight(E.db.chatPanel.height)
 			ChatFrame1:SetWidth(E.db.chatPanel.width)
-			
+			FCF_SavePositionAndDimensions(ChatFrame1)
 		end
 		
 		if E.db.chatPanel.editBoxxOffset ~= editXoffset or

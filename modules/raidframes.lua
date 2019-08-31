@@ -391,6 +391,7 @@ local UpdateHealth = function(self)
 end
 
 local UpdatePower = function(self)
+	if not options.showPowerBars then return end 
 	if not self.displayedUnit then return end
 
 	if UnitPowerMax(self.displayedUnit, ALTERNATE_POWER_INDEX) > 0 then
@@ -1284,41 +1285,50 @@ local eventList = {
 	["UNIT_PHASE"] = true,
 	["UNIT_AURA"] = true,
 	['UNIT_FLAGS'] = true,
+	["UNIT_OTHER_PARTY_CHANGED"] = true,
 	
-	["UNIT_ENTERED_VEHICLE"] = false,
-	["UNIT_EXITED_VEHICLE"] = false,
-	["INCOMING_RESURRECT_CHANGED"] = false,
-	["UNIT_OTHER_PARTY_CHANGED"] = false,
-	
-	["UNIT_CONNECTION"] = false,
+	['PLAYER_FLAGS_CHANGED'] = true, 
+
+	["UNIT_CONNECTION"] = true,
+	["UNIT_DISPLAYPOWER"] = true,
+
+	["UNIT_NAME_UPDATE"] = true,
+
+	["UNIT_ENTERED_VEHICLE"] = true,
+	["UNIT_EXITED_VEHICLE"] = true,
+	["INCOMING_RESURRECT_CHANGED"] = true,
+
 	["PLAYER_ROLES_ASSIGNED"] = false,
 	["PLAYER_LOGIN"] = false,
-	["UNIT_DISPLAYPOWER"] = false,
+
 	["UNIT_POWER_BAR_SHOW"] = false,
 	["PLAYER_TARGET_CHANGED"] = false,
 	["PLAYER_REGEN_ENABLED"] = false,
 	["PLAYER_REGEN_DISABLED"] = false,
 	["RAID_TARGET_UPDATE"] = false,
 	["READY_CHECK"] = false,
-	["READY_CHECK_CONFIRM"] = false,
+	["READY_CHECK_CONFIRM"] = true,
 	["READY_CHECK_FINISHED"] = false,
 	["PLAYER_ENTERING_WORLD"] = false,
-	["UNIT_NAME_UPDATE"] = false,
+
 	["PLAYER_DEAD"] = false,
 	['PLAYER_ALIVE'] = false,
 	
-	['GROUP_JOINED'] = true,
-	['GROUP_LEFT'] = true, 
+	--['GROUP_JOINED'] = true,
+	--['GROUP_LEFT'] = true, 
 	['INCOMING_SUMMON_CHANGED'] = true,
 }
 
 local function UnitFrameHandler(self, event, ...)
-	if ( event == 'UNIT_NAME_UPDATE' or event == 'GROUP_LEFT' or event == 'INCOMING_SUMMON_CHANGED' or event == 'GROUP_JOINED' ) then
-	--	print(..., event, self:IsShown())
-	
-	end
-	
 	local unit = ...
+
+	-- if ( eventList[event] ~= nil ) then 
+	-- 	if ( eventList[event] == false and unit ) then 
+	-- 		print('EVENT WITH UNIT', event, unit) 
+	-- 	end
+	-- end 
+
+
 	if event == "PLAYER_ENTERING_WORLD" or event == "PLAYER_LOGIN" then
 		UpdateAll(self)
 	elseif event == "PLAYER_TARGET_CHANGED" then
@@ -1426,6 +1436,12 @@ local function RaidUnitFrame_ToggleEvents(self)
 		if UnitIsUnit('player', unit) then
 			unit = 'player'
 		end
+
+		local unitChanged = false 
+
+		if ( self.unit ~= unit or self.displayedUnit ~= unit ) then 
+			unitChanged = true 
+		end
 		
 		self.unit = unit
 		self.displayedUnit = unit
@@ -1433,18 +1449,24 @@ local function RaidUnitFrame_ToggleEvents(self)
 		if self.enabled ~= true then
 			self.enabled = true
 
-			for event, unitSpecific in pairs(eventList) do
-				self:RegisterEvent(event)
-			end
-
 			self:SetScript("OnUpdate", UnitFrameOnUpdateHandler)
 			self:SetScript("OnEvent", UnitFrameHandler)
 
 		--	print('Enable frame:1. Hidden=',self.prevhidden, '. Unit=',self.prevunit, UnitName(unit), UnitClass(unit), UnitGUID(unit))
 		end
 
-		if UnitGUID(unit) ~= self.lastGUID then
+		if UnitGUID(unit) ~= self.lastGUID or unitChanged then
 			self.lastGUID = UnitGUID(unit)
+
+			for event, unitSpecific in pairs(eventList) do
+
+				if ( unitSpecific ) then 
+					self:RegisterUnitEvent(event, unit, unit)
+				else 
+					self:RegisterEvent(event)
+				end
+			end
+
 			UpdateAll(self)
 
 		--	print('Enable frame:2. Hidden=',self.prevhidden, '. Unit=',self.prevunit, UnitName(unit), UnitClass(unit), UnitGUID(unit))
@@ -2310,7 +2332,8 @@ function RF.UpdateRaidFrameBackgroundSettings()
 	})
 	RF.raidFrameBackGround:SetBackdropBorderColor(options.artwork.color[1],options.artwork.color[2],options.artwork.color[3],options.artwork.color[4])
 	RF.raidFrameBackGround:SetSize(options.artwork.width, options.artwork.height)
-
+	
+	RF.raidFrameBackGround.back:ClearAllPoints()
 	RF.raidFrameBackGround.back:SetTexture(E:GetTexture(options.artwork.background_texture))
 	RF.raidFrameBackGround.back:SetVertexColor(options.artwork.background_color[1],options.artwork.background_color[2],options.artwork.background_color[3],options.artwork.background_color[4])
 	RF.raidFrameBackGround.back:SetSize(options.artwork.width+options.artwork.background_inset+options.artwork.background_inset,
