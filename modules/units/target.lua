@@ -245,13 +245,15 @@ function UF:UpdateTargetFrameSettings()
 	f:UpdateExistsTags()
 	f:PostUpdate()
 	
-	if opts.castBar.enable then
-		f.castBar:Enable()
-		f.castBar:UpdateSettings(opts.castBar)
-	else
-		f.castBar:Disable()
-	end
-	
+	if ( f.castBar ) then
+		if opts.castBar.enable then
+			f.castBar:Enable()
+			f.castBar:UpdateSettings(opts.castBar)
+		else
+			f.castBar:Disable()
+		end
+	end 
+
 	if opts.model.enable then
 		f.model:Enable()
 		f.model:UpdateSettings(opts.model)
@@ -318,21 +320,25 @@ local function TargetFrame()
 	f.PLAYER_TARGET_CHANGED = function(self)
 		if UnitExists("target") then
 			self:PostUpdate()
-			self:CastBarUpdate()
+			if self.CastBarUpdate then self:CastBarUpdate() end
 		end
 	end
 	
 	UF:UnitAuraWidgets(f)
 
-	local castbar = UF:CreateCastBar(f, 417, 20)
-	castbar:SetAlpha(0.7)
-	E:Mover(castbar, "targetcastbarFrame")
-	
+	if ( not E.isClassic ) then
+		local castbar = UF:CreateCastBar(f, 417, 20)
+		castbar:SetAlpha(0.7)
+		E:Mover(castbar, "targetcastbarFrame")
+	end 
+
 	E.TargetFrame = f
 
 	E.GUI.args.unitframes.args.targetFrame = UF:GetUnitFrameOptions('target', 'UpdateTargetFrameSettings', "targetFrame", 'targetFrame', 'TargetFrameTestFrame')
 	E.GUI.args.unitframes.args.targetFrame.name = E.L['Target']
+	if ( not E.isClassic ) then
 	E.GUI.args.unitframes.args.targetFrame.args.castBar = CB:GetCastBarOptions('target', 'UpdateTargetFrameSettings', "targetcastbarFrame", 'targetFrame')
+	end
 	E.GUI.args.unitframes.args.targetFrame.args.model = UF:GetModelSettings('target', 'UpdateTargetFrameSettings', 'targetFrame')
 	E.GUI.args.unitframes.args.targetFrame.args.auraWidget = UF:GetAuraWidgetSettings('target', 'UpdateTargetFrameSettings', 'targetFrame')
 	

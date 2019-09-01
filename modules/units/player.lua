@@ -516,9 +516,10 @@ local function PlayerFrame()
 			self.threat:Hide()
 		end
 	end
-
+	if (not E.isClassic) then 
 	f:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE")
 	f.UNIT_THREAT_SITUATION_UPDATE = UpdateAggro
+	end
 	
 	f:RegisterEvent('UPDATE_SHAPESHIFT_FORM')
 	f.UPDATE_SHAPESHIFT_FORM = function(self)

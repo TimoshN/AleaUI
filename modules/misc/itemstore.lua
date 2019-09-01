@@ -1,6 +1,10 @@
 local E = AleaUI
 local L = E.L
 
+if ( E.isClassic ) then 
+	return 
+end
+
 local IS = AleaUI:Module("ItemStore")
 
 local bank_db, bags_db, reagent_db
@@ -240,7 +244,9 @@ end
 IS:RegisterEvent("BAG_UPDATE")
 IS:RegisterEvent("PLAYERBANKSLOTS_CHANGED")
 IS:RegisterEvent("BANKFRAME_OPENED")
+if ( not E.isClassic ) then 
 IS:RegisterEvent("PLAYERREAGENTBANKSLOTS_CHANGED")
+end 
 
 function IS:BAG_UPDATE()
 	IS:UpdateItemStore(force)

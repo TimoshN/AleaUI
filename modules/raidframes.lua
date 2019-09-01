@@ -3946,7 +3946,7 @@ E:OnInit2(function()
 		end,
 	}
 
-	if GetNumSpecializations() == 0 then
+	if not E.isClassic and GetNumSpecializations() == 0 then
 		local handler = CreateFrame('Frame')
 		handler:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
 		handler:RegisterEvent("PLAYER_LOGIN")
@@ -3982,10 +3982,33 @@ E:OnInit2(function()
 
 			handler:UnregisterAllEvents()
 		end)
-	else
+	elseif not E.isClassic then 
 		for i=1, GetNumSpecializations() do
 			local id, name, description, icon, background, role = GetSpecializationInfo(i)
 			local tName = name and "|T"..icon ..":0:0:0:0|t"..name or L['Not selected']
+
+			if charOptions.perCharSpec[i] == nil then
+				charOptions.perCharSpec[i] = false
+			end
+
+			E.GUI.args.RaidFrames.args.blizzardSettings.args.autoEnable.args['enable'..i..'Spec'] = {
+				name = tName,
+				order = 5+i,
+				type = "toggle",
+				newLine = i==1 and true or false,
+				set = function(self, value)
+					charOptions.perCharSpec[i] = not charOptions.perCharSpec[i]
+					RF:ReCheckAuraActivation()
+					RF:UpdateProfileSettings()
+				end,
+				get = function(self)
+					return charOptions.perCharSpec[i]
+				end,
+			}
+		end
+	elseif E.isClassic then 
+		for i=1, 1 do
+			local tName = L['Not selected']
 
 			if charOptions.perCharSpec[i] == nil then
 				charOptions.perCharSpec[i] = false
@@ -4260,11 +4283,13 @@ E:OnInit2(function()
 		end,
 	}
 
+	if (not E.isClassic) then 
 	RF:RegisterEvent('PLAYER_SPECIALIZATION_CHANGED')
 	RF:RegisterEvent('PLAYER_TALENT_UPDATE')
+	RF:RegisterEvent('ACTIVE_TALENT_GROUP_CHANGED')
+	end 
 	RF:RegisterEvent('PLAYER_LEVEL_UP')
 	RF:RegisterEvent('PLAYER_ENTERING_WORLD')
-	RF:RegisterEvent('ACTIVE_TALENT_GROUP_CHANGED')
 	RF:RegisterEvent('GROUP_JOINED')
 	RF:RegisterEvent('GROUP_LEFT')
 

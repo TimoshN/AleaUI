@@ -108,14 +108,16 @@ local headerList = {
 			timeLeft2 = 0;
 		end
 	]==]
-	
-ObjectiveTrackerFrame:SetClampedToScreen(true)
-ObjectiveTrackerFrame:SetResizable(true)
-ObjectiveTrackerFrame:SetUserPlaced(true)
-ObjectiveTrackerFrame:SetMaxResize(maxWidth, maxHeight)
-ObjectiveTrackerFrame:SetMinResize(minWidth, minHeight)
-	
+
 local function Load()
+		
+	ObjectiveTrackerFrame:SetClampedToScreen(true)
+	ObjectiveTrackerFrame:SetResizable(true)
+	ObjectiveTrackerFrame:SetUserPlaced(true)
+	ObjectiveTrackerFrame:SetMaxResize(maxWidth, maxHeight)
+	ObjectiveTrackerFrame:SetMinResize(minWidth, minHeight)
+		
+
 	E:Mover(WatchFrameHolder, "watchFrameMover")
 	
 	
@@ -1231,6 +1233,10 @@ local function Load()
 --	hooksecurefunc(WORLD_QUEST_TRACKER_MODULE, 'SetStringText', OT.OnSetStringText)	
 	
 end
+
+if ( E.isClassic ) then 
+	return 
+end 
 
 E:OnInit2(Load)
 E:OnInit(function()

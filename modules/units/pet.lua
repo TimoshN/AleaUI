@@ -319,9 +319,10 @@ local function PlayerPetFrame()
 		end
 	end
 
+	if (not E.isClassic) then 
 	f:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE")
 	f.UNIT_THREAT_SITUATION_UPDATE = UpdateAggro
-	
+	end
 	
 	f.threat = UF.AddAggroBorder(f)
 	

@@ -489,7 +489,7 @@ bttn:SetScale(1)
 bttn:SetAlpha(0.3)
 bttn:SetPoint('TOPRIGHT', ChatFrame1, 'TOPRIGHT', 0, -20)
 
-bttn:SetNormalTexture(GetSpellTexture(80353))
+bttn:SetNormalTexture(GetSpellTexture(80353) or GetSpellTexture(17) )
 bttn:GetNormalTexture():SetTexCoord(unpack(E.media.texCoord))
 bttn:GetNormalTexture():SetDesaturated(true)
 bttn:SetScript("OnClick", function(self) 

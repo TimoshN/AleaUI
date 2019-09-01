@@ -1,6 +1,11 @@
 ﻿local DT = AleaUI:Module('DataText')
 local L = AleaUI.L
 
+if ( AleaUI.isClassic ) then 
+	return 
+end 
+
+
 local format = string.format
 local tsort = table.sort
 local GARRISON_CURRENCY = 824

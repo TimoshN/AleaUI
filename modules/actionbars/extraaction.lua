@@ -1,38 +1,39 @@
 ﻿local addonName, E = ...
 local L = E.L
 
-local ExtraActionBarHolder = CreateFrame('Frame', 'AleaUIExtraActionMover', E.UIParent)
-ExtraActionBarHolder:SetSize(ExtraActionBarFrame:GetSize())
-ExtraActionBarHolder:Show()
-ExtraActionBarFrame:SetParent(ExtraActionBarHolder)
-ExtraActionBarFrame:ClearAllPoints()
-ExtraActionBarFrame:SetPoint('CENTER', ExtraActionBarHolder, 'CENTER')
-ExtraActionBarFrame.ignoreFramePositionManager  = true
-
-local ZoneAbilityHolder = CreateFrame('Frame', nil, E.UIParent)
-ZoneAbilityHolder:SetPoint('BOTTOM', ExtraActionBarFrame, 'TOP', 0, 2)
-ZoneAbilityHolder:SetSize(ExtraActionBarFrame:GetSize())
-ZoneAbilityHolder:Show()
-ZoneAbilityFrame:SetParent(ZoneAbilityHolder)
-ZoneAbilityFrame:ClearAllPoints()
-ZoneAbilityFrame:SetPoint('CENTER', ZoneAbilityHolder, 'CENTER', 0, 0)
-ZoneAbilityFrame.ignoreFramePositionManager = true
-
-function E:Extra_SetScale()
-	local scale = E.db.Frames["extraActionFrame"].scale or 1
-
-	if ExtraActionBarFrame then
-		ExtraActionBarFrame:SetScale(scale)
-		ExtraActionBarHolder:SetSize(ExtraActionBarFrame:GetWidth() * scale, ExtraActionBarFrame:GetWidth() * scale)
-	end
-
-	if ZoneAbilityFrame then
-		ZoneAbilityFrame:SetScale(scale)
-		ZoneAbilityHolder:SetSize(ZoneAbilityFrame:GetWidth() * scale, ZoneAbilityFrame:GetWidth() * scale)
-	end
-end
-
 local ExtraAction_OnLoad = function(self)
+	
+	local ExtraActionBarHolder = CreateFrame('Frame', 'AleaUIExtraActionMover', E.UIParent)
+	ExtraActionBarHolder:SetSize(ExtraActionBarFrame:GetSize())
+	ExtraActionBarHolder:Show()
+	ExtraActionBarFrame:SetParent(ExtraActionBarHolder)
+	ExtraActionBarFrame:ClearAllPoints()
+	ExtraActionBarFrame:SetPoint('CENTER', ExtraActionBarHolder, 'CENTER')
+	ExtraActionBarFrame.ignoreFramePositionManager  = true
+
+	local ZoneAbilityHolder = CreateFrame('Frame', nil, E.UIParent)
+	ZoneAbilityHolder:SetPoint('BOTTOM', ExtraActionBarFrame, 'TOP', 0, 2)
+	ZoneAbilityHolder:SetSize(ExtraActionBarFrame:GetSize())
+	ZoneAbilityHolder:Show()
+	ZoneAbilityFrame:SetParent(ZoneAbilityHolder)
+	ZoneAbilityFrame:ClearAllPoints()
+	ZoneAbilityFrame:SetPoint('CENTER', ZoneAbilityHolder, 'CENTER', 0, 0)
+	ZoneAbilityFrame.ignoreFramePositionManager = true
+
+	function E:Extra_SetScale()
+		local scale = E.db.Frames["extraActionFrame"].scale or 1
+
+		if ExtraActionBarFrame then
+			ExtraActionBarFrame:SetScale(scale)
+			ExtraActionBarHolder:SetSize(ExtraActionBarFrame:GetWidth() * scale, ExtraActionBarFrame:GetWidth() * scale)
+		end
+
+		if ZoneAbilityFrame then
+			ZoneAbilityFrame:SetScale(scale)
+			ZoneAbilityHolder:SetSize(ZoneAbilityFrame:GetWidth() * scale, ZoneAbilityFrame:GetWidth() * scale)
+		end
+	end
+
 	local Skins = E:Module("Skins")
 	
 	E:Mover(ExtraActionBarHolder, "extraActionFrame")
@@ -150,4 +151,7 @@ local ExtraAction_OnLoad = function(self)
 		end
 	}
 end
-E:OnInit2(ExtraAction_OnLoad)
+
+if (not E.isClassic) then 
+	E:OnInit2(ExtraAction_OnLoad)
+end

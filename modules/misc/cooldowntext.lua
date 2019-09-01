@@ -198,13 +198,13 @@ function CT:CreateCooldownTimer(parent)
 end
 
 local function GetGCD()
-	local startTime, duration = GetSpellCooldown(61304);
+	local startTime, duration = GetSpellCooldown(E.isClassic and 29515 or 61304);
 	
 	return duration or 0
 end
 
 local function IsGCDCooldown(start, duration)
-	local startTime, durationTime = GetSpellCooldown(61304);
+	local startTime, durationTime = GetSpellCooldown(E.isClassic and 29515 or 61304);
 	return ( startTime == start and durationTime == duration )
 end
   

@@ -344,4 +344,6 @@ local function FocusFrame()
 	UF:UpdateFocusFrameSettings()
 end
 
+if (not E.isClassic) then 
 E:OnInit2(FocusFrame)
+end

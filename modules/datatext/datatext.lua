@@ -541,22 +541,26 @@ function datatext:ApplyDataText(frame, name, index)
 	
 	frame:Show()
 	
-	if datatexts[name].onEvent then
-		for i, event in pairs(datatexts[name].onEvent) do		
-			frame.texts[index]:RegisterEvent(event)
+	if ( datatexts[name] ) then
+		if datatexts[name].onEvent then
+			for i, event in pairs(datatexts[name].onEvent) do		
+				pcall(frame.texts[index].RegisterEvent, frame.texts[index], event)
+			end
 		end
-	end
-	frame.texts[index]:SetScript("OnEvent", datatexts[name].onEventFunc)
-	frame.texts[index]:SetScript("OnUpdate", datatexts[name].onUpdateFunc)
-	frame.texts[index]:SetScript("OnEnter", datatexts[name].onEnterFunc)
-	frame.texts[index]:SetScript("OnLeave", datatexts[name].onLeaveFunc)
-	frame.texts[index]:SetScript("OnMouseUp", datatexts[name].onClickFunc)
-	
-	if datatexts[name].onUpdateFunc then
-		datatexts[name].onUpdateFunc(frame.texts[index], 61)
-	end
-	if datatexts[name].onEventFunc then
-		datatexts[name].onEventFunc(frame.texts[index], 'PLAYER_ENTERING_WORLD')
+		frame.texts[index]:SetScript("OnEvent", datatexts[name].onEventFunc)
+		frame.texts[index]:SetScript("OnUpdate", datatexts[name].onUpdateFunc)
+		frame.texts[index]:SetScript("OnEnter", datatexts[name].onEnterFunc)
+		frame.texts[index]:SetScript("OnLeave", datatexts[name].onLeaveFunc)
+		frame.texts[index]:SetScript("OnMouseUp", datatexts[name].onClickFunc)
+		
+		if datatexts[name].onUpdateFunc then
+			datatexts[name].onUpdateFunc(frame.texts[index], 61)
+		end
+		if datatexts[name].onEventFunc then
+			datatexts[name].onEventFunc(frame.texts[index], 'PLAYER_ENTERING_WORLD')
+		end
+	else 
+		print('[DATATEXT] Cant find', name)
 	end
 end
 

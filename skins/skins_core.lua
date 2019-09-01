@@ -3,6 +3,11 @@ local Skins = E:Module("Skins")
 local _G = _G
 local L = E.L
 
+local error = function(...)
+
+	print(debugstack(2), ...)
+end 
+
 E.default_settings.skins = {
 	enableAll = true,
 }
@@ -1514,8 +1519,11 @@ end
 
 do
 	Skins.ThemeButton(BankFramePurchaseButton)
+
+	if ( ReagentBankFrameUnlockInfoPurchaseButton ) then 
 	Skins.ThemeButton(ReagentBankFrameUnlockInfoPurchaseButton)
 	Skins.ThemeButton(ReagentBankFrame.DespositButton)
+	end
 end
 
 
@@ -1533,62 +1541,63 @@ end
 
 
 do
+	if ( LossOfControlFrame ) then 
+		--/run LossOfControlFrame.fadeTime = 2000; LossOfControlFrame_SetUpDisplay(LossOfControlFrame, true, 'CONFUSE', 2094, 'Disoriented', [[Interface\Icons\Spell_Shadow_MindSteal]], GetTime(), 7.9950003623962, 8, 0, 5, 2)
+		local IconBackdrop = Skins.NewBackdrop(LossOfControlFrame, LossOfControlFrame.Icon)
+		Skins.SetTemplate(IconBackdrop, 'BORDERED')
+		IconBackdrop:SetOutside(LossOfControlFrame.Icon)
 
-	--/run LossOfControlFrame.fadeTime = 2000; LossOfControlFrame_SetUpDisplay(LossOfControlFrame, true, 'CONFUSE', 2094, 'Disoriented', [[Interface\Icons\Spell_Shadow_MindSteal]], GetTime(), 7.9950003623962, 8, 0, 5, 2)
-	local IconBackdrop = Skins.NewBackdrop(LossOfControlFrame, LossOfControlFrame.Icon)
-	Skins.SetTemplate(IconBackdrop, 'BORDERED')
-	IconBackdrop:SetOutside(LossOfControlFrame.Icon)
-
-	LossOfControlFrame.Icon:SetTexCoord(.1, .9, .1, .9)
-	LossOfControlFrame:StripTextures()
-	LossOfControlFrame.AbilityName:ClearAllPoints()
-	LossOfControlFrame:SetSize(LossOfControlFrame.Icon:GetWidth() + 50, LossOfControlFrame.Icon:GetWidth() + 50)
-	
-	
-	local iconParent = CreateFrame('Frame', nil, LossOfControlFrame)
-	iconParent:SetFrameLevel(LossOfControlFrame:GetFrameLevel()+10)
-	
-	LossOfControlFrame.Icon:SetParent(iconParent)
-	IconBackdrop:SetParent(iconParent)
-	
-	LossOfControlFrame.Cooldown:SetParent(iconParent)
-	LossOfControlFrame.Cooldown:SetFrameLevel(LossOfControlFrame:GetFrameLevel()+6)
-	LossOfControlFrame.Cooldown:ClearAllPoints()
-	LossOfControlFrame.Cooldown:SetPoint('TOPLEFT', LossOfControlFrame.Icon, 'TOPLEFT', -5, 5)
-	LossOfControlFrame.Cooldown:SetPoint('BOTTOMRIGHT', LossOfControlFrame.Icon, 'BOTTOMRIGHT', 5, -5)
-	LossOfControlFrame.Cooldown:SetSwipeTexture([[Interface\Buttons\WHITE8x8]])
-	LossOfControlFrame.Cooldown:SetSwipeColor(10/255, 197/255*0.8, 210/255*0.8, 0.9)
-	
-	local CooldownBackdrop = Skins.NewBackdrop(LossOfControlFrame.Cooldown, LossOfControlFrame.Cooldown)
-	Skins.SetTemplate(CooldownBackdrop, 'DARK')
-	CooldownBackdrop:SetOutside(LossOfControlFrame.Cooldown)
-	
-	
-	local font = E.media.default_font
-	hooksecurefunc("LossOfControlFrame_SetUpDisplay", function(self, animate, locType, spellID, text, iconTexture, startTime, timeRemaining, duration, lockoutSchool, priority, displayType)
-		self.Icon:ClearAllPoints()
-		self.Icon:SetPoint("CENTER", self, "CENTER", 0, 0)
+		LossOfControlFrame.Icon:SetTexCoord(.1, .9, .1, .9)
+		LossOfControlFrame:StripTextures()
+		LossOfControlFrame.AbilityName:ClearAllPoints()
+		LossOfControlFrame:SetSize(LossOfControlFrame.Icon:GetWidth() + 50, LossOfControlFrame.Icon:GetWidth() + 50)
 		
-		self.AbilityName:ClearAllPoints()
-		self.AbilityName:SetPoint("BOTTOM", self, 0, -10)
-		self.AbilityName.scrollTime = nil;
-		self.AbilityName:SetFont(font, 20, 'OUTLINE')
 		
-		self.TimeLeft.NumberText:ClearAllPoints()
-		self.TimeLeft.NumberText:SetPoint("BOTTOM", self, 4, -34)
-		self.TimeLeft.NumberText.scrollTime = nil;
-		self.TimeLeft.NumberText:SetFont(font, 20, 'OUTLINE')
+		local iconParent = CreateFrame('Frame', nil, LossOfControlFrame)
+		iconParent:SetFrameLevel(LossOfControlFrame:GetFrameLevel()+10)
+		
+		LossOfControlFrame.Icon:SetParent(iconParent)
+		IconBackdrop:SetParent(iconParent)
+		
+		LossOfControlFrame.Cooldown:SetParent(iconParent)
+		LossOfControlFrame.Cooldown:SetFrameLevel(LossOfControlFrame:GetFrameLevel()+6)
+		LossOfControlFrame.Cooldown:ClearAllPoints()
+		LossOfControlFrame.Cooldown:SetPoint('TOPLEFT', LossOfControlFrame.Icon, 'TOPLEFT', -5, 5)
+		LossOfControlFrame.Cooldown:SetPoint('BOTTOMRIGHT', LossOfControlFrame.Icon, 'BOTTOMRIGHT', 5, -5)
+		LossOfControlFrame.Cooldown:SetSwipeTexture([[Interface\Buttons\WHITE8x8]])
+		LossOfControlFrame.Cooldown:SetSwipeColor(10/255, 197/255*0.8, 210/255*0.8, 0.9)
+		
+		local CooldownBackdrop = Skins.NewBackdrop(LossOfControlFrame.Cooldown, LossOfControlFrame.Cooldown)
+		Skins.SetTemplate(CooldownBackdrop, 'DARK')
+		CooldownBackdrop:SetOutside(LossOfControlFrame.Cooldown)
+		
+		
+		local font = E.media.default_font
+		hooksecurefunc("LossOfControlFrame_SetUpDisplay", function(self, animate, locType, spellID, text, iconTexture, startTime, timeRemaining, duration, lockoutSchool, priority, displayType)
+			self.Icon:ClearAllPoints()
+			self.Icon:SetPoint("CENTER", self, "CENTER", 0, 0)
+			
+			self.AbilityName:ClearAllPoints()
+			self.AbilityName:SetPoint("BOTTOM", self, 0, -10)
+			self.AbilityName.scrollTime = nil;
+			self.AbilityName:SetFont(font, 20, 'OUTLINE')
+			
+			self.TimeLeft.NumberText:ClearAllPoints()
+			self.TimeLeft.NumberText:SetPoint("BOTTOM", self, 4, -34)
+			self.TimeLeft.NumberText.scrollTime = nil;
+			self.TimeLeft.NumberText:SetFont(font, 20, 'OUTLINE')
 
-		self.TimeLeft.SecondsText:ClearAllPoints()
-		self.TimeLeft.SecondsText:SetPoint("BOTTOM", self, 0, -54)
-		self.TimeLeft.SecondsText.scrollTime = nil;
-		self.TimeLeft.SecondsText:SetFont(font, 20, 'OUTLINE')
+			self.TimeLeft.SecondsText:ClearAllPoints()
+			self.TimeLeft.SecondsText:SetPoint("BOTTOM", self, 0, -54)
+			self.TimeLeft.SecondsText.scrollTime = nil;
+			self.TimeLeft.SecondsText:SetFont(font, 20, 'OUTLINE')
 
-		-- always stop shake animation on start
-		if self.Anim:IsPlaying() then
-			self.Anim:Stop()
-		end
-	end)
+			-- always stop shake animation on start
+			if self.Anim:IsPlaying() then
+				self.Anim:Stop()
+			end
+		end)
+	end
 end
 
 do
@@ -1662,6 +1671,9 @@ end
 do
 	E:OnInit(function()
 		-- QuickJoinToastButton
+		if ( not QuickJoinToastButton ) then
+			return 
+		end 
 		
 		local border = Skins.NewBackdrop(QuickJoinToastButton)
 		border:ClearAllPoints()
@@ -1745,9 +1757,11 @@ do
 
 end
 
-do
-	StatusTrackingBarManager:Kill()
-	StatusTrackingBarManager:GetParent().OnStatusBarsUpdated = function()end
+do	
+	if ( StatusTrackingBarManager ) then
+		StatusTrackingBarManager:Kill()
+		StatusTrackingBarManager:GetParent().OnStatusBarsUpdated = function()end
+	end
 end
 
 do
@@ -1833,8 +1847,9 @@ do
 		end)
 	end
 	
-	
-	E:OnInit2(Skin_TotemFrame)
+	if ( not E.isClassic ) then 
+		E:OnInit2(Skin_TotemFrame)
+	end
 end
 
 local warningIsPoped = false
@@ -1984,6 +1999,7 @@ end)
 
 do
 	
+	if ( TalentMicroButtonAlert ) then
 	TalentMicroButtonAlert:Kill()
 	CollectionsMicroButtonAlert:Kill()
 	LFDMicroButtonAlert:Kill()
@@ -1992,7 +2008,7 @@ do
 	BagHelpBox:Kill()
 	
 	GetCVarBitfield("closedInfoFrames", LE_FRAME_TUTORIAL_WORLD_MAP_FRAME, true)
-
+	end
 end
 
 do

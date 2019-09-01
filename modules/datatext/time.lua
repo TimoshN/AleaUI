@@ -1,6 +1,10 @@
 local DT = AleaUI:Module('DataText')
 local L = AleaUI.L
 
+if ( AleaUI.isClassic ) then 
+	return 
+end
+
 local int = 3
 
 local format = string.format

@@ -652,7 +652,11 @@ function InitializeEventHandler()
 	BF.eventFrame:RegisterEvent("ACTIONBAR_SLOT_CHANGED")
 	BF.eventFrame:RegisterEvent("UPDATE_BINDINGS")
 	BF.eventFrame:RegisterEvent("UPDATE_SHAPESHIFT_FORM")
+
+	if ( not E.isClassic) then 
 	BF.eventFrame:RegisterEvent("UPDATE_VEHICLE_ACTIONBAR")
+	end 
+
 	BF.eventFrame:RegisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED")
 	
 
@@ -662,22 +666,30 @@ function InitializeEventHandler()
 	BF.eventFrame:RegisterEvent("PLAYER_TARGET_CHANGED")
 	BF.eventFrame:RegisterEvent("TRADE_SKILL_SHOW")
 	BF.eventFrame:RegisterEvent("TRADE_SKILL_CLOSE")
+	if ( not E.isClassic) then 
 	BF.eventFrame:RegisterEvent("ARCHAEOLOGY_CLOSED")
+	end
 	BF.eventFrame:RegisterEvent("PLAYER_ENTER_COMBAT")
 	BF.eventFrame:RegisterEvent("PLAYER_LEAVE_COMBAT")
 	BF.eventFrame:RegisterEvent("START_AUTOREPEAT_SPELL")
 	BF.eventFrame:RegisterEvent("STOP_AUTOREPEAT_SPELL")
+	if ( not E.isClassic) then 
 	BF.eventFrame:RegisterEvent("UNIT_ENTERED_VEHICLE")
 	BF.eventFrame:RegisterEvent("UNIT_EXITED_VEHICLE")
 	BF.eventFrame:RegisterEvent("COMPANION_UPDATE")
+	end
 	BF.eventFrame:RegisterEvent("UNIT_INVENTORY_CHANGED")
 	BF.eventFrame:RegisterEvent("LEARNED_SPELL_IN_TAB")
 	BF.eventFrame:RegisterEvent("PET_STABLE_UPDATE")
 	BF.eventFrame:RegisterEvent("PET_STABLE_SHOW")
+	if ( not E.isClassic) then 
 	BF.eventFrame:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_SHOW")
 	BF.eventFrame:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_HIDE")
+	end
 	BF.eventFrame:RegisterEvent("SPELL_UPDATE_CHARGES")
+	if ( not E.isClassic) then 
 	BF.eventFrame:RegisterEvent("UPDATE_SUMMONPETS_ACTION")
+	end
 	BF.eventFrame:RegisterEvent("SPELL_UPDATE_ICON")
 	
 	-- With those two, do we still need the ACTIONBAR equivalents of them?
@@ -1360,7 +1372,7 @@ end
 
 function UpdateOverlayGlow(self)
 	local spellId = self:GetSpellId()
-	if spellId and IsSpellOverlayed(spellId) then
+	if spellId and not E.isClassic and IsSpellOverlayed(spellId) then
 		ShowOverlayGlow(self)
 	else
 		HideOverlayGlow(self)

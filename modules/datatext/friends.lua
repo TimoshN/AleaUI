@@ -2,6 +2,10 @@ local E = AleaUI
 local DT = E:Module('DataText')
 local L = E.L
 
+if ( E.isClassic ) then 
+	return 
+end
+
 -- create a popup
 local BNGetNumFriendToons = BNGetNumFriendToons or BNGetNumFriendGameAccounts
 local BNGetFriendToonInfo = BNGetFriendToonInfo or BNGetFriendGameAccountInfo

@@ -4,7 +4,6 @@ E.L = AleaUI_GUI.GetLocale(addonName)
 local L = E.L
 
 
-
 -- Legion to BFA
 
 if not ( IsAddonMessagePrefixRegistered ) then
@@ -472,7 +471,10 @@ do
 		events:RegisterEvent("RAID_INSTANCE_WELCOME")
 		events:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 		events:RegisterEvent("GUILD_MOTD")
-		events:RegisterEvent("GUILD_NEWS_UPDATE")
+
+		if (not E.isClassic) then 
+			events:RegisterEvent("GUILD_NEWS_UPDATE")
+		end
 		events:RegisterEvent("GUILD_ROSTER_UPDATE")
 		
 		events:SendAddonIndo()
@@ -635,6 +637,11 @@ do
 	local type = type
 	local tinsert = table.insert
 
+	local function trueFunction(...)
+		print(...)
+		return true;
+	end
+
 	function E:OnInit(func)
 		if not func then return end
 		if type(func) == "function" then
@@ -645,7 +652,11 @@ do
 	end
 	function E:InitFrames()
 		for i, func in ipairs(list) do		
-			func()
+			local status, ret, err = xpcall(func, trueFunction)
+
+			-- print (status)
+			-- print (ret)
+			print (err)
 		end		
 		wipe(list)
 	end
@@ -661,7 +672,11 @@ do
 	end	
 	function E:InitFrames2()
 		for i, func in ipairs(list2) do
-			func()
+			local status, ret, err = xpcall(func, trueFunction)
+
+			print (status)
+			print (ret)
+			print (err)
 		end	
 		wipe(list2)
 	end
@@ -677,7 +692,11 @@ do
 	end
 	function E:InitFrames3()
 		for i, func in ipairs(list3) do		
-			func()
+			local status, ret, err = xpcall(func, trueFunction)
+
+			print (status)
+			print (ret)
+			print (err)
 		end		
 		wipe(list3)
 	end
@@ -692,7 +711,11 @@ do
 	end
 	function E:InitFrames4()
 		for i, func in ipairs(list4) do		
-			func()
+			local status, ret, err = xpcall(func, trueFunction)
+
+			print (status)
+			print (ret)
+			print (err)
 		end		
 		wipe(list4)
 	end

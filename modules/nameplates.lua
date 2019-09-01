@@ -206,26 +206,35 @@ local function DisableBlizzardNamePlates()
 	hooksecurefunc(C_NamePlate, 'SetNamePlateEnemySize', UpdateBasePlateSize)
 	hooksecurefunc(C_NamePlate, 'SetNamePlateSelfSize', UpdateBasePlateSize)
 	
-
+	if ( ClassNameplateBarRogueDruidFrame ) then
 	ClassNameplateBarRogueDruidFrame:UnregisterAllEvents()
 	ClassNameplateBarRogueDruidFrame:SetScript('OnEvent', E.noop)
+	end 
 
+	if ( DeathKnightResourceOverlayFrame ) then
 	DeathKnightResourceOverlayFrame:UnregisterAllEvents()
 	DeathKnightResourceOverlayFrame:SetScript('OnEvent', E.noop)
+	end
 
+	if ( ClassNameplateBarMageFrame ) then
 	ClassNameplateBarMageFrame:UnregisterAllEvents()
 	ClassNameplateBarMageFrame:SetScript('OnEvent', E.noop)
+	end 
 
 	if ClassNameplateBarMonkFrame then
 	ClassNameplateBarMonkFrame:UnregisterAllEvents()
 	ClassNameplateBarMonkFrame:SetScript('OnEvent', E.noop)
 	end
 
+	if ( ClassNameplateBarPaladinFrame ) then
 	ClassNameplateBarPaladinFrame:UnregisterAllEvents()
 	ClassNameplateBarPaladinFrame:SetScript('OnEvent', E.noop)
+	end
 
+	if ( ClassNameplateBarWarlockFrame ) then 
 	ClassNameplateBarWarlockFrame:UnregisterAllEvents()
 	ClassNameplateBarWarlockFrame:SetScript('OnEvent', E.noop)
+	end
 end
 
 AleaUI:OnInit2(function()
@@ -670,7 +679,9 @@ NP:RegisterEvent("PLAYER_TARGET_CHANGED");
 --NP:RegisterEvent("CVAR_UPDATE");
 NP:RegisterEvent("RAID_TARGET_UPDATE");
 NP:RegisterEvent('UPDATE_MOUSEOVER_UNIT')
+if ( not E.isClassic ) then
 NP:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE")
+end
 NP:RegisterEvent('QUEST_LOG_UPDATE')
 NP:RegisterEvent('QUEST_WATCH_UPDATE')
 NP:RegisterEvent('CURSOR_UPDATE')
@@ -1041,8 +1052,12 @@ local function IsOnThreatList(threatStatus)
 end
 
 local function IsTapped(unit)
-	local _, threatStatus = UnitDetailedThreatSituation("player", unit);
-	return IsOnThreatList(threatStatus);
+	if ( UnitDetailedThreatSituation ) then 
+		local _, threatStatus = UnitDetailedThreatSituation("player", unit);
+		return IsOnThreatList(threatStatus);
+	end 
+
+	return false
 end
 
 local mouseoverUpdate = CreateFrame('Frame')
@@ -1196,7 +1211,7 @@ function NP:UpdateLevel()
 	elseif E.db.nameplates.healthBar_lvl_visability == 2 and not UnitIsUnit(self.unit, 'target') then
 		self.levelText:SetText('')
 	else
-		if ( UnitIsWildBattlePet(self.unit) or UnitIsBattlePetCompanion(self.unit) ) then
+		if ( UnitIsWildBattlePet and UnitIsWildBattlePet(self.unit) or UnitIsBattlePetCompanion and UnitIsBattlePetCompanion(self.unit) ) then
 			self.levelText:SetText(UnitBattlePetLevel(self.unit))
 		elseif level == UnitLevel('player') then
 			self.levelText:SetText('')
@@ -1304,7 +1319,7 @@ local UpdateHealPrediction = function(self)
 	local health = self:GetValue();
 	local width = self:GetWidth()
 
-	if ( maxHealth <= 0 ) or not self.unit then
+	if E.isClassic or ( maxHealth <= 0 ) or not self.unit then
 		self.totalHealPrediction:SetWidth(0)
 		self.totalHealPrediction:Hide()
 		self.totalAbsorb:Hide()
@@ -1799,6 +1814,8 @@ local function NamePlate_CastBarOnUpdate(self)
 end
 
 function NP:UpdateCast()
+	if E.isClassic then return end
+
 	if not self.unit then return end
 
 	if self.plateNamePlate or self.disableBars then
@@ -1851,6 +1868,7 @@ function NP:UpdateCast()
 end
 
 function NP:StopCast(notChannel)
+	if E.isClassic then return end
 
 	if notChannel and self.castBar.castType == 'channel' then
 		return
@@ -1903,17 +1921,20 @@ function NP:RegisterEvents()
 		self:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTED", self.unit)
 		self:RegisterUnitEvent("UNIT_SPELLCAST_STOP", self.unit)
 		self:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", self.unit)
+
+		if ( not E.isClassic ) then
 		self:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTIBLE", self.unit)
 		self:RegisterUnitEvent("UNIT_SPELLCAST_NOT_INTERRUPTIBLE", self.unit)
+		end
 	--	self:RegisterEvent("UNIT_SPELLCAST_FAILED")
 
 		self:RegisterUnitEvent('UNIT_HEALTH_FREQUENT', self.unit)
 		self:RegisterUnitEvent('UNIT_MAXHEALTH', self.unit)
-
+		if ( not E.isClassic ) then
 		self:RegisterUnitEvent('UNIT_ABSORB_AMOUNT_CHANGED', self.unit)
 		self:RegisterUnitEvent('UNIT_HEAL_PREDICTION', self.unit)
 		self:RegisterUnitEvent('UNIT_HEAL_ABSORB_AMOUNT_CHANGED', self.unit)
-
+		end
 		self:RegisterUnitEvent('UNIT_NAME_UPDATE', self.unit)
 		self:RegisterUnitEvent('UNIT_FACTION', self.unit)
 		self:RegisterUnitEvent('UNIT_FLAGS', self.unit)
@@ -2076,6 +2097,12 @@ local ThreatStatusColor = {
 	[3] = { 1, 0.3, 0.3 },
 }
 function NP.UpdateAggro(self)
+
+	if ( E.isClassic ) then 
+		return 
+	end
+
+	
 	local status = UnitThreatSituation('player', self.unit)
 
 	if (status and status > 0) then
@@ -2821,9 +2848,9 @@ function NP:CreateNamePlateFrame(frame)
 --	plate.castBar:SetFrameStrata('LOW')
 	plate.castBar:SetFrameLevel(plate:GetFrameLevel())
 
-	plate.castBar:SetScript('OnUpdate', NamePlate_CastBarOnUpdate)
+	plate.castBar:SetScript('OnUpdate', not E.isClassic and NamePlate_CastBarOnUpdate or nil)
 	plate.castBar:Hide()
-	plate.castBar:SetScript('OnSizeChanged', NamePlate_CastBarOnUpdate)
+	plate.castBar:SetScript('OnSizeChanged', not E.isClassic and NamePlate_CastBarOnUpdate or nil)
 
 	plate.castBar.fader = CreateFrame('Frame', nil, plate.castBar)
 	plate.castBar.fader:Hide()
@@ -3290,7 +3317,9 @@ function NP:CVarUpdate()
 	-- "Position other nameplates at the base, rather than overhead -1=bottom 0=top 1=middle",
 	E:LockCVar("nameplateOtherAtBase", E.db.nameplates.nameplatePosition)
 
-	E:LockCVar("nameplateShowSelf", E.db.nameplates.nameplateShowSelf and '1' or '0')
+	if ( not E.isClassic ) then 
+		E:LockCVar("nameplateShowSelf", E.db.nameplates.nameplateShowSelf and '1' or '0')
+	end
 
 	SetCVar("nameplateShowEnemies", E.db.nameplates.nameplateShowEnemies and '1' or '0')
 	E:LockCVar("nameplateShowEnemyMinions", E.db.nameplates.nameplateShowEnemyMinions and '1' or '0')
@@ -3351,41 +3380,42 @@ E:OnInit(function()
 
 	hooksecurefunc("SetCVar", CVarCheck)
 
+	if ( not E.isClassic ) then 
+		local iname = 'InterfaceOptionsNamesPanelUnitNameplates'
 
-	local iname = 'InterfaceOptionsNamesPanelUnitNameplates'
+		_G[iname..'PersonalResource']:SetScale(0.00001)
+		_G[iname..'PersonalResource']:SetAlpha(0)
 
-	_G[iname..'PersonalResource']:SetScale(0.00001)
-	_G[iname..'PersonalResource']:SetAlpha(0)
+		_G[iname..'PersonalResourceOnEnemy']:SetScale(0.00001)
+		_G[iname..'PersonalResourceOnEnemy']:SetAlpha(0)
 
-	_G[iname..'PersonalResourceOnEnemy']:SetScale(0.00001)
-	_G[iname..'PersonalResourceOnEnemy']:SetAlpha(0)
+		_G[iname..'MakeLarger']:SetScale(0.00001)
+		_G[iname..'MakeLarger']:SetAlpha(0)
 
-	_G[iname..'MakeLarger']:SetScale(0.00001)
-	_G[iname..'MakeLarger']:SetAlpha(0)
+		_G[iname..'AggroFlash']:SetScale(0.00001)
+		_G[iname..'AggroFlash']:SetAlpha(0)
 
-	_G[iname..'AggroFlash']:SetScale(0.00001)
-	_G[iname..'AggroFlash']:SetAlpha(0)
+		_G[iname..'ShowAll']:SetScale(0.00001)
+		_G[iname..'ShowAll']:SetAlpha(0)
 
-	_G[iname..'ShowAll']:SetScale(0.00001)
-	_G[iname..'ShowAll']:SetAlpha(0)
+		_G[iname..'Enemies']:SetScale(0.00001)
+		_G[iname..'Enemies']:SetAlpha(0)
 
-	_G[iname..'Enemies']:SetScale(0.00001)
-	_G[iname..'Enemies']:SetAlpha(0)
+		_G[iname..'EnemyMinions']:SetScale(0.00001)
+		_G[iname..'EnemyMinions']:SetAlpha(0)
 
-	_G[iname..'EnemyMinions']:SetScale(0.00001)
-	_G[iname..'EnemyMinions']:SetAlpha(0)
+		_G[iname..'EnemyMinus']:SetScale(0.00001)
+		_G[iname..'EnemyMinus']:SetAlpha(0)
 
-	_G[iname..'EnemyMinus']:SetScale(0.00001)
-	_G[iname..'EnemyMinus']:SetAlpha(0)
+		_G[iname..'Friends']:SetScale(0.00001)
+		_G[iname..'Friends']:SetAlpha(0)
 
-	_G[iname..'Friends']:SetScale(0.00001)
-	_G[iname..'Friends']:SetAlpha(0)
+		_G[iname..'FriendlyMinions']:SetScale(0.00001)
+		_G[iname..'FriendlyMinions']:SetAlpha(0)
 
-	_G[iname..'FriendlyMinions']:SetScale(0.00001)
-	_G[iname..'FriendlyMinions']:SetAlpha(0)
-
-	_G[iname..'MotionDropDown']:SetScale(0.00001)
-	_G[iname..'MotionDropDown']:SetAlpha(0)
+		_G[iname..'MotionDropDown']:SetScale(0.00001)
+		_G[iname..'MotionDropDown']:SetAlpha(0)
+	end
 
 	local f = CreateFrame('Button', nil, _G[ 'InterfaceOptionsNamesPanelUnitNameplates'], "UIPanelButtonTemplate")
 	f:SetSize(160, 22)

@@ -199,9 +199,11 @@ function AB:UpdateMicroPositionDimensions()
 end
 
 function AB:UpdateMicroButtons()
-	GuildMicroButtonTabard:ClearAllPoints()
-	GuildMicroButtonTabard:SetAlpha(0)
-	
+	if ( GuildMicroButtonTabard ) then 
+		GuildMicroButtonTabard:ClearAllPoints()
+		GuildMicroButtonTabard:SetAlpha(0)
+	end
+
 	AB:UpdateMicroPositionDimensions()
 end
 
@@ -232,7 +234,9 @@ end
 
 local function UpdateButtonTransparent()
 	for i=1, #MICRO_BUTTONS do
+		if ( _G[MICRO_BUTTONS[i]] ) then
 		_G[MICRO_BUTTONS[i]]._backdrop._background:SetColorTexture(24/255, 24/255, 29/255, E.db.Frames["actionBarMover"].transparent and 0.45 or 0.9)
+		end
 	end
 end
 
@@ -246,7 +250,11 @@ function AB:SetupMicroBar()
 	mover:SetScript("OnLeave", OnLeave)	
 		
 	for i=1, #MICRO_BUTTONS do
-		AB:HandleMicroButton(_G[MICRO_BUTTONS[i]], 'Interface\\AddOns\\AleaUI\\media\\'..buttonTexture[MICRO_BUTTONS[i]])
+
+		print(i, MICRO_BUTTONS[i], _G[MICRO_BUTTONS[i]]  )
+		if ( _G[MICRO_BUTTONS[i]] ) then
+			AB:HandleMicroButton(_G[MICRO_BUTTONS[i]], 'Interface\\AddOns\\AleaUI\\media\\'..(buttonTexture[MICRO_BUTTONS[i]] or 'help.tga' ) )
+		end
 	end
 
 	MicroButtonPortrait:SetParent(hiden) --SetInside(CharacterMicroButton.backdrop)
@@ -256,8 +264,10 @@ function AB:SetupMicroBar()
 	hooksecurefunc('UpdateMicroButtonsParent', AB.UpdateMicroButtonsParent)
 	hooksecurefunc('MoveMicroButtons', AB.UpdateMicroPositionDimensions)
 
+	if ( GuildMicroButtonTabard ) then 
 	GuildMicroButtonTabard:Kill()
-	
+	end
+
 	hooksecurefunc("UpdateMicroButtons",AB.UpdateMicroButtons)
 
 	AB.UpdateMicroButtonsParent(mover)

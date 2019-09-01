@@ -523,4 +523,6 @@ local function ArenaFrame()
 	UF:UpdateArenaFramesSettings()
 end
 
-E:OnInit(ArenaFrame)
+if ( not E.isClassic ) then  
+	E:OnInit(ArenaFrame)
+end 

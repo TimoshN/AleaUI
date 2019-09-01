@@ -6,6 +6,23 @@ local w, h
 
 local pingWorkAround = true
 
+local UnitChannelInfo = UnitChannelInfo
+local UnitCastingInfo = UnitCastingInfo
+
+if ( E.isClassic ) then 
+	UnitChannelInfo = function(unit) 
+		if UnitIsUnit(unit, 'player') then 
+			return ChannelInfo()
+		end
+	end
+
+	UnitCastingInfo = function(unit) 
+		if UnitIsUnit(unit, 'player') then 
+			return CastingInfo()
+		end
+	end
+end 
+
 CB.rightTextPattern_channel = " %s | %s + %.1f "
 CB.rightTextPattern_cast = " %s | %s "
 CB.rightTextPatternMS_channel = " |cFFFF0000ms:%d|r %s | %s + %.1f "
@@ -504,7 +521,7 @@ end
 local function Enable(f)
 
 	for i, event in ipairs(events) do
-		f:RegisterEvent(event)
+		pcall(f.RegisterEvent, f, event)
 	end
 	
 	if f.unit == "player" then		
@@ -618,7 +635,7 @@ end
 
 function CB.UpdateByLSM()
 	for f in pairs(UF.handledFrames['unitframes']) do
-		if f.castBar.opts then
+		if f.castBar and f.castBar.opts then
 			local opts = f.castBar.opts			
 			f.castBar:SetStatusBarTexture(E:GetTexture(opts.texture))
 		--	f.castBar.castLatency.text:SetFont(E:GetFont(opts.font), opts.fontSize-1, opts.fontOutline)
@@ -893,7 +910,7 @@ function UF:CreateCastBar(frame, w, h, drawticks)
 	]==]
 	
 	for i, event in ipairs(events) do
-		f:RegisterEvent(event)
+		pcall(f.RegisterEvent, f, event)
 	end
 
 	local rightText = f.ticksparent:CreateFontString(nil, "ARTWORK", nil, 4);

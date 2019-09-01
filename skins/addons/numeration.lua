@@ -1,5 +1,9 @@
 local Skins = AleaUI:Module("Skins")
 
+if ( AleaUI.isClassic ) then 
+	return 
+end
+
 local defaults = {
 	enable = true,
 	texture = 'Minimalist',

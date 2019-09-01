@@ -2,6 +2,9 @@ local addonName, E = ...
 local ABS = E:Module("BarSaver")
 
 --if true then return end
+if ( E.isClassic ) then 
+	return 
+end 
 
 local restoreErrors, spellCache, macroCache, macroNameCache, highestRanks = {}, {}, {}, {}, {}
 local playerClass

@@ -70,9 +70,11 @@ local NO = NO
 local RAID_CLASS_COLORS = RAID_CLASS_COLORS
 local CLASS_LOCALIZED = {}
 
-for i = 1, GetNumClasses() do
-	local classDisplayName, class, classID = GetClassInfo(i);
-	CLASS_LOCALIZED[class] = classDisplayName
+for classID = 1, 20 do -- GetNumClasses not supported by wow classic
+	local classInfo = C_CreatureInfo.GetClassInfo(classID)
+	if classInfo then
+	  CLASS_LOCALIZED[classInfo.classFile] = classInfo.className
+	end
 end
 
 
@@ -627,7 +629,7 @@ end
 tag_OnEvents["[level]"] = "UNIT_LEVEL PLAYER_LEVEL_UP POST_UPDATE_FRAME"
 tag_function["[level]"] = function(unit)
 	local level = UnitLevel(unit)
-	if ( UnitIsWildBattlePet(unit) or UnitIsBattlePetCompanion(unit) ) then
+	if ( UnitIsWildBattlePet and UnitIsWildBattlePet(unit) or UnitIsBattlePetCompanion and UnitIsBattlePetCompanion(unit) ) then
 		return UnitBattlePetLevel(unit)
 	elseif (level == UnitLevel('player')) then
 		return '|cffF2F266'..level.."|r"
@@ -645,7 +647,7 @@ end
 tag_OnEvents["[level:smart]"] = "UNIT_LEVEL PLAYER_LEVEL_UP POST_UPDATE_FRAME"
 tag_function["[level:smart]"] = function(unit)
 	local level = UnitLevel(unit)
-	if ( UnitIsWildBattlePet(unit) or UnitIsBattlePetCompanion(unit) ) then
+	if ( UnitIsWildBattlePet and UnitIsWildBattlePet(unit) or UnitIsBattlePetCompanion and UnitIsBattlePetCompanion(unit) ) then
 		return UnitBattlePetLevel(unit);
 	elseif level == UnitLevel('player') then
 		return ''
@@ -772,7 +774,7 @@ tag_function["[autoinfo]"] = function(unit)
 	
 	
 	local level = UnitLevel(unit)
-	if ( UnitIsWildBattlePet(unit) or UnitIsBattlePetCompanion(unit) ) then
+	if ( UnitIsWildBattlePet and UnitIsWildBattlePet(unit) or UnitIsBattlePetCompanion and UnitIsBattlePetCompanion(unit) ) then
 		info = UnitBattlePetLevel(unit).." "..info
 	elseif level == UnitLevel('player') then
 		
@@ -1048,12 +1050,13 @@ local UpdateHealPrediction = function(self)
 	local health = self.health:GetValue();
 	local width = self.health:GetWidth()
 	
-	if ( maxHealth <= 0 ) then
+	if ( maxHealth <= 0 or E.isClassic) then
 		self.health.totalHealPrediction:SetWidth(0)
 		self.health.totalHealPrediction:Hide()
 		self.health.totalAbsorb:Hide()			
 		self.health.overHealAbsorbGlow:Hide()
 		self.health.totalHealAbsorb:Hide()	
+		self.health.overAbsorbGlow:Hide()
 		return;
 	end
 	
@@ -1819,7 +1822,8 @@ do
 		aggro:SetScale(1)
 		aggro:SetPoint("TOPLEFT", f, "TOPLEFT", -3, 3)
 		aggro:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", 3, -3)	
-		
+		aggro:Hide()
+
 		return aggro
 	end
 
@@ -2241,7 +2245,9 @@ UnitFrameMethods['PostUpdate'] = function(self)
 	self:RAID_TARGET_UPDATE()		
 	self:EventTextUpdate("POST_UPDATE_FRAME", unit)
 	
+	if (not E.isClassic) then 
 	if self.threat then self:UNIT_THREAT_SITUATION_UPDATE() end
+	end
 	if self.aggro then self:PLAYER_TARGET_CHANGED() end
 	if self.model then self.model:UpdateModel() end
 end
@@ -2264,6 +2270,10 @@ function UF.OnVehicleUpdate(self)
 			end
 		end)
 	end			
+end
+
+local function trueFunction()
+	return true;
 end
 
 function UF:UnitEvent(frame, unit, check_range)
@@ -2323,7 +2333,9 @@ function UF:UnitEvent(frame, unit, check_range)
 
 	if unitEvents[unit] or unitEvents[match(unit, "(boss)%d")] or unitEvents[match(unit, "(arena)%d")] then
 		for i,event in ipairs(unitEvents[unit] or unitEvents[match(unit, "(boss)%d")] or unitEvents[match(unit, "(arena)%d")]) do
-			frame:RegisterEvent(event, unit)
+			--frame:RegisterEvent(event, unit)
+
+			xpcall(frame.RegisterEvent, trueFunction, frame, event)
 		end
 	else
 		UF:AddOnUpdateEvent(frame)
@@ -2409,12 +2421,10 @@ function UF:UnitEvent(frame, unit, check_range)
 	frame:SetAttribute("shift-type1", "target")
 	frame:SetAttribute("type2", "togglemenu")
 		
-	if unit == 'player' or unit == 'pet' then		
+	if ( unit == 'player' or unit == 'pet' ) and not E.isClassic then		
 		stateMonitor:WrapScript(frame, "OnAttributeChanged", [[
 			if( name == "state-vehicleupdated" ) then
-			--	print(self:GetAttribute('unit'), 'UnitHasVehicleUI:', UnitHasVehicleUI('player'))
-				
-				if value == 'enable' and UnitHasVehicleUI('player') then
+				if value == 'enable' and UnitHasVehicleUI and UnitHasVehicleUI('player') then
 					self:SetAttribute("type1", "macro")
 					self:SetAttribute("shift-type1", "macro")
 				else
@@ -2424,7 +2434,7 @@ function UF:UnitEvent(frame, unit, check_range)
 			elseif name == 'state-visability' then
 				if value == 'hide' then
 					self:Hide()
-				elseif UnitHasVehicleUI('player') then
+				elseif UnitHasVehicleUI and UnitHasVehicleUI('player') then
 					self:Show()						
 				elseif UnitExists(self:GetAttribute('unit')) then
 					self:Show()
@@ -2433,8 +2443,7 @@ function UF:UnitEvent(frame, unit, check_range)
 		]])
 		RegisterStateDriver(frame, "vehicleupdated", ("[@vehicle, exists] enable; hide"))
 		RegisterStateDriver(frame, "visability", ("[@vehicle, exists] show1; [@%s, exists] show2; hide"):format(unit))
-		frame:SetAttribute("macrotext", "/target "..(unit == 'player' and 'vehicle' or 'player'))		
-	--	RegisterUnitWatch(frame)
+		frame:SetAttribute("macrotext", "/target "..(unit == 'player' and 'vehicle' or 'player'))
 	else
 		stateMonitor:WrapScript(frame, "OnAttributeChanged", [[
 			if name == 'state-visability' then

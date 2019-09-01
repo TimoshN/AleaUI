@@ -329,5 +329,6 @@ local function TargetTargetFrame()
 	UF:UpdateTargetTargetFrameSettings()
 
 end
-
+if ( not E.isClassic ) then
 E:OnInit2(TargetTargetFrame)
+end

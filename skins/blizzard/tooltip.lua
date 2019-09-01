@@ -133,7 +133,7 @@ end)
 
 -- NPCs
 GameTooltip:HookScript("OnTooltipSetUnit", function(self)
-    if C_PetBattles.IsInBattle() then return end
+    if C_PetBattles and C_PetBattles.IsInBattle() then return end
 	
     local unit = select(2, self:GetUnit())
     if unit then
@@ -225,7 +225,7 @@ local function attachItemTooltip(self)
 		end
 		
 		addLine(self, itemId, types.item) 		
-		IS:SearchItem(itemId, self)		
+		if IS and IS.SearchItem then IS:SearchItem(itemId, self) end
 	end
 end
 
@@ -259,26 +259,30 @@ f:SetScript("OnEvent", function(_, _, what)
 end)
 
 -- Pet battle buttons
-hooksecurefunc("PetBattleAbilityButton_OnEnter", function(self)
-    local petIndex = C_PetBattles.GetActivePet(LE_BATTLE_PET_ALLY);
-    if ( self:GetEffectiveAlpha() > 0 ) then
-        local id = select(1, C_PetBattles.GetAbilityInfo(LE_BATTLE_PET_ALLY, petIndex, self:GetID()));
-        if id then
-            local oldText = PetBattlePrimaryAbilityTooltip.Description:GetText(id);
-            PetBattlePrimaryAbilityTooltip.Description:SetText(oldText .. "\r\r" .. types.ability .. "|cffffffff " .. id .. "|r")
-        end
-    end
-end)
+if ( PetBattleAbilityButton_OnEnter ) then
+	hooksecurefunc("PetBattleAbilityButton_OnEnter", function(self)
+		local petIndex = C_PetBattles.GetActivePet(LE_BATTLE_PET_ALLY);
+		if ( self:GetEffectiveAlpha() > 0 ) then
+			local id = select(1, C_PetBattles.GetAbilityInfo(LE_BATTLE_PET_ALLY, petIndex, self:GetID()));
+			if id then
+				local oldText = PetBattlePrimaryAbilityTooltip.Description:GetText(id);
+				PetBattlePrimaryAbilityTooltip.Description:SetText(oldText .. "\r\r" .. types.ability .. "|cffffffff " .. id .. "|r")
+			end
+		end
+	end)
+end 
 
 -- Pet battle auras
-hooksecurefunc("PetBattleAura_OnEnter", function(self)
-    local parent = self:GetParent();
-    local id = select(1, C_PetBattles.GetAuraInfo(parent.petOwner, parent.petIndex, self.auraIndex))
-    if id then
-        local oldText = PetBattlePrimaryAbilityTooltip.Description:GetText(id);
-        PetBattlePrimaryAbilityTooltip.Description:SetText(oldText .. "\r\r" .. types.ability .. "|cffffffff " .. id .. "|r")
-    end
-end)
+if ( PetBattleAura_OnEnter ) then 
+	hooksecurefunc("PetBattleAura_OnEnter", function(self)
+		local parent = self:GetParent();
+		local id = select(1, C_PetBattles.GetAuraInfo(parent.petOwner, parent.petIndex, self.auraIndex))
+		if id then
+			local oldText = PetBattlePrimaryAbilityTooltip.Description:GetText(id);
+			PetBattlePrimaryAbilityTooltip.Description:SetText(oldText .. "\r\r" .. types.ability .. "|cffffffff " .. id .. "|r")
+		end
+	end)
+end 
 --[[
 local tt_ = CreateFrame("Frame")
 tt_:RegisterEvent("MODIFIER_STATE_CHANGED")
@@ -410,7 +414,7 @@ for i, frame in ipairs({
 	'GarrisonFollowerTooltip', 
 	'GarrisonShipyardFollowerTooltip'}) do
 	
-	Skins:StyleTooltipsCustom(frame)	
+	print(pcall(Skins.StyleTooltipsCustom, Skins, frame) )	
 end
 
 hooksecurefunc('GameTooltip_ShowCompareItem', function(self, anchorFrame)
@@ -576,7 +580,7 @@ local function Custom_OnTooltipSetUnit(tt)
 
 		local levelLine = GetLevelLine(tt, 2)
 		if(levelLine) then
-			local isPetWild, isPetCompanion = UnitIsWildBattlePet(unit), UnitIsBattlePetCompanion(unit);
+			local isPetWild, isPetCompanion = UnitIsWildBattlePet and UnitIsWildBattlePet(unit), UnitIsBattlePetCompanion and UnitIsBattlePetCompanion(unit);
 			local creatureClassification = UnitClassification(unit)
 			local creatureType = UnitCreatureType(unit)
 			local pvpFlag = ""

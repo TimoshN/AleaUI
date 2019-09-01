@@ -95,6 +95,7 @@ end
 ]==]
 local function SkinEditBox(frame)
 
+	if not frame then return end
 	if frame._skinned then return end
 	
 --	print("TEST", frame:GetName())
@@ -185,7 +186,11 @@ local function ItemBackdrop(frame)
 	local bagID, slotID = ( frame.BagID or frame:GetParent():GetID()), frame:GetID() --frame:GetParent():GetID(), frame:GetID()
 	local texture, itemCount, locked, quality, readable, lootable, link, isFiltered, hasNoValue, itemID = GetContainerItemInfo(bagID, slotID);
 
-	local isQuestItem, questId, isActive = GetContainerItemQuestInfo(bagID, slotID);
+	local isQuestItem, questId, isActive
+	if ( GetContainerItemQuestInfo ) then 
+	isQuestItem, questId, isActive = GetContainerItemQuestInfo(bagID, slotID);
+	end
+
 	local bagFreeSlots, bagType = GetContainerNumFreeSlots(bagID)
 
 	if quality then
@@ -215,7 +220,11 @@ end
 local _addons = CreateFrame("Frame")
 _addons:RegisterEvent("BAG_UPDATE_DELAYED")
 _addons:RegisterEvent("PLAYERBANKSLOTS_CHANGED")
-_addons:RegisterEvent("PLAYERREAGENTBANKSLOTS_CHANGED")
+
+if ( not E.isClassic ) then 
+	_addons:RegisterEvent("PLAYERREAGENTBANKSLOTS_CHANGED")
+end 
+
 _addons:RegisterEvent("BANKFRAME_OPENED")
 _addons:SetScript("OnEvent", function(self, elapsed)
 	for k in pairs(bagsIcons['bags']) do
@@ -362,32 +371,35 @@ for port = 1, 1 do
 	SetPortraitToTexture(_G["ContainerFrame"..port.."Portrait"], "Interface\\ICONS\\INV_Misc_Bag_08");
 end
 
-BagItemSearchBox:ClearAllPoints()
-BagItemSearchBox:SetPoint("TOPLEFT", bagsFrame, "TOPLEFT", 170, -5)
-BagItemSearchBox:SetPoint("TOPRIGHT", bagsFrame, "TOPRIGHT", -30, -5)
-BagItemSearchBox:SetParent(bagsFrame)
-BagItemSearchBox:Show()
+if ( BagItemSearchBox ) then 
 
-BagItemSearchBox._ClearAllPoints = BagItemSearchBox.ClearAllPoints
-BagItemSearchBox._SetPoint = BagItemSearchBox.SetPoint
-BagItemSearchBox._SetParent = BagItemSearchBox.SetParent
+	BagItemSearchBox:ClearAllPoints()
+	BagItemSearchBox:SetPoint("TOPLEFT", bagsFrame, "TOPLEFT", 170, -5)
+	BagItemSearchBox:SetPoint("TOPRIGHT", bagsFrame, "TOPRIGHT", -30, -5)
+	BagItemSearchBox:SetParent(bagsFrame)
+	BagItemSearchBox:Show()
 
-BagItemSearchBox.ClearAllPoints = blank_func
-BagItemSearchBox.SetPoint = blank_func
-BagItemSearchBox.SetParent = blank_func
+	BagItemSearchBox._ClearAllPoints = BagItemSearchBox.ClearAllPoints
+	BagItemSearchBox._SetPoint = BagItemSearchBox.SetPoint
+	BagItemSearchBox._SetParent = BagItemSearchBox.SetParent
 
-BagItemAutoSortButton:ClearAllPoints()
-BagItemAutoSortButton:SetPoint("TOPLEFT", BagItemSearchBox, "TOPRIGHT", 5, 0)
-BagItemAutoSortButton:SetSize(18,18)
-BagItemAutoSortButton:SetParent(BagItemSearchBox)
-BagItemAutoSortButton:Show()
-BagItemAutoSortButton:GetNormalTexture():SetTexCoord(.13, 0.87, .13, 0.87)
-E:CreateBackdrop(BagItemAutoSortButton, nil, {0,0,0,1}, {0,0,0,0.6})
+	BagItemSearchBox.ClearAllPoints = blank_func
+	BagItemSearchBox.SetPoint = blank_func
+	BagItemSearchBox.SetParent = blank_func
 
-BagItemAutoSortButton.ClearAllPoints = blank_func
-BagItemAutoSortButton.SetPoint = blank_func
-BagItemAutoSortButton.SetParent = blank_func
+	BagItemAutoSortButton:ClearAllPoints()
+	BagItemAutoSortButton:SetPoint("TOPLEFT", BagItemSearchBox, "TOPRIGHT", 5, 0)
+	BagItemAutoSortButton:SetSize(18,18)
+	BagItemAutoSortButton:SetParent(BagItemSearchBox)
+	BagItemAutoSortButton:Show()
+	BagItemAutoSortButton:GetNormalTexture():SetTexCoord(.13, 0.87, .13, 0.87)
+	E:CreateBackdrop(BagItemAutoSortButton, nil, {0,0,0,1}, {0,0,0,0.6})
 
+	BagItemAutoSortButton.ClearAllPoints = blank_func
+	BagItemAutoSortButton.SetPoint = blank_func
+	BagItemAutoSortButton.SetParent = blank_func
+
+end 
 
 
 local bankFrame = CreateFrame("Frame", frameHeader.."bankFrame", UIParent)
@@ -446,9 +458,14 @@ end
 
 bankFrame:SetScript("OnShow", CheckReagentFramePurchase)
 
-BankFrameMoneyFrameInset:Hide()
-BankFrameMoneyFrameBorder:Hide()
-BankFrameCloseButton:Hide()
+if ( BankFrameMoneyFrameInset ) then 
+	BankFrameMoneyFrameInset:Hide()
+	BankFrameMoneyFrameBorder:Hide()
+end 
+if ( BankFrameCloseButton ) then 
+	BankFrameCloseButton:Hide()
+end 
+
 BankPortraitTexture:Hide()
 
 BankFrame:EnableMouse(false)
@@ -475,69 +492,78 @@ BankSlotsFrame:DisableDrawLayer("BORDER")
 ]]
 
 for i=1, 7 do
-BankSlotsFrame["Bag"..i]:SetParent(bankFrame)
-BankSlotsFrame["Bag"..i]:Show()
-BankSlotsFrame["Bag"..i]:ClearAllPoints()
-BankSlotsFrame["Bag"..i]:SetPoint("BOTTOMLEFT", bankFrame, "BOTTOMLEFT", 30+39*(i), 30)
+	if ( BankSlotsFrame["Bag"..i] ) then 
+		BankSlotsFrame["Bag"..i]:SetParent(bankFrame)
+		BankSlotsFrame["Bag"..i]:Show()
+		BankSlotsFrame["Bag"..i]:ClearAllPoints()
+		BankSlotsFrame["Bag"..i]:SetPoint("BOTTOMLEFT", bankFrame, "BOTTOMLEFT", 30+39*(i), 30)
+	end 
 end
 
-BankFrameTab1:Disable()
-BankFrameTab2:Disable()
+if ( BankFrameTab1 ) then 
+	BankFrameTab1:Disable()
+	BankFrameTab1:Hide()
+	BankFrameTab1.Show = blank_func
+end 
 
-BankFrameTab1:Hide()
-BankFrameTab2:Hide()
-
-BankFrameTab1.Show = blank_func
-BankFrameTab2.Show = blank_func
+if ( BankFrameTab2 ) then 
+	BankFrameTab2:Disable()
+	BankFrameTab2:Hide()
+	BankFrameTab2.Show = blank_func
+end 
 
 BankFrameTitleText:Hide()
 BankFrameTitleText.Show = blank_func
 
-BankItemSearchBox:ClearAllPoints()
-BankItemSearchBox:SetPoint("TOPLEFT", bankFrame, "TOPLEFT", 200, -5)
-BankItemSearchBox:SetPoint("RIGHT", bankFrame, "RIGHT", -40, 0)
+if ( BankItemSearchBox ) then 
+	BankItemSearchBox:ClearAllPoints()
+	BankItemSearchBox:SetPoint("TOPLEFT", bankFrame, "TOPLEFT", 200, -5)
+	BankItemSearchBox:SetPoint("RIGHT", bankFrame, "RIGHT", -40, 0)
 
-BankItemSearchBox:SetParent(BankFrameItem1)
-BankItemSearchBox:SetFrameStrata('HIGH')
-BankItemSearchBox:SetFrameLevel(bankFrame:GetFrameLevel()+1)
-BankItemSearchBox.ClearAllPoints = blank_func
-BankItemSearchBox.SetPoint = blank_func
-BankItemSearchBox.SetParent = blank_func
+	BankItemSearchBox:SetParent(BankFrameItem1)
+	BankItemSearchBox:SetFrameStrata('HIGH')
+	BankItemSearchBox:SetFrameLevel(bankFrame:GetFrameLevel()+1)
+	BankItemSearchBox.ClearAllPoints = blank_func
+	BankItemSearchBox.SetPoint = blank_func
+	BankItemSearchBox.SetParent = blank_func
 
-BankItemAutoSortButton:ClearAllPoints()
-BankItemAutoSortButton:SetPoint("TOPLEFT", BankItemSearchBox, "TOPRIGHT", 5, 0)
-BankItemAutoSortButton:SetParent(BankItemSearchBox)
-BankItemAutoSortButton:SetSize(18,18)
-BankItemAutoSortButton:GetNormalTexture():SetTexCoord(.13, 0.87, .13, 0.87)
-BankItemAutoSortButton:SetScript('OnClick', function()
-	SortBankBags();
-	SortReagentBankBags();
-end)
+	BankItemAutoSortButton:ClearAllPoints()
+	BankItemAutoSortButton:SetPoint("TOPLEFT", BankItemSearchBox, "TOPRIGHT", 5, 0)
+	BankItemAutoSortButton:SetParent(BankItemSearchBox)
+	BankItemAutoSortButton:SetSize(18,18)
+	BankItemAutoSortButton:GetNormalTexture():SetTexCoord(.13, 0.87, .13, 0.87)
+	BankItemAutoSortButton:SetScript('OnClick', function()
+		SortBankBags();
+		SortReagentBankBags();
+	end)
 
-E:CreateBackdrop(BankItemAutoSortButton, nil, {0,0,0,1}, {0,0,0,0.6})
+	E:CreateBackdrop(BankItemAutoSortButton, nil, {0,0,0,1}, {0,0,0,0.6})
 
-BankItemAutoSortButton.ClearAllPoints = blank_func
-BankItemAutoSortButton.SetPoint = blank_func
-BankItemAutoSortButton.SetParent = blank_func
+	BankItemAutoSortButton.ClearAllPoints = blank_func
+	BankItemAutoSortButton.SetPoint = blank_func
+	BankItemAutoSortButton.SetParent = blank_func
+end 
 
 BankFramePurchaseButton:ClearAllPoints()
 BankFramePurchaseButton:SetPoint("BOTTOMLEFT", bankFrame, "BOTTOMLEFT", 100, 0)
 BankFramePurchaseButton:SetParent(bankFrame)
 
-ReagentBankFrameUnlockInfoPurchaseButton:ClearAllPoints()
-ReagentBankFrameUnlockInfoPurchaseButton:SetPoint("BOTTOM", bankFrame, "BOTTOM", 200, 100)
-ReagentBankFrameUnlockInfoPurchaseButton:SetParent(bankFrame)
+if ( ReagentBankFrameUnlockInfoPurchaseButton ) then 
+	ReagentBankFrameUnlockInfoPurchaseButton:ClearAllPoints()
+	ReagentBankFrameUnlockInfoPurchaseButton:SetPoint("BOTTOM", bankFrame, "BOTTOM", 200, 100)
+	ReagentBankFrameUnlockInfoPurchaseButton:SetParent(bankFrame)
 
-ReagentBankFrame.DespositButton:ClearAllPoints()
-ReagentBankFrame.DespositButton:SetPoint("BOTTOM", bankFrame, "BOTTOM", 216, 50)
-ReagentBankFrame.DespositButton:SetParent(bankFrame)
-
+	ReagentBankFrame.DespositButton:ClearAllPoints()
+	ReagentBankFrame.DespositButton:SetPoint("BOTTOM", bankFrame, "BOTTOM", 216, 50)
+	ReagentBankFrame.DespositButton:SetParent(bankFrame)
+end 
 			
 BankSlotsFrame:Show()
-ReagentBankFrame:Show()
 
--- BankSlotsFrame.Hide = BankSlotsFrame.Show
+if ( ReagentBankFrame ) then 
+ReagentBankFrame:Show()
 ReagentBankFrame.Hide = ReagentBankFrame.Show
+end 
 
 local function BuildBagFrame()
 
@@ -714,7 +740,10 @@ function UpdateReagentFrame()
 	end
 end
 
-hooksecurefunc('BuyReagentBank', UpdateReagentFrame)
+if ( BuyReagentBank ) then 
+	hooksecurefunc('BuyReagentBank', UpdateReagentFrame)
+end 
+
 --[==[
 
 	BankFrame:IsShown() then
@@ -957,15 +986,18 @@ function ContainerFrame_GenerateFrame(frame, size, id)
 			bagsFrame:SetHeight(header_1 + 20 + 30 + 4*(39))
 			bagsFrame:SetWidth(5 + 4*39)
 			
+			if ( BagItemSearchBox ) then
 			BagItemSearchBox:_SetPoint("TOPLEFT", bagsFrame, "TOPLEFT", 15, -30)
 			BagItemSearchBox:_SetPoint("TOPRIGHT", bagsFrame, "TOPRIGHT", -30, -30)
-
+			end
 		else
 			bagsFrame:SetHeight(((E.db.containers.spacing+36)*(numrows+1)+40+header_1)-E.db.containers.spacing)			
 			bagsFrame:SetWidth(E.db.containers.bpr*39)
 			
+			if ( BagItemSearchBox ) then
 			BagItemSearchBox:_SetPoint("TOPLEFT", bagsFrame, "TOPLEFT", 170, -5)
 			BagItemSearchBox:_SetPoint("TOPRIGHT", bagsFrame, "TOPRIGHT", -30, -5)
+			end
 		end
 	else
 		local numrows, lastrowbutton, numbuttons, lastbutton = UpdateBankItems()
@@ -1229,7 +1261,7 @@ do
 
 	IconText.QueueUpdate = function(self)
 	
-		
+		if ( E.isClassic ) then return end
 		if queueframe:IsShown() then return end
 		
 	--	print("QUEUE")
@@ -1407,12 +1439,15 @@ do
 	bankFrame:HookScript('OnShow', IconText.QueueUpdate)
 	
 	IconText.eventframe = CreateFrame("Frame")	
-	IconText.eventframe:RegisterEvent("EQUIPMENT_SETS_CHANGED")
-	IconText.eventframe:RegisterEvent("BAG_UPDATE")
-	IconText.eventframe:RegisterEvent("BANKFRAME_OPENED")
-	IconText.eventframe:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
-	IconText.eventframe:RegisterEvent("PLAYERBANKSLOTS_CHANGED")
-	IconText.eventframe:SetScript("OnEvent", IconText.QueueUpdate)
+
+	if ( not E.isClassic ) then
+		IconText.eventframe:RegisterEvent("EQUIPMENT_SETS_CHANGED")
+		IconText.eventframe:RegisterEvent("BAG_UPDATE")
+		IconText.eventframe:RegisterEvent("BANKFRAME_OPENED")
+		IconText.eventframe:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
+		IconText.eventframe:RegisterEvent("PLAYERBANKSLOTS_CHANGED")
+		IconText.eventframe:SetScript("OnEvent", IconText.QueueUpdate)
+	end 
 end
 
 do
@@ -1682,15 +1717,40 @@ local function LoadModule()
 		end,
 	}
 	
-	if GetNumSpecializations() == 0 then
-		local handler = CreateFrame('Frame')
-		handler:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
-		handler:RegisterEvent("PLAYER_LOGIN")
-		handler:SetScript('OnEvent', function(self, event, unit)
-			unit = unit or 'player'
-			if unit ~= 'player' then return end
-			
-			if GetNumSpecializations() == 0 then return end
+	if ( not E.isClassic ) then 
+		if GetNumSpecializations() == 0 then
+			local handler = CreateFrame('Frame')
+			handler:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
+			handler:RegisterEvent("PLAYER_LOGIN")
+			handler:SetScript('OnEvent', function(self, event, unit)
+				unit = unit or 'player'
+				if unit ~= 'player' then return end
+				
+				if GetNumSpecializations() == 0 then return end
+				for i=1, GetNumSpecializations() do
+					local id, name, description, icon, background, role = GetSpecializationInfo(i)
+					local tName = name and "|T"..icon ..":0:0:0:0|t"..name or L['Not selected']
+					
+					if E.db.containers.apSpecSettings[id] == nil then
+						E.db.containers.apSpecSettings[id] = true
+					end
+					
+					E.GUI.args.Containers.args.ApLockerSpec.args['spec'..i..'choose'] = {
+						name = tName,
+						order = 1.9,
+						type = "toggle",
+						set = function(self, value)
+							E.db.containers.apSpecSettings[id] = not E.db.containers.apSpecSettings[id]
+						end,
+						get = function(self) 
+							return E.db.containers.apSpecSettings[id]
+						end,
+					}
+				end
+				
+				handler:UnregisterAllEvents()
+			end)
+		else
 			for i=1, GetNumSpecializations() do
 				local id, name, description, icon, background, role = GetSpecializationInfo(i)
 				local tName = name and "|T"..icon ..":0:0:0:0|t"..name or L['Not selected']
@@ -1698,7 +1758,7 @@ local function LoadModule()
 				if E.db.containers.apSpecSettings[id] == nil then
 					E.db.containers.apSpecSettings[id] = true
 				end
-				
+					
 				E.GUI.args.Containers.args.ApLockerSpec.args['spec'..i..'choose'] = {
 					name = tName,
 					order = 1.9,
@@ -1711,32 +1771,8 @@ local function LoadModule()
 					end,
 				}
 			end
-			
-			handler:UnregisterAllEvents()
-		end)
-	else
-		for i=1, GetNumSpecializations() do
-			local id, name, description, icon, background, role = GetSpecializationInfo(i)
-			local tName = name and "|T"..icon ..":0:0:0:0|t"..name or L['Not selected']
-			
-			if E.db.containers.apSpecSettings[id] == nil then
-				E.db.containers.apSpecSettings[id] = true
-			end
-				
-			E.GUI.args.Containers.args.ApLockerSpec.args['spec'..i..'choose'] = {
-				name = tName,
-				order = 1.9,
-				type = "toggle",
-				set = function(self, value)
-					E.db.containers.apSpecSettings[id] = not E.db.containers.apSpecSettings[id]
-				end,
-				get = function(self) 
-					return E.db.containers.apSpecSettings[id]
-				end,
-			}
 		end
 	end
-	
 end
 
 E:OnInit2(LoadModule)

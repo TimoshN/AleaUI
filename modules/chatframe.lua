@@ -737,9 +737,14 @@ do
 		updateGameChatButtons(frame)
 	--	frame:SetIgnoreFramePositionManager(true)
 		
-		frame.ScrollBar:Kill()
-		frame.ScrollToBottomButton:Kill()
-		
+		if ( frame.ScrollBar ) then
+			frame.ScrollBar:Kill()
+		end 
+
+		if ( frame.ScrollToBottomButton ) then 
+			frame.ScrollToBottomButton:Kill()
+		end 
+
 		_G[name.."Tab"]:HookScript("OnClick", SelectChatFrame)
 		_G[name.."Tab"]:GetFontString():SetFont(E.media.default_font, E.media.default_font_size-1, "OUTLINE")
 		frame:SetClampRectInsets(0, 0, 0, 0)
@@ -750,14 +755,30 @@ do
 			end
 		end)
 		
-		_G[name.."EditBoxLeft"]:SetAlpha(0)
-		_G[name.."EditBoxRight"]:SetAlpha(0)
-		_G[name.."EditBoxMid"]:SetAlpha(0)
-
-		_G[name.."EditBoxFocusLeft"]:SetAlpha(0)
-		_G[name.."EditBoxFocusRight"]:SetAlpha(0)
-		_G[name.."EditBoxFocusMid"]:SetAlpha(0)				
+		if ( _G[name.."EditBoxLeft"] ) then
+			_G[name.."EditBoxLeft"]:SetAlpha(0)
+		end 
 		
+		if ( _G[name.."EditBoxRight"] ) then
+			_G[name.."EditBoxRight"]:SetAlpha(0)
+		end 
+
+		if (_G[name.."EditBoxMid"]) then 
+			_G[name.."EditBoxMid"]:SetAlpha(0)
+		end 
+	
+		if ( _G[name.."EditBoxFocusLeft"] ) then 
+			_G[name.."EditBoxFocusLeft"]:SetAlpha(0)
+		end 
+
+		if ( _G[name.."EditBoxFocusRight"] ) then
+			_G[name.."EditBoxFocusRight"]:SetAlpha(0)
+		end 
+
+		if ( _G[name.."EditBoxFocusMid"] ) then
+			_G[name.."EditBoxFocusMid"]:SetAlpha(0)				
+		end 
+
 		frame:SetFrameStrata("DIALOG")
 		
 		frame.editBox:ClearAllPoints()
@@ -784,20 +805,22 @@ do
 		
 		frame.editBox:Hide()
 		
-		hooksecurefunc(_G[name.."EditBoxFocusRight"], "SetVertexColor", function(self, r,g,b,a)
-			self.border:SetBackdropBorderColor(r,g,b,1)		
-		end)
-		
-		hooksecurefunc(_G[name.."EditBoxFocusRight"], "Show", function(self, r,g,b,a)
-			self.border:Show()
-		end)
-		
-		hooksecurefunc(_G[name.."EditBoxFocusRight"], "Hide", function(self, r,g,b,a)
-			self.border:Hide()
-		end)
-		
-		_G[name.."EditBoxFocusRight"].border = frame.editBox.border
-		
+		if ( _G[name.."EditBoxFocusRight"] ) then
+			hooksecurefunc(_G[name.."EditBoxFocusRight"], "SetVertexColor", function(self, r,g,b,a)
+				self.border:SetBackdropBorderColor(r,g,b,1)		
+			end)
+			
+			hooksecurefunc(_G[name.."EditBoxFocusRight"], "Show", function(self, r,g,b,a)
+				self.border:Show()
+			end)
+			
+			hooksecurefunc(_G[name.."EditBoxFocusRight"], "Hide", function(self, r,g,b,a)
+				self.border:Hide()
+			end)
+			
+			_G[name.."EditBoxFocusRight"].border = frame.editBox.border
+		end 
+
 		--Enable moving in editbox without holding alt
 		frame.editBox:SetAltArrowKeyMode(nil)
 
@@ -808,7 +831,9 @@ do
 		
 		for i=1, #bordersTex do	
 			_G[name..bordersTex[i]]:SetTexture(nil)
-			_G[name.."ButtonFrame"..bordersTex[i]]:SetTexture(nil)
+			if ( _G[name.."ButtonFrame"..bordersTex[i]] ) then 
+				_G[name.."ButtonFrame"..bordersTex[i]]:SetTexture(nil)
+			end
 		end
 
 		tabTextUpdate(_G[name.."Tab"], _G[name.."Tab"]:GetFontString():GetText())
@@ -1832,43 +1857,46 @@ do
 		end	
 	end
 	
-	
-	QuickJoinToastButton:ClearAllPoints()
-	QuickJoinToastButton:SetPoint('CENTER', toastButtonMover, 'CENTER', 0, 0) 
-	
-	QuickJoinToastButton.Toast2.Text:SetFont(E.media.default_font2, E.media.default_font_size2)
-	QuickJoinToastButton.Toast.Text:SetFont(E.media.default_font2, E.media.default_font_size2)
-	
-	
-	hooksecurefunc(QuickJoinToastButton,'SetPoint', function(self,a1,a2,a3,a4,a5)
-		if (a1 ~= 'CENTER' or a2 ~= toastButtonMover or a3 ~= 'CENTER' or a4 ~= 0 or a5 ~= 0) then
-			QuickJoinToastButton:ClearAllPoints()
-			QuickJoinToastButton:SetPoint('CENTER', toastButtonMover, 'CENTER', 0, 0)
-		end
-	end)
+	if ( QuickJoinToastButton ) then 
+		QuickJoinToastButton:ClearAllPoints()
+		QuickJoinToastButton:SetPoint('CENTER', toastButtonMover, 'CENTER', 0, 0) 
+		
+		QuickJoinToastButton.Toast2.Text:SetFont(E.media.default_font2, E.media.default_font_size2)
+		QuickJoinToastButton.Toast.Text:SetFont(E.media.default_font2, E.media.default_font_size2)
+		
+		
+		hooksecurefunc(QuickJoinToastButton,'SetPoint', function(self,a1,a2,a3,a4,a5)
+			if (a1 ~= 'CENTER' or a2 ~= toastButtonMover or a3 ~= 'CENTER' or a4 ~= 0 or a5 ~= 0) then
+				QuickJoinToastButton:ClearAllPoints()
+				QuickJoinToastButton:SetPoint('CENTER', toastButtonMover, 'CENTER', 0, 0)
+			end
+		end)
 
-	hooksecurefunc(QuickJoinToastButton.Toast,'SetPoint', function(self,a1,a2,a3,a4,a5)
-		if (a1 ~= 'LEFT' or a2 ~= QuickJoinToastButton or a3 ~= 'RIGHT' or a4 ~= 0 or a5 ~= -1) then
-			QuickJoinToastButton.Toast:ClearAllPoints()
-			QuickJoinToastButton.Toast:SetPoint('LEFT', QuickJoinToastButton, 'RIGHT', 0, -1)
-		end
-	end)
-	hooksecurefunc(QuickJoinToastButton.Toast2,'SetPoint', function(self,a1,a2,a3,a4,a5)
-		if (a1 ~= 'LEFT' or a2 ~= QuickJoinToastButton or a3 ~= 'RIGHT' or a4 ~= 0 or a5 ~= -1) then
-			QuickJoinToastButton.Toast2:ClearAllPoints()
-			QuickJoinToastButton.Toast2:SetPoint('LEFT', QuickJoinToastButton, 'RIGHT', 0, -1)
-		end
-	end)
+		hooksecurefunc(QuickJoinToastButton.Toast,'SetPoint', function(self,a1,a2,a3,a4,a5)
+			if (a1 ~= 'LEFT' or a2 ~= QuickJoinToastButton or a3 ~= 'RIGHT' or a4 ~= 0 or a5 ~= -1) then
+				QuickJoinToastButton.Toast:ClearAllPoints()
+				QuickJoinToastButton.Toast:SetPoint('LEFT', QuickJoinToastButton, 'RIGHT', 0, -1)
+			end
+		end)
+		hooksecurefunc(QuickJoinToastButton.Toast2,'SetPoint', function(self,a1,a2,a3,a4,a5)
+			if (a1 ~= 'LEFT' or a2 ~= QuickJoinToastButton or a3 ~= 'RIGHT' or a4 ~= 0 or a5 ~= -1) then
+				QuickJoinToastButton.Toast2:ClearAllPoints()
+				QuickJoinToastButton.Toast2:SetPoint('LEFT', QuickJoinToastButton, 'RIGHT', 0, -1)
+			end
+		end)
 
-	
-	function chatframe:UpdateFriendButton()
-		if E.db.chatPanel.EnableFriendButton then
-			QuickJoinToastButton:SetParent(E.UIParent)
-		else
-			QuickJoinToastButton:SetParent(E.hidenframe)
+		
+		function chatframe:UpdateFriendButton()
+			if ( QuickJoinToastButton ) then
+				if E.db.chatPanel.EnableFriendButton then
+					QuickJoinToastButton:SetParent(E.UIParent)
+				else
+					QuickJoinToastButton:SetParent(E.hidenframe)
+				end
+			end
 		end
-	end
-	
+	end 
+
 	local function LoadChatSettings()
 		
 		--E.db.chatPanel.enable_background
@@ -1880,8 +1908,10 @@ do
 			chatFrameBackground:Hide()
 		end
 		
-		chatframe:UpdateFriendButton()
-		
+		if ( chatframe.UpdateFriendButton ) then
+			chatframe:UpdateFriendButton()
+		end
+
 		lastScale = ChatFrame2Tab:GetScale()
 		
 		chatframe:UpdateCombatLogChatSettings()

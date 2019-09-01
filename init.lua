@@ -27,6 +27,9 @@ if E.uibuild >= 70200 then
 	E.removeLagTolerance = true
 end
 
+
+E.isClassic = E.uibuild < 20000
+
 E.media = {}
 E.media.default_font_name = "Gothic-Bold"
 E.media.default_font = [[Interface\AddOns\AleaUI\media\GOTHICB.TTF]]
@@ -217,14 +220,16 @@ function E:SetupCVars()
 --	SetCVar("ConversationMode", "inline")
 	SetCVar("showTutorials", 0)
 	SetCVar("UberTooltips", 1)
+	if ( not E.isClassic ) then 
 	SetCVar("threatWarning", 3)
+	end
 	SetCVar('alwaysShowActionBars', 1)
 	SetCVar('lockActionBars', 1)
 	SetCVar('SpamFilter', 0)
 	SetCVar("whisperMode","inline")
-
+	if ( not E.isClassic ) then 
 	E:LockCVar('displaySpellActivationOverlays', E.chardb.cVars['displaySpellActivationOverlays'] and 1 or 0)
-	
+	end
 	
 	core:UpdateQuestTrackingTooltips()
 end
@@ -237,8 +242,10 @@ function core:PLAYER_LOGIN() -- self - core, 1 - event , 2+ - args
 	E.myrealm = GetRealmName()
 	E.myclass = select(2, UnitClass("player"))
 	
-	core:PLAYER_SPECIALIZATION_CHANGED()	 
-	core:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
+	if ( not E.isClassic ) then 
+		core:PLAYER_SPECIALIZATION_CHANGED()	 
+		core:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
+	end
 
 	E:InitFrames()
 	E:InitFrames3()
@@ -700,6 +707,9 @@ core:RegisterEvent("ADDON_LOADED")
 
 function core:GROUP_ROSTER_UPDATE(event)
 --	print('T', 'Core:GROUP_ROSTER_UPDATE', E.chardb.cVars['showQuestTrackingTooltips'])
+	if (E.isClassic) then 
+		return 
+	end
 	
 	if E.chardb.cVars['showQuestTrackingTooltips'] then
 		E:LockCVar('showQuestTrackingTooltips', 1)		
@@ -722,7 +732,7 @@ core:RegisterEvent('GROUP_LEFT')
 
 
 function core:PLAYER_SPECIALIZATION_CHANGED()	
-	local spec = GetSpecialization()
+	local spec = E.isClassic and 1 or GetSpecialization()
 	
 	if E.myclass == "PRIEST" then
 		if spec == 3 then

@@ -420,11 +420,12 @@ function AB:LoadKeyBinder()
 	else
 		self:RegisterMacro("Blizzard_MacroUI");
 	end
-
-	hooksecurefunc("ActionButton_UpdateFlyout", function()
-		AB:UpdateFlyouts()
-	end)
-	self:UpdateFlyouts()
+	if not E.isClassic then 
+		hooksecurefunc("ActionButton_UpdateFlyout", function()
+			AB:UpdateFlyouts()
+		end)
+		self:UpdateFlyouts() 
+	end
 	
 	local S = E:Module("Skins")
 	

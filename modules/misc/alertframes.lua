@@ -2,6 +2,10 @@
 local L = E.L
 local AM = E:Module("Alerts")
 
+if ( E.isClassic ) then 
+	return 
+end 
+
 local defaults = {
 	enable = true,
 	growUp = true,
@@ -41,9 +45,9 @@ local MAX_QUEUED_ACHIEVEMENT_TOASTS = 6;
 
 	
 local events = {
-	"ACHIEVEMENT_EARNED", 
-	"CRITERIA_EARNED", 
-	"LFG_COMPLETION_REWARD", 
+	'ACHIEVEMENT_EARNED',
+	'LFG_COMPLETION_REWARD',
+	'CRITERIA_EARNED',
 	"GUILD_CHALLENGE_COMPLETED",
 	"CHALLENGE_MODE_COMPLETED",
 	"LOOT_ITEM_ROLL_WON",
@@ -66,6 +70,7 @@ local events = {
 	
 	'SKILL_LINES_CHANGED',
 }	
+
 
 local garrison_icons = {
 	["GarrMission_MissionIcon-Combat"] = {0.39,0.51,0.13,0.25},
@@ -531,6 +536,7 @@ function AM:SHOW_PVP_FACTION_LOOT_TOAST(event, ...)
 end
 
 function AM:ACHIEVEMENT_EARNED(event, achievementID, alreadyEarned)
+	print(event, achievementID, alreadyEarned)
 	
 	local _, name, points, completed, month, day, year, description, flags, icon, rewardText, isGuildAch, wasEarnedByMe, earnedBy = GetAchievementInfo(achievementID);
 	
@@ -938,7 +944,7 @@ function AM:SKILL_LINES_CHANGED(event)
 	AlertProfessionUp(firstAid)
 end
 
-AM:Register(events)
+
 
 function AM:UpdateSize()
 
@@ -947,8 +953,9 @@ end
 
 local function InitAlertMover()
 	E:Mover(mover, "alertMover")
-
 	
+	AM:Register(events)	
+ 
 --	ScenarioAlertFrame1.Show = ScenarioAlertFrame1.Hide
 --	ScenarioAlertFrame1:Hide()
 	AM:UpdateSettings()
@@ -1047,54 +1054,63 @@ else
 	end)
 end
 
-BonusRollMoneyWonFrame:Kill()
-hooksecurefunc('MoneyWonAlertFrame_SetUp', function(self, rewardQuantity)
-	self:Hide()
-	self.animIn:Stop()
-	ALEAUI_GetAlertFrame("MONEY", nil, E.RGBToHex(237, 183, 19)..GetMoneyString(rewardQuantity), "Interface\\Icons\\INV_Misc_Coin_02", 0, 0)
-	AlertFrame:UpdateAnchors();
-end)
+if ( BonusRollMoneyWonFrame ) then 
+	BonusRollMoneyWonFrame:Kill()
+end 
 
-BonusRollLootWonFrame:Kill()
-hooksecurefunc('LootWonAlertFrame_SetUp', function(self, rewardLink, rewardQuantity, rollType, roll, rewardSpecID, isCurrency, showFactionBG, lootSource, lessAwesome, isUpgraded)
-	self:Hide()
-	self.animIn:Stop()
-	
-	local itemName, itemHyperLink, itemRarity, itemTexture, itemLevel, _
-	local color;
-	local r, g, b
-	
-	if (isCurrency == true) then
-		itemName, _, itemTexture, _, _, _, _, itemRarity = GetCurrencyInfo(rewardLink);
-		if ( lootSource == LOOT_SOURCE_GARRISON_CACHE ) then
-			itemName = format(GARRISON_RESOURCES_LOOT, rewardQuantity);
-		else
-			itemName = format(CURRENCY_QUANTITY_TEMPLATE, rewardQuantity, itemName);
-		end
-		itemHyperLink = rewardLink;		
-	else
-		itemName, itemHyperLink, itemRarity, _, _, _, _, _, _, itemTexture = GetItemInfo(rewardLink);
-
-		itemLevel = GetDetailedItemLevelInfo(rewardLink)
-
-		if ( itemLevel ) then 
-			itemLevel = '('.. tostring(itemLevel) ..')'
-		end
-	end
-	
-	color = ItemQualityTable[itemRarity];
-	r, g, b = color and color.r or 1, color and color.g or 1, color and color.b or 1
-	
-	if not itemName then 
+if ( MoneyWonAlertFrame_SetUp ) then 
+	hooksecurefunc('MoneyWonAlertFrame_SetUp', function(self, rewardQuantity)
+		self:Hide()
+		self.animIn:Stop()
+		ALEAUI_GetAlertFrame("MONEY", nil, E.RGBToHex(237, 183, 19)..GetMoneyString(rewardQuantity), "Interface\\Icons\\INV_Misc_Coin_02", 0, 0)
 		AlertFrame:UpdateAnchors();
-		return 
-	end
-	
-	ALEAUI_GetAlertFrame("ITEM", nil, E.RGBToHex(r*255, g*255, b*255)..itemName..(itemLevel or '') , itemTexture, rewardLink, 0)
-	
-	AlertFrame:UpdateAnchors();
-end)
+	end)
+end 
 
+if ( BonusRollLootWonFrame ) then 
+	BonusRollLootWonFrame:Kill()
+end 
+
+if ( LootWonAlertFrame_SetUp ) then
+	hooksecurefunc('LootWonAlertFrame_SetUp', function(self, rewardLink, rewardQuantity, rollType, roll, rewardSpecID, isCurrency, showFactionBG, lootSource, lessAwesome, isUpgraded)
+		self:Hide()
+		self.animIn:Stop()
+		
+		local itemName, itemHyperLink, itemRarity, itemTexture, itemLevel, _
+		local color;
+		local r, g, b
+		
+		if (isCurrency == true) then
+			itemName, _, itemTexture, _, _, _, _, itemRarity = GetCurrencyInfo(rewardLink);
+			if ( lootSource == LOOT_SOURCE_GARRISON_CACHE ) then
+				itemName = format(GARRISON_RESOURCES_LOOT, rewardQuantity);
+			else
+				itemName = format(CURRENCY_QUANTITY_TEMPLATE, rewardQuantity, itemName);
+			end
+			itemHyperLink = rewardLink;		
+		else
+			itemName, itemHyperLink, itemRarity, _, _, _, _, _, _, itemTexture = GetItemInfo(rewardLink);
+
+			itemLevel = GetDetailedItemLevelInfo(rewardLink)
+
+			if ( itemLevel ) then 
+				itemLevel = '('.. tostring(itemLevel) ..')'
+			end
+		end
+		
+		color = ItemQualityTable[itemRarity];
+		r, g, b = color and color.r or 1, color and color.g or 1, color and color.b or 1
+		
+		if not itemName then 
+			AlertFrame:UpdateAnchors();
+			return 
+		end
+		
+		ALEAUI_GetAlertFrame("ITEM", nil, E.RGBToHex(r*255, g*255, b*255)..itemName..(itemLevel or '') , itemTexture, rewardLink, 0)
+		
+		AlertFrame:UpdateAnchors();
+	end)
+end 
 
 E:OnInit2(InitAlertMover)
 

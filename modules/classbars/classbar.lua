@@ -225,4 +225,8 @@ local function InitClassBars()
 	ClassBarUpdate()
 end
 
+if ( E.isClassic ) then 
+	return 
+end 
+
 E:OnInit2(InitClassBars)

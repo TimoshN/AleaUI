@@ -322,7 +322,7 @@ local function updateStatus()
 		end
 	end
 	
-	if E.db.xpbar.enableArtifact then
+	if E.db.xpbar.enableArtifact and not E.isClassic then
 
 		local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem(); 
 		
@@ -353,7 +353,7 @@ local function updateStatus()
 		artifactBar:Hide()
 	end
 	
-	if E.db.xpbar.enableHonor then
+	if E.db.xpbar.enableHonor and not E.isClassic  then
 		
 		local current = UnitHonor("player");
 		local max = UnitHonorMax("player");
@@ -428,84 +428,86 @@ local function updateStatus()
 			end
 		end
 		
-		local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem(); 
+		if ( not E.isClassic ) then
+			local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem(); 
 
-		if azeriteItemLocation then
-			if not IsMaxLevel() then GameTooltip:AddLine(" ") end
+			if azeriteItemLocation then
+				if not IsMaxLevel() then GameTooltip:AddLine(" ") end
 
-			local itemName, itemLink, _, _, _, _, _, _, _, itemIcon = GetItemInfo(158075)
+				local itemName, itemLink, _, _, _, _, _, _, _, itemIcon = GetItemInfo(158075)
 
-			GameTooltip:AddLine(L['Artifact']..': '..format('|T%s:14:14:0:0:64:64:4:60:4:60|t', itemIcon or '')..(itemLink or '[Heart of Azeroth]')..' ['..artifactBar.currentLevel..']')
-			GameTooltip:AddLine(string.format(L['Current']..': %d/%d (%d%%)', artifactBar.xp, (artifactBar.totalLevelXP), artifactBar.xp/artifactBar.totalLevelXP*100))
-			GameTooltip:AddLine(string.format(L['VALUE_LEFT']..': %d', artifactBar.xpToNextLevel))
-		end
-		
-		if E.db.xpbar.enableHonor then
-			GameTooltip:AddLine(" ")
-			GameTooltip:AddLine(PVP..'['..(UnitHonorLevel("player") or 0)..']')
-			GameTooltip:AddLine(string.format(L['Value']..': %s/%s (%d%%)', CommaValue(UnitHonor("player")), CommaValue(UnitHonorMax("player")), (UnitHonor("player")/UnitHonorMax("player"))*100))
-		end 
-
-		if GetWatchedFactionInfo() then
-			GameTooltip:AddLine(" ")
-
-			local name, rank, minRep, maxRep, value, factionID = GetWatchedFactionInfo()
-			
-			local left = maxRep-minRep
-			
-			if left == 0 then 
-				minRep = 0
-				value = 999
-				maxRep = 1000
-			end 
-
-			if (C_Reputation.IsFactionParagon(factionID)) then
-				local currentValue, threshold = C_Reputation.GetFactionParagonInfo(factionID);
-				minRep, maxRep, value = 0, threshold, mod(currentValue, threshold);			
+				GameTooltip:AddLine(L['Artifact']..': '..format('|T%s:14:14:0:0:64:64:4:60:4:60|t', itemIcon or '')..(itemLink or '[Heart of Azeroth]')..' ['..artifactBar.currentLevel..']')
+				GameTooltip:AddLine(string.format(L['Current']..': %d/%d (%d%%)', artifactBar.xp, (artifactBar.totalLevelXP), artifactBar.xp/artifactBar.totalLevelXP*100))
+				GameTooltip:AddLine(string.format(L['VALUE_LEFT']..': %d', artifactBar.xpToNextLevel))
 			end
+			
+			if E.db.xpbar.enableHonor then
+				GameTooltip:AddLine(" ")
+				GameTooltip:AddLine(PVP..'['..(UnitHonorLevel("player") or 0)..']')
+				GameTooltip:AddLine(string.format(L['Value']..': %s/%s (%d%%)', CommaValue(UnitHonor("player")), CommaValue(UnitHonorMax("player")), (UnitHonor("player")/UnitHonorMax("player"))*100))
+			end 
+				
+			if GetWatchedFactionInfo() then
+				GameTooltip:AddLine(" ")
 
-			GameTooltip:AddLine(string.format(L['Faction']..': %s', name))
-			GameTooltip:AddLine(string.format(L['Reputation']..': |c'..colorize(rank)..'%s|r', FactionInfo[rank][2]))
-			GameTooltip:AddLine(string.format(L['Value']..': %s/%s (%d%%)', CommaValue(value-minRep), CommaValue(maxRep-minRep), (value-minRep)/(maxRep-minRep)*100))
-			GameTooltip:AddLine(string.format(L['VALUE_LEFT']..': %s', CommaValue(maxRep-value)))
-		end
-	
-		local addSpance = false 
-
-		for k,v in pairs(BFAReps) do
-			if (C_Reputation.IsFactionParagon(v)) then
-
-				if not addSpance then
-					GameTooltip:AddLine(" ")
+				local name, rank, minRep, maxRep, value, factionID = GetWatchedFactionInfo()
+				
+				local left = maxRep-minRep
+				
+				if left == 0 then 
+					minRep = 0
+					value = 999
+					maxRep = 1000
 				end 
-				addSpance = true 
 
-				if not BFARepsNames[v] then
-					for factionIndex = 1, GetNumFactions() do
-						local name, description, standingID, barMin, barMax, barValue, atWarWith, canToggleAtWar, isHeader, isCollapsed, 
-							hasRep, isWatched, isChild, factionID, hasBonusRepGain, canBeLFGBonus = GetFactionInfo(factionIndex);
-					   
-						if ( factionID == v ) then
-					   
-							BFARepsNames[v] = name
-							break
+				if (C_Reputation.IsFactionParagon(factionID)) then
+					local currentValue, threshold = C_Reputation.GetFactionParagonInfo(factionID);
+					minRep, maxRep, value = 0, threshold, mod(currentValue, threshold);			
+				end
+
+				GameTooltip:AddLine(string.format(L['Faction']..': %s', name))
+				GameTooltip:AddLine(string.format(L['Reputation']..': |c'..colorize(rank)..'%s|r', FactionInfo[rank][2]))
+				GameTooltip:AddLine(string.format(L['Value']..': %s/%s (%d%%)', CommaValue(value-minRep), CommaValue(maxRep-minRep), (value-minRep)/(maxRep-minRep)*100))
+				GameTooltip:AddLine(string.format(L['VALUE_LEFT']..': %s', CommaValue(maxRep-value)))
+			end
+		
+			local addSpance = false 
+
+			for k,v in pairs(BFAReps) do
+				if (C_Reputation.IsFactionParagon(v)) then
+
+					if not addSpance then
+						GameTooltip:AddLine(" ")
+					end 
+					addSpance = true 
+
+					if not BFARepsNames[v] then
+						for factionIndex = 1, GetNumFactions() do
+							local name, description, standingID, barMin, barMax, barValue, atWarWith, canToggleAtWar, isHeader, isCollapsed, 
+								hasRep, isWatched, isChild, factionID, hasBonusRepGain, canBeLFGBonus = GetFactionInfo(factionIndex);
+						
+							if ( factionID == v ) then
+						
+								BFARepsNames[v] = name
+								break
+							end
 						end
 					end
+					
+					local currentValue, threshold, rewardQuestID, hasRewardPending = C_Reputation.GetFactionParagonInfo(v);
+					local minRep, maxRep, value = 0, threshold, mod(currentValue, threshold);		
+					local color = ''
+					
+					if ( hasRewardPending ) then
+						value = maxRep
+						color = '|cFF00FF00'
+					end
+					
+					GameTooltip:AddLine(string.format(color..BFARepsNames[v]..': %s/%s (%d%%)', CommaValue(value-minRep), CommaValue(maxRep-minRep), (value-minRep)/(maxRep-minRep)*100))
 				end
-				
-				local currentValue, threshold, rewardQuestID, hasRewardPending = C_Reputation.GetFactionParagonInfo(v);
-				local minRep, maxRep, value = 0, threshold, mod(currentValue, threshold);		
-				local color = ''
-				
-				if ( hasRewardPending ) then
-					value = maxRep
-					color = '|cFF00FF00'
-				end
-				
-				GameTooltip:AddLine(string.format(color..BFARepsNames[v]..': %s/%s (%d%%)', CommaValue(value-minRep), CommaValue(maxRep-minRep), (value-minRep)/(maxRep-minRep)*100))
 			end
-		end
 	
+		end 
 
 		GameTooltip:Show()
 	end)
@@ -513,29 +515,31 @@ local function updateStatus()
 		GameTooltip:Hide()
 	end)
 	
-	local paragonHeader = true
-	local paragonText = ''
-	for factionIndex = 1, GetNumFactions() do
-			local name, description, standingId, bottomValue, topValue, earnedValue, atWarWith, canToggleAtWar, isHeader, isCollapsed, hasRep, isWatched, isChild, factionID = GetFactionInfo(factionIndex)
-			
-			if hasRep or not isHeader and C_Reputation.IsFactionParagon(factionID) then
-
-			local currentValue, threshold, rewardQuestID, hasRewardPending = C_Reputation.GetFactionParagonInfo(factionID);
-
-			if hasRewardPending then
-				if paragonHeader then
-					paragonText = ''
-				end
+	if ( not E.isClassic ) then
+		local paragonHeader = true
+		local paragonText = ''
+		for factionIndex = 1, GetNumFactions() do
+				local name, description, standingId, bottomValue, topValue, earnedValue, atWarWith, canToggleAtWar, isHeader, isCollapsed, hasRep, isWatched, isChild, factionID = GetFactionInfo(factionIndex)
 				
-				paragonText = paragonText..'  '..name
-			--	print("Faction: " .. name .. " - " .. earnedValue, hasRewardPending)   
-			else         
+				if hasRep or not isHeader and C_Reputation.IsFactionParagon(factionID) then
 
-			end     
+				local currentValue, threshold, rewardQuestID, hasRewardPending = C_Reputation.GetFactionParagonInfo(factionID);
+
+				if hasRewardPending then
+					if paragonHeader then
+						paragonText = ''
+					end
+					
+					paragonText = paragonText..'  '..name
+				--	print("Faction: " .. name .. " - " .. earnedValue, hasRewardPending)   
+				else         
+
+				end     
+			end
 		end
-	end
 
-	paragonReputationText:SetText(paragonText)
+		paragonReputationText:SetText(paragonText)
+	end
 end
 
 -- Event Stuff -----------
@@ -548,13 +552,17 @@ frame:RegisterEvent("UPDATE_EXHAUSTION")
 frame:RegisterEvent("CHAT_MSG_COMBAT_FACTION_CHANGE")
 frame:RegisterEvent("UPDATE_FACTION")
 frame:RegisterEvent("PLAYER_ENTERING_WORLD")
-frame:RegisterEvent("ARTIFACT_XP_UPDATE")
-frame:RegisterEvent("ARTIFACT_UPDATE")
-frame:RegisterEvent("ARTIFACT_CLOSE")
---frame:RegisterUnitEvent("UNIT_INVENTORY_CHANGED", 'player')
-frame:RegisterEvent("AZERITE_ITEM_EXPERIENCE_CHANGED")
-frame:RegisterEvent("HONOR_XP_UPDATE");
-frame:RegisterEvent("HONOR_LEVEL_UPDATE");
+
+if ( not E.isClassic ) then 
+	frame:RegisterEvent("ARTIFACT_XP_UPDATE")
+	frame:RegisterEvent("ARTIFACT_UPDATE")
+	frame:RegisterEvent("ARTIFACT_CLOSE")
+	--frame:RegisterUnitEvent("UNIT_INVENTORY_CHANGED", 'player')
+	frame:RegisterEvent("AZERITE_ITEM_EXPERIENCE_CHANGED")
+	frame:RegisterEvent("HONOR_XP_UPDATE");		
+	frame:RegisterEvent("HONOR_LEVEL_UPDATE");
+end 
+
 frame:RegisterEvent("PLAYER_UPDATE_RESTING");
 frame:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
 	

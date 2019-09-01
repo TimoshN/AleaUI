@@ -14,6 +14,11 @@ local default_border_color_dark = Skins.default_border_color_dark
 
 local garrisonAddon = "Blizzard_GarrisonUI"
 
+if ( AleaUI.isClassic ) then 
+	return 
+end 
+
+
 local e = CreateFrame("Frame")
 e.elapsed = 0
 e.attept = 0

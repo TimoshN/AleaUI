@@ -503,6 +503,14 @@ local options = {
 
 E.default_settings.actionbars = options
 
+local GetVehicleBarIndex = GetVehicleBarIndex
+local GetOverrideBarIndex = GetOverrideBarIndex
+
+if (E.isClassic) then 
+	GetVehicleBarIndex = function() return 1 end 
+	GetOverrideBarIndex = function() return 1 end
+end 
+
 AB["handledBars"] = {} --List of all bars
 AB["handledbuttons"] = {} --List of all buttons that have been modified.
 AB["barDefaults"] = {
@@ -620,23 +628,27 @@ function AB:PositionAndSizeBar(barName)
 		bar.artWork.back:SetSize(opts.artwork.width+opts.artwork.background_inset+opts.artwork.background_inset, opts.artwork.height+opts.artwork.background_inset+opts.artwork.background_inset)
 		bar.artWork.back:SetPoint("BOTTOMLEFT", bar.artWork, "BOTTOMLEFT", -opts.artwork.background_inset, -opts.artwork.background_inset)
 		
+		if ( not E.isClassic) then 
 		bar.artWork:RegisterEvent('VEHICLE_UPDATE')
 		bar.artWork:RegisterEvent('UNIT_ENTERED_VEHICLE')
 		bar.artWork:RegisterEvent('UNIT_ENTERING_VEHICLE')
 		bar.artWork:RegisterEvent('UNIT_EXITED_VEHICLE')
 		bar.artWork:RegisterEvent('UNIT_EXITING_VEHICLE')
-	
+		end
+
 		bar.artWork:Show()
 		bar.artWork.back:Show()
 		
 		AB.VehicleBarArtWorkVisability(bar.artWork)
 	else
-		bar.artWork:UnregisterEvent('VEHICLE_UPDATE')
-		bar.artWork:UnregisterEvent('UNIT_ENTERED_VEHICLE')
-		bar.artWork:UnregisterEvent('UNIT_ENTERING_VEHICLE')
-		bar.artWork:UnregisterEvent('UNIT_EXITED_VEHICLE')
-		bar.artWork:UnregisterEvent('UNIT_EXITING_VEHICLE')
-		
+		if ( not E.isClassic) then 
+			bar.artWork:UnregisterEvent('VEHICLE_UPDATE')
+			bar.artWork:UnregisterEvent('UNIT_ENTERED_VEHICLE')
+			bar.artWork:UnregisterEvent('UNIT_ENTERING_VEHICLE')
+			bar.artWork:UnregisterEvent('UNIT_EXITED_VEHICLE')
+			bar.artWork:UnregisterEvent('UNIT_EXITING_VEHICLE')
+		end
+
 		bar.artWork:Hide()
 		bar.artWork.back:Hide()
 	end
@@ -802,18 +814,6 @@ function AB:PositionAndSizeBar(barName)
 		bar:SetFrameRef("MainMenuBarArtFrame", MainMenuBarArtFrame)
 
 		if barName == 'bar1' then
-			-- RegisterStateDriver(bar, "vehicleFix", "[vehicleui] true;false")
-			-- bar:SetAttribute("_onstate-vehicleFix", [[
-			-- 	print('vehicleFix', newstate, HasVehicleActionBar(), GetVehicleBarIndex() )
-
-			-- 	if ( HasVehicleActionBar() ) then 
-			-- 		local index = GetVehicleBarIndex()
-			-- 		self:SetAttribute("state", index)
-			-- 		self:ChildUpdate("state", index)
-			-- 		self:GetFrameRef("MainMenuBarArtFrame"):SetAttribute("actionpage", index)
-			-- 	end
-			-- ]])
-
 			RegisterStateDriver(bar, "overridebarFix", "[overridebar] true;false")
 			bar:SetAttribute("_onstate-overridebarFix", [[
 				--print('overridebarFix', newstate, HasOverrideActionBar(), GetOverrideBarIndex())
@@ -825,100 +825,7 @@ function AB:PositionAndSizeBar(barName)
 					self:GetFrameRef("MainMenuBarArtFrame"):SetAttribute("actionpage", index)
 				end
 			]])	
-
-			-- RegisterStateDriver(bar, "possessbarFix", "[possessbar] 1;0")
-			-- bar:SetAttribute("_onstate-possessbarFix", [[
-			-- 	print('possessbarFix', newstate, HasOverrideActionBar(), GetOverrideBarIndex())
-
-			-- ]])
-
-			-- RegisterStateDriver(bar, "pagerFix", "[vehicleui] vehicle; [possessbar] possess; [overridebar] override; none;")
-			-- bar:SetAttribute("_onstate-pagerFix", [[
-			-- 	print('pagerFix', newstate)
-
-			-- 	if ( newstate == 'vehicle') then
-			-- 		local index = GetVehicleBarIndex()
-			-- 		self:SetAttribute("state", index)
-			-- 		self:ChildUpdate("state", index)
-			-- 		self:GetFrameRef("MainMenuBarArtFrame"):SetAttribute("actionpage", index)
-			-- 	elseif ( possess == 'possess' ) then
-
-			-- 	elseif ( override == 'override'  ) then
-			-- 		local index = GetOverrideBarIndex()
-			-- 		self:SetAttribute("state", index)
-			-- 		self:ChildUpdate("state", index)
-			-- 		self:GetFrameRef("MainMenuBarArtFrame"):SetAttribute("actionpage", index)
-			-- 	else
-			-- 		local newCondition = self:GetAttribute("newCondition")
-			-- 		if newCondition then
-			-- 			local index = SecureCmdOptionParse(newCondition)
-			-- 			self:SetAttribute("state", index)
-			-- 			self:ChildUpdate("state", index)
-			-- 			self:GetFrameRef("MainMenuBarArtFrame"):SetAttribute("actionpage", index)
-			-- 		end
-			-- 	end
-			-- ]])
 		end 
-
-		-- RegisterStateDriver(bar, "overridebarFix", "[overridebar] 1;0")
-		-- bar:SetAttribute("_onstate-overridebarFix", [[
-
-		-- bar:SetFrameRef("MainMenuBarArtFrame", MainMenuBarArtFrame)
-		-- if barName == "bar1" then
-		-- 	RegisterStateDriver(bar, "vehicleFix", "[vehicleui] 1;0")
-		-- 	bar:SetAttribute("_onstate-vehicleFix", [[
-
-		-- 		print(UnitHasVehicleUI('player'))
-
-		-- 		local bar = self
-		-- 		local ParsedText = SecureCmdOptionParse(self:GetAttribute("page"))
-
-		-- 		if newstate == 1 then
-		-- 			if(HasVehicleActionBar()) then
-		-- 				local index = GetVehicleBarIndex() -- This should update the bar correctly for King's Rest now.
-		-- 				bar:SetAttribute("state", index)
-		-- 				bar:ChildUpdate("state", index)
-		-- 				self:GetFrameRef("MainMenuBarArtFrame"):SetAttribute("actionpage", index) -- Update MainMenuBarArtFrame too.
-		-- 			else
-		-- 				if HasTempShapeshiftActionBar() and self:GetAttribute("hasTempBar") then
-		-- 					ParsedText = GetTempShapeshiftBarIndex() or ParsedText
-		-- 				end
-
-		-- 				if ParsedText ~= 0 then
-		-- 					bar:SetAttribute("state", ParsedText)
-		-- 					bar:ChildUpdate("state", ParsedText)
-		-- 					self:GetFrameRef("MainMenuBarArtFrame"):SetAttribute("actionpage", ParsedText)
-		-- 				else
-		-- 					local newCondition = bar:GetAttribute("newCondition")
-		-- 					if newCondition then
-		-- 						newstate = SecureCmdOptionParse(newCondition)
-		-- 						bar:SetAttribute("state", newstate)
-		-- 						bar:ChildUpdate("state", newstate)
-		-- 						self:GetFrameRef("MainMenuBarArtFrame"):SetAttribute("actionpage", newstate)
-		-- 					end
-		-- 				end
-		-- 			end
-		-- 		else
-		-- 			if HasTempShapeshiftActionBar() and self:GetAttribute("hasTempBar") then
-		-- 				ParsedText = GetTempShapeshiftBarIndex() or ParsedText
-		-- 			end
-
-		-- 			if ParsedText ~= 0 then
-		-- 				bar:SetAttribute("state", ParsedText)
-		-- 				bar:ChildUpdate("state", ParsedText)
-		-- 				self:GetFrameRef("MainMenuBarArtFrame"):SetAttribute("actionpage", ParsedText)
-		-- 			else
-		-- 				local newCondition = bar:GetAttribute("newCondition")
-		-- 				if newCondition then
-		-- 					newstate = SecureCmdOptionParse(newCondition)
-		-- 					bar:SetAttribute("state", newstate)
-		-- 					bar:ChildUpdate("state", newstate)
-		-- 					self:GetFrameRef("MainMenuBarArtFrame"):SetAttribute("actionpage", newstate)
-		-- 				end
-		-- 			end
-		-- 		end
-		-- 	]])
-		-- end
 
 		if not bar.initialized then
 			bar.initialized = true;
@@ -1447,11 +1354,13 @@ function AB:CreateVehicleLeave()
 	vehicle:SetScript("OnLeave", GameTooltip_Hide)
 	vehicle:RegisterEvent("PLAYER_ENTERING_WORLD");
 	vehicle:RegisterEvent("UPDATE_BONUS_ACTIONBAR");
+	if ( not E.isClassic ) then
 	vehicle:RegisterEvent("UPDATE_MULTI_CAST_ACTIONBAR");
 	vehicle:RegisterEvent("UNIT_ENTERED_VEHICLE");
 	vehicle:RegisterEvent("UNIT_EXITED_VEHICLE");
 	vehicle:RegisterEvent("VEHICLE_UPDATE");
 	vehicle:SetScript("OnEvent", Vehicle_OnEvent)
+	end
 	
 	self:UpdateVehicleLeave()
 
@@ -1587,7 +1496,7 @@ end
 
 function AB:VehicleBarArtWorkVisability()
 	
-	if UnitHasVehicleUI('player')  then
+	if UnitHasVehicleUI and UnitHasVehicleUI('player')  then
 		self:Hide()
 		self.back:Hide()
 	else
@@ -1765,14 +1674,18 @@ function AB:DisableBlizzard()
 			_G['OverrideActionBarButton'..i]:SetAttribute("statehidden", true)
 		end
 
+		if ( _G['MultiCastActionButton'..i] ) then 
 		_G['MultiCastActionButton'..i]:Hide()
 		_G['MultiCastActionButton'..i]:UnregisterAllEvents()
 		_G['MultiCastActionButton'..i]:SetAttribute("statehidden", true)
+		end
 	end
 
 	ActionBarController:UnregisterAllEvents()
+	if (not E.isClassic) then 
 	ActionBarController:RegisterEvent('UPDATE_EXTRA_ACTIONBAR')
-	
+	end
+
 	MainMenuBar:SetMovable(true)
 	MainMenuBar:SetUserPlaced(true)
 	MainMenuBar:SetIgnoreFramePositionManager(true)
@@ -1808,27 +1721,35 @@ function AB:DisableBlizzard()
 	StanceBarFrame:Hide()
 	StanceBarFrame:SetParent(UIHider)
 
+	if ( OverrideActionBar ) then
 	OverrideActionBar:UnregisterAllEvents()
 	OverrideActionBar:Hide()
 	OverrideActionBar:SetParent(UIHider)
+	end
 
+	if ( PossessBarFrame ) then 
 	PossessBarFrame:UnregisterAllEvents()
 	PossessBarFrame:Hide()
 	PossessBarFrame:SetParent(UIHider)
+	end
 
 	PetActionBarFrame:UnregisterAllEvents()
 	PetActionBarFrame:Hide()
 	PetActionBarFrame:SetParent(UIHider)
 
+	if ( MultiCastActionBarFrame ) then 
 	MultiCastActionBarFrame:UnregisterAllEvents()
 	MultiCastActionBarFrame:Hide()
 	MultiCastActionBarFrame:SetParent(UIHider)
+	end
 
 	--This frame puts spells on the damn actionbar, fucking obliterate that shit
+	if ( IconIntroTracker ) then 
 	IconIntroTracker:UnregisterAllEvents()
 	IconIntroTracker:Hide()
 	IconIntroTracker:SetParent(UIHider)
-	
+	end
+
 	InterfaceOptionsActionBarsPanelAlwaysShowActionBars:EnableMouse(false)
 	InterfaceOptionsActionBarsPanelPickupActionKeyDropDownButton:SetScale(0.0001)
 	InterfaceOptionsActionBarsPanelLockActionBars:SetScale(0.0001)
@@ -2068,12 +1989,15 @@ function AB:Initialize()
 
 	AB:LoadKeyBinder()
 	AB:RegisterEvent("UPDATE_BINDINGS", "ReassignBindings")
+
+	if ( not E.isClassic ) then 
 	AB:RegisterEvent("PET_BATTLE_CLOSE", "ReassignBindings")
 	AB:RegisterEvent('PET_BATTLE_OPENING_DONE', 'RemoveBindings')
 	AB:RegisterEvent('UPDATE_VEHICLE_ACTIONBAR', 'VehicleFix')
 	AB:RegisterEvent('UPDATE_OVERRIDE_ACTIONBAR', 'VehicleFix')
+	end 
 
-	if C_PetBattles.IsInBattle() then
+	if C_PetBattles and C_PetBattles.IsInBattle() then
 		AB:RemoveBindings()
 	else
 		AB:ReassignBindings()
@@ -2083,8 +2007,10 @@ function AB:Initialize()
 		SetCVar('lockActionBars', 1)
 	end
 
+	if ( SpellFlyout ) then 
 	SpellFlyout:HookScript("OnShow", SetupFlyoutButton)
-	
+	end
+
 	E.GUI.args.actionbars.args.FontGroup = {
 		name = L["Fonts"],
 		type = "group",
@@ -3093,7 +3019,7 @@ function AB:AdjustMaxStanceButtons(event)
 		self:StyleShapeShift()
 	end
 
-	if not C_PetBattles.IsInBattle() or initialCreate then
+	if C_PetBattles and not C_PetBattles.IsInBattle() or initialCreate then
 		if numButtons == 0 then
 			UnregisterStateDriver(bar, "show");
 			bar:Hide()
@@ -3456,9 +3382,11 @@ do
 	addon1:RegisterEvent("ACTIONBAR_SLOT_CHANGED")
 	addon1:RegisterEvent("PLAYER_LOGIN")
 	addon1:RegisterEvent("SPELLS_CHANGED")
+	if (not E.isClassic) then 
 	addon1:RegisterEvent("PLAYER_TALENT_UPDATE")
 	addon1:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
 	addon1:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
+	end
 	addon1:SetScript("OnEvent", function(self, event, buttonID)
 		self:Show()
 	end)

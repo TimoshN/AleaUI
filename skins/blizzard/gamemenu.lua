@@ -22,8 +22,11 @@ GameMenuFrameHeader:SetUIBackgroundDrawLayer('ARTWORK')
 GameMenuFrameHeader:SetUIBorderDrawLayer('ARTWORK')
 
 Skins.ThemeButton('GameMenuButtonHelp')
+
+if (not AleaUI.isClassic) then 
 Skins.ThemeButton('GameMenuButtonStore')
 Skins.ThemeButton('GameMenuButtonWhatsNew')
+end 
 
 Skins.ThemeButton('GameMenuButtonOptions')
 Skins.ThemeButton('GameMenuButtonUIOptions')

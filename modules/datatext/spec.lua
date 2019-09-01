@@ -2,6 +2,10 @@
 local DT = E:Module('DataText')
 local L = E.L
 
+if ( E.isClassic ) then 
+	return 
+end
+
 local format = string.format
 local join = string.join
 local lastPanel, active

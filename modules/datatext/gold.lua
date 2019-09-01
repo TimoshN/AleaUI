@@ -90,15 +90,17 @@ local function OnEnter(self)
 	DT.tooltip:AddLine(L["Server"]..": ")
 	DT.tooltip:AddDoubleLine(L["Total"]..": ", FormatTooltipMoney(totalGold), 1, 1, 1, 1, 1, 1)
 
-	for i = 1, MAX_WATCHED_TOKENS do
-		local name, count, extraCurrencyType, icon, itemID = GetBackpackCurrencyInfo(i)
-		if name and i == 1 then
-			DT.tooltip:AddLine(" ")
-			DT.tooltip:AddLine(CURRENCY)
+	if ( MAX_WATCHED_TOKENS ) then 
+		for i = 1, MAX_WATCHED_TOKENS do
+			local name, count, extraCurrencyType, icon, itemID = GetBackpackCurrencyInfo(i)
+			if name and i == 1 then
+				DT.tooltip:AddLine(" ")
+				DT.tooltip:AddLine(CURRENCY)
+			end
+			if name and count then DT.tooltip:AddDoubleLine(name, count, 1, 1, 1) end
 		end
-		if name and count then DT.tooltip:AddDoubleLine(name, count, 1, 1, 1) end
-	end
-	
+	end 
+
 	DT.tooltip:AddLine' '
 	DT.tooltip:AddLine(resetInfoFormatter)
 

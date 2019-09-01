@@ -1,6 +1,10 @@
 ﻿local E = AleaUI
 local LR = E:Module("LootRoll")
 
+if ( E.isClassic ) then 
+	return 
+end 
+
 local pos = 'BOTTOM';
 local cancelled_rolls = {}
 local FRAME_WIDTH, FRAME_HEIGHT = 328, 28
@@ -205,95 +209,96 @@ end
 -------------------------
 -- Blizzard Bonus Roll --
 -------------------------
-local brf_pos1, brf_pos2, brf_x, brf_y = "BOTTOM", "TOP", FRAME_HEIGHT/2, 4 -- FRAME_HEIGHT
-if pos == 'TOP' then
-	brf_pos1, brf_pos2, brf_x, brf_y = "TOP", "BOTTOM", FRAME_HEIGHT/2,-4 -- FRAME_HEIGHT
-end
-
-hooksecurefunc(BonusRollFrame, 'SetPoint', function(self, pos1, parent, pos2, x, y)
---	print("T", 'BonusRollFrame', 'SetPoint', pos1, parent, pos2, x, y)
-	if pos1 ~= brf_pos1 or parent ~= mover or pos2 ~= brf_pos2 or x ~= brf_x or y ~= brf_y then
-	--	print('T', 'BonusRollFrame', 'Reposition')
-		BonusRollFrame:ClearAllPoints()
-		BonusRollFrame:SetPoint(brf_pos1, mover, brf_pos2, brf_x, brf_y)
+if ( BonusRollFrame ) then
+	local brf_pos1, brf_pos2, brf_x, brf_y = "BOTTOM", "TOP", FRAME_HEIGHT/2, 4 -- FRAME_HEIGHT
+	if pos == 'TOP' then
+		brf_pos1, brf_pos2, brf_x, brf_y = "TOP", "BOTTOM", FRAME_HEIGHT/2,-4 -- FRAME_HEIGHT
 	end
-end)
 
-BonusRollFrame:ClearAllPoints()
-BonusRollFrame:SetPoint(brf_pos1, mover, brf_pos2, brf_x, brf_y)
-BonusRollFrame:SetSize(FRAME_WIDTH, FRAME_HEIGHT)
+	hooksecurefunc(BonusRollFrame, 'SetPoint', function(self, pos1, parent, pos2, x, y)
+	--	print("T", 'BonusRollFrame', 'SetPoint', pos1, parent, pos2, x, y)
+		if pos1 ~= brf_pos1 or parent ~= mover or pos2 ~= brf_pos2 or x ~= brf_x or y ~= brf_y then
+		--	print('T', 'BonusRollFrame', 'Reposition')
+			BonusRollFrame:ClearAllPoints()
+			BonusRollFrame:SetPoint(brf_pos1, mover, brf_pos2, brf_x, brf_y)
+		end
+	end)
 
-BonusRollFrame.Background:SetAlpha(0)
+	BonusRollFrame:ClearAllPoints()
+	BonusRollFrame:SetPoint(brf_pos1, mover, brf_pos2, brf_x, brf_y)
+	BonusRollFrame:SetSize(FRAME_WIDTH, FRAME_HEIGHT)
 
-BonusRollFrame.RollingFrame.myText = BonusRollFrame.RollingFrame:CreateFontString(nil, 'OVERLAY', nil, 4)
-BonusRollFrame.RollingFrame.myText:SetPoint("LEFT", BonusRollFrame.PromptFrame.PassButton, 'RIGHT')
-BonusRollFrame.RollingFrame.myText:SetFont(AleaUI.media.default_font, 12, "OUTLINE")
-BonusRollFrame.RollingFrame.myText:SetText(E.L['Rolling'])
-BonusRollFrame.RollingFrame.myText:SetTextColor(1, 1, 1, 1)
+	BonusRollFrame.Background:SetAlpha(0)
 
-BonusRollFrame.RollingFrame.Label.Show = BonusRollFrame.RollingFrame.Label.Hide
-BonusRollFrame.RollingFrame.Label:Hide()
+	BonusRollFrame.RollingFrame.myText = BonusRollFrame.RollingFrame:CreateFontString(nil, 'OVERLAY', nil, 4)
+	BonusRollFrame.RollingFrame.myText:SetPoint("LEFT", BonusRollFrame.PromptFrame.PassButton, 'RIGHT')
+	BonusRollFrame.RollingFrame.myText:SetFont(AleaUI.media.default_font, 12, "OUTLINE")
+	BonusRollFrame.RollingFrame.myText:SetText(E.L['Rolling'])
+	BonusRollFrame.RollingFrame.myText:SetTextColor(1, 1, 1, 1)
 
-BonusRollFrame.RollingFrame.DieIcon.Show = BonusRollFrame.RollingFrame.DieIcon.Hide
-BonusRollFrame.RollingFrame.DieIcon:Hide()
+	BonusRollFrame.RollingFrame.Label.Show = BonusRollFrame.RollingFrame.Label.Hide
+	BonusRollFrame.RollingFrame.Label:Hide()
+
+	BonusRollFrame.RollingFrame.DieIcon.Show = BonusRollFrame.RollingFrame.DieIcon.Hide
+	BonusRollFrame.RollingFrame.DieIcon:Hide()
 
 
-BonusRollFrame.PromptFrame.Icon:ClearAllPoints()
-BonusRollFrame.PromptFrame.Icon:SetPoint('RIGHT', BonusRollFrame, 'LEFT', -4, 0)
-BonusRollFrame.PromptFrame.Icon:SetSize(FRAME_HEIGHT, FRAME_HEIGHT)
+	BonusRollFrame.PromptFrame.Icon:ClearAllPoints()
+	BonusRollFrame.PromptFrame.Icon:SetPoint('RIGHT', BonusRollFrame, 'LEFT', -4, 0)
+	BonusRollFrame.PromptFrame.Icon:SetSize(FRAME_HEIGHT, FRAME_HEIGHT)
 
-BonusRollFrame.RollingFrame.LootSpinnerFinalText.Show = BonusRollFrame.RollingFrame.LootSpinnerFinalText.Hide
-BonusRollFrame.RollingFrame.LootSpinnerFinalText:Hide()
+	BonusRollFrame.RollingFrame.LootSpinnerFinalText.Show = BonusRollFrame.RollingFrame.LootSpinnerFinalText.Hide
+	BonusRollFrame.RollingFrame.LootSpinnerFinalText:Hide()
 
-BonusRollFrame.LootSpinnerBG:ClearAllPoints()
-BonusRollFrame.LootSpinnerBG:SetPoint("CENTER", BonusRollFrame.PromptFrame.Icon, 'CENTER')
-BonusRollFrame.LootSpinnerBG:SetSize(FRAME_HEIGHT, FRAME_HEIGHT)
-BonusRollFrame.IconBorder:SetSize(FRAME_HEIGHT, FRAME_HEIGHT)
+	BonusRollFrame.LootSpinnerBG:ClearAllPoints()
+	BonusRollFrame.LootSpinnerBG:SetPoint("CENTER", BonusRollFrame.PromptFrame.Icon, 'CENTER')
+	BonusRollFrame.LootSpinnerBG:SetSize(FRAME_HEIGHT, FRAME_HEIGHT)
+	BonusRollFrame.IconBorder:SetSize(FRAME_HEIGHT, FRAME_HEIGHT)
 
-BonusRollFrame.PromptFrame.Timer:ClearAllPoints()
-BonusRollFrame.PromptFrame.Timer:SetPoint('TOPLEFT', BonusRollFrame, 'TOPLEFT', 0, 0)
-BonusRollFrame.PromptFrame.Timer:SetPoint('BOTTOMRIGHT', BonusRollFrame, 'BOTTOMRIGHT', 0, 0)
-BonusRollFrame.PromptFrame.Timer:SetStatusBarTexture("Interface\\AddOns\\AleaUI\\media\\Minimalist.tga")
+	BonusRollFrame.PromptFrame.Timer:ClearAllPoints()
+	BonusRollFrame.PromptFrame.Timer:SetPoint('TOPLEFT', BonusRollFrame, 'TOPLEFT', 0, 0)
+	BonusRollFrame.PromptFrame.Timer:SetPoint('BOTTOMRIGHT', BonusRollFrame, 'BOTTOMRIGHT', 0, 0)
+	BonusRollFrame.PromptFrame.Timer:SetStatusBarTexture("Interface\\AddOns\\AleaUI\\media\\Minimalist.tga")
 
-E:CreateBackdrop(BonusRollFrame, nil, {0,0,0,1}, {0,0,0,0}, true)
+	E:CreateBackdrop(BonusRollFrame, nil, {0,0,0,1}, {0,0,0,0}, true)
 
-BonusRollFrame.PromptFrame.RollButton:ClearAllPoints()
-BonusRollFrame.PromptFrame.RollButton:SetPoint('LEFT', BonusRollFrame, 'LEFT', 3, 0)
-BonusRollFrame.PromptFrame.RollButton:SetSize(24, 24)
+	BonusRollFrame.PromptFrame.RollButton:ClearAllPoints()
+	BonusRollFrame.PromptFrame.RollButton:SetPoint('LEFT', BonusRollFrame, 'LEFT', 3, 0)
+	BonusRollFrame.PromptFrame.RollButton:SetSize(24, 24)
 
-BonusRollFrame.PromptFrame.PassButton:ClearAllPoints()
-BonusRollFrame.PromptFrame.PassButton:SetPoint('LEFT', BonusRollFrame.PromptFrame.RollButton, 'RIGHT', 3, 0)
-BonusRollFrame.PromptFrame.PassButton:SetSize(24, 24)
+	BonusRollFrame.PromptFrame.PassButton:ClearAllPoints()
+	BonusRollFrame.PromptFrame.PassButton:SetPoint('LEFT', BonusRollFrame.PromptFrame.RollButton, 'RIGHT', 3, 0)
+	BonusRollFrame.PromptFrame.PassButton:SetSize(24, 24)
 
-BonusRollFrame.PromptFrame.InfoFrame:ClearAllPoints()
-BonusRollFrame.PromptFrame.InfoFrame:SetPoint("TOPLEFT", BonusRollFrame.PromptFrame.PassButton, 'TOPRIGHT')
-BonusRollFrame.PromptFrame.InfoFrame:SetAlpha(0)
-BonusRollFrame.PromptFrame.InfoFrame.Cost.Show = BonusRollFrame.PromptFrame.InfoFrame.Cost.Hide
-BonusRollFrame.PromptFrame.InfoFrame.Cost:Hide()
+	BonusRollFrame.PromptFrame.InfoFrame:ClearAllPoints()
+	BonusRollFrame.PromptFrame.InfoFrame:SetPoint("TOPLEFT", BonusRollFrame.PromptFrame.PassButton, 'TOPRIGHT')
+	BonusRollFrame.PromptFrame.InfoFrame:SetAlpha(0)
+	BonusRollFrame.PromptFrame.InfoFrame.Cost.Show = BonusRollFrame.PromptFrame.InfoFrame.Cost.Hide
+	BonusRollFrame.PromptFrame.InfoFrame.Cost:Hide()
 
-BonusRollFrame.PromptFrame.EncounterJournalLinkButton:ClearAllPoints()
-BonusRollFrame.PromptFrame.EncounterJournalLinkButton:SetAllPoints(BonusRollFrame.PromptFrame.InfoFrame)
+	BonusRollFrame.PromptFrame.EncounterJournalLinkButton:ClearAllPoints()
+	BonusRollFrame.PromptFrame.EncounterJournalLinkButton:SetAllPoints(BonusRollFrame.PromptFrame.InfoFrame)
 
-BonusRollFrame.PromptFrame.myText = BonusRollFrame.PromptFrame.Timer:CreateFontString(nil, 'OVERLAY', nil, 4)
-BonusRollFrame.PromptFrame.myText:SetPoint("LEFT", BonusRollFrame.PromptFrame.PassButton, 'RIGHT')
-BonusRollFrame.PromptFrame.myText:SetFont(AleaUI.media.default_font, 12, "OUTLINE")
-BonusRollFrame.PromptFrame.myText:SetText(E.L['Bonus loot'])
-BonusRollFrame.PromptFrame.myText:SetTextColor(1, 1, 1, 1)
+	BonusRollFrame.PromptFrame.myText = BonusRollFrame.PromptFrame.Timer:CreateFontString(nil, 'OVERLAY', nil, 4)
+	BonusRollFrame.PromptFrame.myText:SetPoint("LEFT", BonusRollFrame.PromptFrame.PassButton, 'RIGHT')
+	BonusRollFrame.PromptFrame.myText:SetFont(AleaUI.media.default_font, 12, "OUTLINE")
+	BonusRollFrame.PromptFrame.myText:SetText(E.L['Bonus loot'])
+	BonusRollFrame.PromptFrame.myText:SetTextColor(1, 1, 1, 1)
 
-BonusRollFrame.SpecRing:ClearAllPoints()
-BonusRollFrame.SpecRing:SetPoint('TOPLEFT', BonusRollFrame, 'TOPLEFT', -65, 3)
+	BonusRollFrame.SpecRing:ClearAllPoints()
+	BonusRollFrame.SpecRing:SetPoint('TOPLEFT', BonusRollFrame, 'TOPLEFT', -65, 3)
 
-BonusRollFrame.SpecIcon:ClearAllPoints()
-BonusRollFrame.SpecIcon:SetPoint('CENTER', BonusRollFrame.SpecRing, 'CENTER', -14, 14)
+	BonusRollFrame.SpecIcon:ClearAllPoints()
+	BonusRollFrame.SpecIcon:SetPoint('CENTER', BonusRollFrame.SpecRing, 'CENTER', -14, 14)
 
-BonusRollFrame.IconBorder.bg = BonusRollFrame:CreateTexture(nil, 'ARTWORK')
-BonusRollFrame.IconBorder.bg:SetColorTexture(0,0,0,1)
-BonusRollFrame.IconBorder.bg:SetOutside(BonusRollFrame.IconBorder)
+	BonusRollFrame.IconBorder.bg = BonusRollFrame:CreateTexture(nil, 'ARTWORK')
+	BonusRollFrame.IconBorder.bg:SetColorTexture(0,0,0,1)
+	BonusRollFrame.IconBorder.bg:SetOutside(BonusRollFrame.IconBorder)
 
-BonusRollFrame:HookScript('OnShow', UpdateLootAnchors)
-BonusRollFrame:HookScript('OnHide', UpdateLootAnchors)
---------------------------
-
+	BonusRollFrame:HookScript('OnShow', UpdateLootAnchors)
+	BonusRollFrame:HookScript('OnHide', UpdateLootAnchors)
+	--------------------------
+end 
 
 local function GetFrame()
 	for i,f in ipairs(LR.RollBars) do

@@ -574,23 +574,23 @@ do
 			_G[variable].profileKeys[profileOwner] = {}
 
 			if usedefault then
-				for i=1, GetNumSpecializations() do
+				for i=1, C.isClassic and 1 or GetNumSpecializations() do
 					_G[variable].profileKeys[profileOwner][i] = DEFAULT_NAME
 				end
 			else
-				for i=1, GetNumSpecializations() do
+				for i=1, C.isClassic and 1 or GetNumSpecializations() do
 					_G[variable].profileKeys[profileOwner][i] = profileOwner		
 				end
 			end
 		else	
 			if usedefault then
-				for i=1, GetNumSpecializations() do
+				for i=1, C.isClassic and 1 or GetNumSpecializations() do
 					if not _G[variable].profileKeys[profileOwner][i] then
 						_G[variable].profileKeys[profileOwner][i] = DEFAULT_NAME
 					end
 				end
 			else
-				for i=1, GetNumSpecializations() do
+				for i=1, C.isClassic and 1 or GetNumSpecializations() do
 					if not _G[variable].profileKeys[profileOwner][i] then
 						_G[variable].profileKeys[profileOwner][i] = profileOwner		
 					end
@@ -626,7 +626,7 @@ do
 			
 			_G[variable].profileKeys[profileOwner] = {}
 	
-			for i=1, GetNumSpecializations() do
+			for i=1, C.isClassic and 1 or GetNumSpecializations() do
 				_G[variable].profileKeys[profileOwner][i] = oldprofile		
 			end
 		end
@@ -635,7 +635,7 @@ do
 		local instance
 		
 	
-		activespec = ( GetSpecialization() and GetSpecialization() > 0 ) and GetSpecialization() or 1
+		activespec = C.isClassic and 1 or ( GetSpecialization() and GetSpecialization() > 0 ) and GetSpecialization() or 1
 		
 		if not _G[variable].profileKeys[profileOwner][_G[variable][cvarSettings] and activespec or 1] then		
 			_G[variable].profileKeys[profileOwner][_G[variable][cvarSettings] and activespec or 1] = DEFAULT_NAME
@@ -667,8 +667,11 @@ h:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
 print('RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")', C.IsLegion )
 
 ]==]
-h:RegisterEvent("PLAYER_TALENT_UPDATE")
-print('RegisterEvent("PLAYER_TALENT_UPDATE")', C.IsLegion )
+if ( not C.isClassic ) then
+	h:RegisterEvent("PLAYER_TALENT_UPDATE")
+	print('RegisterEvent("PLAYER_TALENT_UPDATE")', C.IsLegion )
+end 
+
 --[==[
 h:RegisterEvent("PLAYER_LOGIN")
 print('RegisterEvent("PLAYER_LOGIN")', C.IsLegion )

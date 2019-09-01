@@ -1,6 +1,10 @@
 ﻿local addonName, E = ...
 local L = E.L
 
+if ( E.isClassic ) then  
+	return
+end 
+
 local holder = CreateFrame('Frame', 'AleaUIAltPowerBarHolder', E.UIParent)
 holder:SetSize(128, 50)
 holder:Show()

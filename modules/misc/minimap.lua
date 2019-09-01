@@ -34,8 +34,12 @@ E.default_settings.minimap = defaults
 --  END CONFIG  --
 ------------------
 Minimap:SetMaskTexture('Interface\\ChatFrame\\ChatFrameBackground')
-Minimap:SetQuestBlobRingAlpha(0)
-Minimap:SetArchBlobRingAlpha(0)
+if ( Minimap.SetQuestBlobRingAlpha ) then 
+	Minimap:SetQuestBlobRingAlpha(0)
+end
+if (Minimap.SetArchBlobRingAlpha) then 
+	Minimap:SetArchBlobRingAlpha(0)
+end
 Minimap:SetScale(1)
 Minimap:SetFrameLevel(3)
 Minimap:SetFrameStrata('LOW')
@@ -108,14 +112,18 @@ local hideThis = {
 }
 
 for i, v in pairs(hideThis) do
-	hooksecurefunc(_G[v],"Show", _G[v].Hide)	
-	_G[v]:Hide()
+	if ( _G[v] ) then 
+		hooksecurefunc(_G[v],"Show", _G[v].Hide)	
+		_G[v]:Hide()
+	end 
 end
 
-QueueStatusMinimapButton:SetScale(.9)
-QueueStatusMinimapButton:SetFrameStrata("MEDIUM")
-QueueStatusMinimapButton:SetFrameLevel(10)
-QueueStatusMinimapButtonBorder:Hide()
+if ( QueueStatusMinimapButton ) then 
+	QueueStatusMinimapButton:SetScale(.9)
+	QueueStatusMinimapButton:SetFrameStrata("MEDIUM")
+	QueueStatusMinimapButton:SetFrameLevel(10)
+	QueueStatusMinimapButtonBorder:Hide()
+end 
 
 MiniMapMailFrame:SetFrameStrata("HIGH")
 
@@ -137,31 +145,42 @@ local function HookFlagRepoint(self, point1, anchor, point2, x, y)
 end
 
 local function SelectMinimapButtonPoint()
-	QueueStatusMinimapButton:ClearAllPoints()
-	QueueStatusFrame:ClearAllPoints()
+	if ( QueueStatusMinimapButton ) then 
+		QueueStatusMinimapButton:ClearAllPoints()
+		QueueStatusFrame:ClearAllPoints()
+	end 
+
 	MiniMapMailFrame:ClearAllPoints()
 
 	if raidBuffSide == 'LEFT' then
-		QueueStatusMinimapButton:SetPoint('BOTTOMRIGHT', Minimap, 3, 1)
-		QueueStatusFrame:SetPoint('TOPLEFT', QueueStatusMinimapButton, "TOPRIGHT", 3, 1)
+		if ( QueueStatusMinimapButton ) then 
+			QueueStatusMinimapButton:SetPoint('BOTTOMRIGHT', Minimap, 3, 1)
+			QueueStatusFrame:SetPoint('TOPLEFT', QueueStatusMinimapButton, "TOPRIGHT", 3, 1)
+		end 
+
 		MiniMapMailFrame:SetPoint('TOPRIGHT', Minimap, 2, 3)
 		
 		minimapFlagPoint1, minimapFlagPoint2, minimapFlagXoffset, minimapFlagYoffset = 'TOPLEFT', "TOPLEFT", 2, 3
 			
 		for i=1, #minimapFlags do
-			_G[minimapFlags[i]]:SetFrameStrata("MEDIUM")
-			_G[minimapFlags[i]]:ClearAllPoints()
-			_G[minimapFlags[i]]:SetPoint(minimapFlagPoint1, Minimap, minimapFlagPoint2,minimapFlagXoffset,minimapFlagYoffset)
-			_G[minimapFlags[i]]:SetScale(0.9)
-			if not _G[minimapFlags[i]].hooked then
-				_G[minimapFlags[i]].hooked = true
-				hooksecurefunc(_G[minimapFlags[i]], 'SetPoint', HookFlagRepoint)
+			if ( _G[minimapFlags[i]] ) then
+				_G[minimapFlags[i]]:SetFrameStrata("MEDIUM")
+				_G[minimapFlags[i]]:ClearAllPoints()
+				_G[minimapFlags[i]]:SetPoint(minimapFlagPoint1, Minimap, minimapFlagPoint2,minimapFlagXoffset,minimapFlagYoffset)
+				_G[minimapFlags[i]]:SetScale(0.9)
+				if not _G[minimapFlags[i]].hooked then
+					_G[minimapFlags[i]].hooked = true
+					hooksecurefunc(_G[minimapFlags[i]], 'SetPoint', HookFlagRepoint)
+				end
 			end
 		end
 	
 	else
-		QueueStatusMinimapButton:SetPoint('BOTTOMLEFT', Minimap, -3, 1)
-		QueueStatusFrame:SetPoint('TOPRIGHT', QueueStatusMinimapButton, "TOPLEFT", -3, 1)
+		if ( QueueStatusMinimapButton ) then 
+			QueueStatusMinimapButton:SetPoint('BOTTOMLEFT', Minimap, -3, 1)
+			QueueStatusFrame:SetPoint('TOPRIGHT', QueueStatusMinimapButton, "TOPLEFT", -3, 1)
+		end 
+
 		MiniMapMailFrame:SetPoint('TOPLEFT', Minimap, -2, 3)
 		
 		minimapFlagPoint1, minimapFlagPoint2, minimapFlagXoffset, minimapFlagYoffset = 'TOPRIGHT', "TOPRIGHT", -2, 3
@@ -182,25 +201,27 @@ local function SelectMinimapButtonPoint()
 end
 
 do
-	local VehicleSeatMover = CreateFrame("Frame", nil, E.UIParent)
-		VehicleSeatMover:SetSize(100,100)
-		VehicleSeatMover:SetPoint("CENTER", E.UIParent, "CENTER", 0, 0)
-		VehicleSeatMover:EnableMouse(false)		
+	if ( VehicleSeatIndicator ) then 
+		local VehicleSeatMover = CreateFrame("Frame", nil, E.UIParent)
+			VehicleSeatMover:SetSize(100,100)
+			VehicleSeatMover:SetPoint("CENTER", E.UIParent, "CENTER", 0, 0)
+			VehicleSeatMover:EnableMouse(false)		
 
-	hooksecurefunc(VehicleSeatIndicator,"SetPoint",function(_,_,parent) -- vehicle seat indicator
-		if (parent ~=  VehicleSeatMover ) then
-			VehicleSeatIndicator:ClearAllPoints()
-			VehicleSeatIndicator:SetPoint("CENTER", VehicleSeatMover, "CENTER", 0, 0)
-			VehicleSeatIndicator:SetScale(0.8)		
+		hooksecurefunc(VehicleSeatIndicator,"SetPoint",function(_,_,parent) -- vehicle seat indicator
+			if (parent ~=  VehicleSeatMover ) then
+				VehicleSeatIndicator:ClearAllPoints()
+				VehicleSeatIndicator:SetPoint("CENTER", VehicleSeatMover, "CENTER", 0, 0)
+				VehicleSeatIndicator:SetScale(0.8)		
+			end
+		end)
+		VehicleSeatIndicator:SetPoint('TOPLEFT', MinimapCluster, 'TOPLEFT', 2, 2) -- initialize mover
+
+		function E:UpdateVehicleSeatMover()			
+			E:Mover(VehicleSeatMover, "vehicleSeatMover")
 		end
-	end)
-	VehicleSeatIndicator:SetPoint('TOPLEFT', MinimapCluster, 'TOPLEFT', 2, 2) -- initialize mover
-
-	function E:UpdateVehicleSeatMover()			
-		E:Mover(VehicleSeatMover, "vehicleSeatMover")
+		
+		E:OnInit(E.UpdateVehicleSeatMover)
 	end
-	
-	E:OnInit(E.UpdateVehicleSeatMover)
 end
 
 do
@@ -335,8 +356,13 @@ end
 	
 local function MoveWatchFrame()
 	
-	Minimap:SetQuestBlobRingAlpha(0)
-	Minimap:SetArchBlobRingAlpha(0)
+	if ( Minimap.SetQuestBlobRingAlpha ) then 
+		Minimap:SetQuestBlobRingAlpha(0)
+	end 
+
+	if ( Minimap.SetArchBlobRingAlpha ) then 
+		Minimap:SetArchBlobRingAlpha(0)
+	end 
 
 	minimapFader.InterateChildrend(_G["Minimap"]:GetChildren())
 	
@@ -347,10 +373,12 @@ local function MoveWatchFrame()
 	
 	SelectMinimapButtonPoint()
 
-	_G["GarrisonLandingPageMinimapButton"]:SetScale(0.7)
-	_G["GarrisonLandingPageMinimapButton"]:EnableMinimapMoving("garrisonMinimapButton")	
-	minimapFader.AddToFading(_G["GarrisonLandingPageMinimapButton"])
-	
+	if ( _G["GarrisonLandingPageMinimapButton"] ) then
+		_G["GarrisonLandingPageMinimapButton"]:SetScale(0.7)
+		_G["GarrisonLandingPageMinimapButton"]:EnableMinimapMoving("garrisonMinimapButton")	
+		minimapFader.AddToFading(_G["GarrisonLandingPageMinimapButton"])
+	end
+
 	C_Timer.After(0.1, function() 
 		minimapFader.InterateChildrend(_G["Minimap"]:GetChildren())
 	end)
