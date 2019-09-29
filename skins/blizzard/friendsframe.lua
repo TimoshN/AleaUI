@@ -29,22 +29,22 @@ local function Skin_FriendsFrame()
 
 	_G['FriendsFrameIcon']:SetAlpha(0)
 
-	for i=1, 3 do
+	for i=1, 4 do
 		Skins.ThemeTab('FriendsFrameTab'..i)	
 	end
 
-	for i=1, 3 do
+	for i=1, 4 do
 		Skins.ThemeUpperTabs(_G["FriendsTabHeaderTab"..i])
 	end
 		
-	IgnoreListFrameTop:Kill()
-	IgnoreListFrameMiddle:Kill()
-	IgnoreListFrameBottom:Kill()
---	PendingListFrameTop:Kill()
---	PendingListFrameMiddle:Kill()
---	PendingListFrameBottom:Kill()
+	-- IgnoreListFrameTop:Kill()
+	-- IgnoreListFrameMiddle:Kill()
+	-- IgnoreListFrameBottom:Kill()
+	--	PendingListFrameTop:Kill()
+	--	PendingListFrameMiddle:Kill()
+	--	PendingListFrameBottom:Kill()
 
-	for i=1, 4 do
+	for i=1, 3 do
 		_G["WhoFrameColumnHeader"..i]:StripTextures(true)
 	end
 		
@@ -53,16 +53,16 @@ local function Skin_FriendsFrame()
 	Skins.ThemeButton('FriendsFrameIgnorePlayerButton')
 	Skins.ThemeButton('FriendsFrameUnsquelchButton')
 
-	Skins.ThemeScrollBar('FriendsFrameIgnoreScrollFrameScrollBar')
-	Skins.ThemeScrollBar('QuickJoinScrollFrameScrollBar')
-	Skins.ThemeScrollBar('FriendsFrameFriendsScrollFrameScrollBar')
+	Skins.ThemeScrollBar(IgnoreListFrameScrollFrame.scrollBar)
+	Skins.ThemeScrollBar(QuickJoinScrollFrame.scrollBar)
+	Skins.ThemeScrollBar(FriendsListFrameScrollFrame.scrollBar)
 
 	Skins.ThemeButton(QuickJoinFrame.JoinQueueButton)
 	
 	WhoFrameListInset:StripTextures()
 	--WhoFrameListInsetBg:Kill()
 
-	Skins.ThemeScrollBar('WhoListScrollFrameScrollBar')
+	Skins.ThemeScrollBar(WhoListScrollFrame.scrollBar)
 
 	WhoFrameEditBoxInset:StripTextures()
 		
@@ -135,9 +135,11 @@ local function Skin_FriendsFrame()
 	Skins.ThemeDropdown(FriendsFrameStatusDropDown)
 
 --	FriendsFrameBattlenetFrameScrollFrame:StripTextures()
-	Skins.ThemeBackdrop(FriendsFrameBattlenetFrameScrollFrame)
-	Skins.ThemeButton(FriendsFrameBattlenetFrameScrollFrame.UpdateButton)
-	Skins.ThemeButton(FriendsFrameBattlenetFrameScrollFrame.CancelButton)
+
+
+	-- Skins.ThemeBackdrop(FriendsFrameBattlenetFrameScrollFrame)
+	-- Skins.ThemeButton(FriendsFrameBattlenetFrameScrollFrame.UpdateButton)
+	-- Skins.ThemeButton(FriendsFrameBattlenetFrameScrollFrame.CancelButton)
 
 	Skins.SetAllFontString(FriendsFrameBattlenetFrame.BroadcastFrame, default_font,Skins.default_font_size, 'NONE')
 
@@ -147,7 +149,7 @@ local function Skin_FriendsFrame()
 	
 	
 --	FriendsFrameFriendsScrollFrame.PendingInvitesHeaderButton
-	local pendingButton = FriendsFrameFriendsScrollFrame.PendingInvitesHeaderButton
+	local pendingButton = FriendsListFrameScrollFrame.PendingInvitesHeaderButton
 
 	local function ClearCustomButton(frame)
 		frame.TopLeft:Hide()
@@ -191,41 +193,22 @@ local function Skin_FriendsFrame()
 	local lastNumMaxChilds = -1
 	
 	local function ThemePendingButtons()
-		if lastNumMaxChilds ~= FriendsFrameFriendsScrollFrameScrollChild:GetNumChildren() then
-			lastNumMaxChilds = FriendsFrameFriendsScrollFrameScrollChild:GetNumChildren()
+		if lastNumMaxChilds ~= FriendsListFrameScrollFrameScrollChild:GetNumChildren() then
+			lastNumMaxChilds = FriendsListFrameScrollFrameScrollChild:GetNumChildren()
 
-			for k,v in pairs({FriendsFrameFriendsScrollFrameScrollChild:GetChildren()}) do
+			for k,v in pairs({FriendsListFrameScrollFrameScrollChild:GetChildren()}) do
 			   if v.AcceptButton and v.DeclineButton and not v.skinned then
 					v.skinned = true
 					
 					ClearCustomButton(v.AcceptButton)
 					ClearCustomButton(v.DeclineButton)
-		
-					--[==[
-					print('Skinn button')
-					v.AcceptButton:HookScript('OnShow', function(self)
-						for a,b in pairs(self) do
-							print(a,b)
-						end
-						
-						for i=1, self:GetNumRegions() do
-							local region = select(i, self:GetRegions());
-							if(region:GetObjectType() == "Texture") then
-							
-								print(i, region:GetTexture())
-							end
-						end
-					end)
-					]==]
-				--	Skins.ThemeButton(v.AcceptButton)
-				--	Skins.ThemeButton(v.DeclineButton)
 			   end
 			end
 		end
 	end
 	
-	hooksecurefunc('FriendsFriendsList_Update', ThemePendingButtons)
-	hooksecurefunc('FriendsFriendsFrame_OnEvent', ThemePendingButtons)	
+	hooksecurefunc('FriendsList_Update', ThemePendingButtons)
+	hooksecurefunc('FriendsFrame_OnEvent', ThemePendingButtons)	
 	FriendsListFrame:HookScript('OnShow', ThemePendingButtons)
 	
 	
@@ -274,11 +257,13 @@ local function Skin_FriendsFrame()
 		local nameText, nameColor, infoText, broadcastText, _, Cooperate
 		
 		if button.buttonType == FRIENDS_BUTTON_TYPE_WOW then
-			local name, level, class, area, connected, status = GetFriendInfo(button.id)
+			local info = C_FriendList.GetFriendInfo(button.id);
+			--local name, level, class, area, connected, status = C_FriendList.GetFriendInfo(button.id)
+
 			broadcastText = nil
-			if connected then
+			if info.connected then
 			--	button.status:SetTexture(StatusIcons[self.db.StatusIconPack][(status == CHAT_FLAG_DND and 'DND' or status == CHAT_FLAG_AFK and 'AFK' or 'Online')])
-				nameText = format('%s%s - %s', ClassColorCode(class), name, class, level)
+				nameText = format('%s%s - %s', ClassColorCode(info.class), info.name, info.class, info.level)
 				nameColor = FRIENDS_WOW_NAME_COLOR
 				Cooperate = true
 			else
@@ -286,9 +271,9 @@ local function Skin_FriendsFrame()
 				nameText = name
 				nameColor = FRIENDS_GRAY_COLOR
 			end
-			infoText = area
+			infoText = info.area
 		elseif button.buttonType == FRIENDS_BUTTON_TYPE_BNET and BNConnected() then
-			local presenceID, presenceName, battleTag, isBattleTagPresence, toonName, toonID, client, isOnline, lastOnline, isAFK, isDND, messageText, noteText, isRIDFriend, messageTime, canSoR = BNGetFriendInfo(button.id)
+			local presenceID, presenceName, battleTag, isBattleTagPresence, toonName, toonID, client, isOnline, lastOnline, isAFK, isDND, messageText, noteText, isRIDFriend, messageTime, canSoR = BNGetFriendInfoByID(button.id)
 			local realmName, realmID, faction, race, class, zoneName, level, gameText
 			broadcastText = messageText
 			local characterName = toonName
@@ -362,7 +347,7 @@ local function Skin_FriendsFrame()
 		end
 	end
 	
-	hooksecurefunc('FriendsFrame_UpdateFriendButton', function(button) BasicUpdateFriends(button) end)
+	--hooksecurefunc('FriendsFrame_UpdateFriendButton', BasicUpdateFriends)
 end
 
 AleaUI:OnInit2(Skin_FriendsFrame)

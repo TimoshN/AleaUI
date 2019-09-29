@@ -750,6 +750,9 @@ local function UpdateSettings(self, opts)
 		local f =  self.HELPFUL[i] or CreateAuraFrame(self.parentFrame)		
 		f:SetSize(opts.buff.size, opts.buff.size)
 		f:ClearAllPoints()
+
+		--print(i, opts.buff.perrow)
+		
 		if i == 1 then
 			f:SetPoint(point[1], self.parentFrame, point[2], point[3] + opts.buff.pos[1], point[4] + opts.buff.pos[2])
 		elseif i == opts.buff.perrow+1 or 

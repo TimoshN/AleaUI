@@ -139,7 +139,7 @@ local function BuildBNTable(total)
 
 	for i = 1, total do
 		bnetIDAccount, accountName, battleTag, _, characterName, bnetIDGameAccount, client, isOnline, _, isAFK, isDND, _, noteText = BNGetFriendInfo(i)
-		hasFocus, _, _, realmName, realmID, faction, race, class, guild, zoneName, level, gameText = BNGetGameAccountInfo(bnetIDGameAccount or bnetIDAccount);
+		hasFocus, _, _, realmName, realmID, faction, race, class, guild, zoneName, level, gameText = BNGetGameAccountInfo(bnetIDGameAccount or bnetIDAccount, 1);
 		
 
 		if isOnline then --16

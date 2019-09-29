@@ -412,9 +412,13 @@ for i, frame in ipairs({
 	"ShoppingTooltip1", 
 	"ShoppingTooltip2", 
 	'GarrisonFollowerTooltip', 
-	'GarrisonShipyardFollowerTooltip'}) do
+	'GarrisonShipyardFollowerTooltip',
+	'FriendsTooltip',}) do
 	
-	print(pcall(Skins.StyleTooltipsCustom, Skins, frame) )	
+	if ( not pcall(Skins.StyleTooltipsCustom, Skins, frame) ) then 
+		
+		print('Cant skin', frame)	
+	end
 end
 
 hooksecurefunc('GameTooltip_ShowCompareItem', function(self, anchorFrame)

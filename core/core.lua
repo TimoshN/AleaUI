@@ -638,7 +638,7 @@ do
 	local tinsert = table.insert
 
 	local function trueFunction(...)
-		print(...)
+		print('[Error Trace]', ...)
 		return true;
 	end
 
@@ -656,7 +656,7 @@ do
 
 			-- print (status)
 			-- print (ret)
-			print (err)
+			-- print (err)
 		end		
 		wipe(list)
 	end
@@ -674,9 +674,9 @@ do
 		for i, func in ipairs(list2) do
 			local status, ret, err = xpcall(func, trueFunction)
 
-			print (status)
-			print (ret)
-			print (err)
+			--print (status)
+			--print (ret)
+			--print (err)
 		end	
 		wipe(list2)
 	end
@@ -694,9 +694,9 @@ do
 		for i, func in ipairs(list3) do		
 			local status, ret, err = xpcall(func, trueFunction)
 
-			print (status)
-			print (ret)
-			print (err)
+			--print (status)
+			--print (ret)
+			--print (err)
 		end		
 		wipe(list3)
 	end
@@ -713,9 +713,9 @@ do
 		for i, func in ipairs(list4) do		
 			local status, ret, err = xpcall(func, trueFunction)
 
-			print (status)
-			print (ret)
-			print (err)
+			--print (status)
+			--print (ret)
+			--print (err)
 		end		
 		wipe(list4)
 	end
@@ -838,45 +838,9 @@ do
 	--local tempItemLinkItemLevel = {}
 	
 	local function GetItemUpgradeLevel(itemLink)
-	
 		local itemLevel = itemLink and GetDetailedItemLevelInfo(itemLink)
 		
 		return itemLevel
-		
-		--[==[
-		scantip:ClearLines()
-		scantip:SetHyperlink(itemLink)
-		
-		if tempItemLinkItemLevel[itemLink] then
-			return tempItemLinkItemLevel[itemLink][1], tempItemLinkItemLevel[itemLink][2], tempItemLinkItemLevel[itemLink][3]
-		end
-		
-		local itemLevel, itemUpgrade, itemUpgradeTotal = nil, nil, nil
-		
-		for i=1, 6 do		
-			local line = _G["AleaUIScanningTooltipTextLeft"..i]:GetText()			
-			if line and line ~= "" then
-				local ilvl = string.match(line, ITEM_LEVEL_PATTERN)	
-				local grade1, grade2 = string.match(line, ITEM_UPGRADE_TOOLTIP_FORMAT_PATTERN)
-				
-				if ilvl and tonumber(ilvl) then
-					itemLevel = tonumber(ilvl)
-					break
-				end			
-				
-				if grade1 and grade2 and tonumber(grade1) and tonumber(grade2) then
-					itemUpgrade = tonumber(grade1)
-					itemUpgradeTotal = tonumber(grade2)
-				end
-			end
-		end
-		
-		if not E:ItemIsArtifact(itemLink) and itemLevel then
-			tempItemLinkItemLevel[itemLink] = { itemLevel, itemUpgrade, itemUpgradeTotal }
-		end
-		
-		return itemLevel, itemUpgrade, itemUpgradeTotal
-		]==]
 	end
 
 	local function GetItemItemLevel( unit, id )
@@ -887,38 +851,6 @@ do
 		local itemLevel = link and GetDetailedItemLevelInfo(link)
 		
 		return itemLevel
-		
-		--[==[
-		if link and tempItemLinkItemLevel[link] then
-			return tempItemLinkItemLevel[link][1], tempItemLinkItemLevel[link][2], tempItemLinkItemLevel[link][3]
-		end
-		
-		local itemLevel, itemUpgrade, itemUpgradeTotal = nil, nil, nil
-		
-		for i=1, 6 do		
-			local line = _G["AleaUIScanningTooltipTextLeft"..i]:GetText()			
-			if line and line ~= "" then
-				local ilvl = string.match(line, ITEM_LEVEL_PATTERN)	
-				local grade1, grade2 = string.match(line, ITEM_UPGRADE_TOOLTIP_FORMAT_PATTERN)
-				
-				if ilvl and tonumber(ilvl) then
-					itemLevel = tonumber(ilvl)
-					break
-				end			
-				
-				if grade1 and grade2 and tonumber(grade1) and tonumber(grade2) then
-					itemUpgrade = tonumber(grade1)
-					itemUpgradeTotal = tonumber(grade2)
-				end
-			end
-		end
-		
-		if link and not E:ItemIsArtifact(link) and itemLevel then
-			tempItemLinkItemLevel[link] = { itemLevel, itemUpgrade, itemUpgradeTotal }
-		end
-		
-		return itemLevel, itemUpgrade, itemUpgradeTotal
-		]==]
 	end
 	
 	function E.ScanTooltip(str, doNotClear)

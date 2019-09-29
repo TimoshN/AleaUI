@@ -53,7 +53,7 @@ local events = {
 	"LOOT_ITEM_ROLL_WON",
 	"SHOW_LOOT_TOAST",
 	"PET_BATTLE_CLOSE",
-	"STORE_PRODUCT_DELIVERED",
+	--"STORE_PRODUCT_DELIVERED",
 	"GARRISON_BUILDING_ACTIVATABLE",
 	"GARRISON_MISSION_FINISHED",
 	"GARRISON_FOLLOWER_ADDED",
@@ -967,7 +967,7 @@ local function InitAlertMover()
 	AlertFrame:UnregisterEvent("CHALLENGE_MODE_COMPLETED")
 	AlertFrame:UnregisterEvent("LOOT_ITEM_ROLL_WON")
 	AlertFrame:UnregisterEvent("SHOW_LOOT_TOAST")
-	AlertFrame:UnregisterEvent("STORE_PRODUCT_DELIVERED")
+	--AlertFrame:UnregisterEvent("STORE_PRODUCT_DELIVERED")
 	AlertFrame:UnregisterEvent("SHOW_LOOT_TOAST_UPGRADE")
 	
 	AlertFrame:UnregisterEvent("SHOW_PVP_FACTION_LOOT_TOAST")

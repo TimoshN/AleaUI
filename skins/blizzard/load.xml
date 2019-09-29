@@ -7,7 +7,7 @@
 	<Script file="deleteframes.lua"/>
 	<Script file="tooltip.lua"/>
     <Script file="gamemenu.lua"/>
-	<!-- <Script file="dropdown.lua"/>
+	<Script file="dropdown.lua"/>
 	<Script file="uierrorframe.lua"/>	
 	<Script file='bossbanner.lua'/>
 	<Script file='communities.lua'/>
@@ -24,9 +24,9 @@
 	<Script file="questframe.lua"/>
 	<Script file="garrison.lua"/>
 	<Script file="tradeskillframe.lua"/>
-	<Script file="collectionjournal.lua"/> -->
+	<Script file="collectionjournal.lua"/>
 	<!-- <Script file="lootframe.lua"/> -->
-	<!-- <Script file="worldmap.lua"/>
+	<Script file="worldmap.lua"/>
 	<Script file="encounterjournal.lua"/>
 	<Script file="friendsframe.lua"/>
 	<Script file="battlemap.lua"/>
@@ -49,7 +49,7 @@
 	<Script file='taxiframe.lua'/>
 	<Script file='artifactframe.lua'/>
 	<Script file='trainerframe.lua'/>
-	<Script file='talkinghead.lua'/> -->
+	<Script file='talkinghead.lua'/>
 	
 	<Frame name="AleaUISpellActivationAlert" virtual="true">
         <Animations>

@@ -251,7 +251,7 @@ function AB:SetupMicroBar()
 		
 	for i=1, #MICRO_BUTTONS do
 
-		print(i, MICRO_BUTTONS[i], _G[MICRO_BUTTONS[i]]  )
+		--print(i, MICRO_BUTTONS[i], _G[MICRO_BUTTONS[i]]  )
 		if ( _G[MICRO_BUTTONS[i]] ) then
 			AB:HandleMicroButton(_G[MICRO_BUTTONS[i]], 'Interface\\AddOns\\AleaUI\\media\\'..(buttonTexture[MICRO_BUTTONS[i]] or 'help.tga' ) )
 		end

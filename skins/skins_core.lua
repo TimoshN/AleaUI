@@ -1998,16 +1998,15 @@ end)
 
 
 do
-	
 	if ( TalentMicroButtonAlert ) then
-	TalentMicroButtonAlert:Kill()
-	CollectionsMicroButtonAlert:Kill()
-	LFDMicroButtonAlert:Kill()
-	EJMicroButtonAlert:Kill()
-	ZoneAbilityButtonAlert:Kill()
-	BagHelpBox:Kill()
-	
-	GetCVarBitfield("closedInfoFrames", LE_FRAME_TUTORIAL_WORLD_MAP_FRAME, true)
+		TalentMicroButtonAlert:Kill()
+		CollectionsMicroButtonAlert:Kill()
+		LFDMicroButtonAlert:Kill()
+		EJMicroButtonAlert:Kill()
+		ZoneAbilityButtonAlert:Kill()
+		BagHelpBox:Kill()
+		
+		GetCVarBitfield("closedInfoFrames", LE_FRAME_TUTORIAL_WORLD_MAP_FRAME, true)
 	end
 end
 

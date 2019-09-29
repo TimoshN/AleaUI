@@ -42,12 +42,12 @@ local function Skin_QuestFrame()
 	_G['QuestProgressScrollFrame']:StripTextures()
 	_G['QuestDetailScrollFrame']:StripTextures()
 	_G['QuestRewardScrollFrame']:StripTextures()
-	_G['QuestNPCModel']:StripTextures()
+	--_G['QuestNPCModel']:StripTextures()
 	_G['GossipFrameBg']:SetAlpha(0)
 	_G['GossipFrameInset']:StripTextures()
 	_G['GossipGreetingScrollFrame']:StripTextures()
 	_G['QuestGreetingScrollFrame']:StripTextures()
-	_G['QuestNPCModelTextFrame']:StripTextures()
+	--_G['QuestNPCModelTextFrame']:StripTextures()
 
 	for i=1, _G['GossipFrame']:GetNumRegions() do
 		local region = select(i, _G['GossipFrame']:GetRegions())
@@ -78,34 +78,34 @@ local function Skin_QuestFrame()
 	
 	_G['QuestLogPopupDetailFrameInset']:StripTextures()
 
-	QuestNPCModel:SetPoint("TOPLEFT", QuestLogDetailFrame, "TOPRIGHT", 4, -34)
-	hooksecurefunc("QuestFrame_ShowQuestPortrait", function(parentFrame, portraitDisplayID, mountPortraitDisplayID, text, name, x, y)
-		QuestNPCModel:ClearAllPoints();
-		QuestNPCModel:SetPoint("TOPLEFT", parentFrame, "TOPRIGHT", x + 8, y);
-	end)
+	-- QuestNPCModel:SetPoint("TOPLEFT", QuestLogDetailFrame, "TOPRIGHT", 4, -34)
+	-- hooksecurefunc("QuestFrame_ShowQuestPortrait", function(parentFrame, portraitDisplayID, mountPortraitDisplayID, text, name, x, y)
+	-- 	QuestNPCModel:ClearAllPoints();
+	-- 	QuestNPCModel:SetPoint("TOPLEFT", parentFrame, "TOPRIGHT", x + 8, y);
+	-- end)
 		
 	Skins.ThemeBackdrop('QuestFrame')
 	Skins.ThemeBackdrop('GossipFrame')
 	Skins.ThemeBackdrop('QuestFrameInset')
-	Skins.ThemeBackdrop('QuestNPCModel')
+	--Skins.ThemeBackdrop('QuestNPCModel')
 	Skins.ThemeBackdrop('GossipFrameInset')
 	Skins.ThemeBackdrop('QuestLogPopupDetailFrame')
 	Skins.ThemeBackdrop('QuestLogPopupDetailFrameInset')
-	Skins.ThemeBackdrop('QuestNPCModelTextFrame')
+	--Skins.ThemeBackdrop('QuestNPCModelTextFrame')
 	Skins.ThemeFrameRing('GossipFrame')
 	Skins.ThemeFrameRing('QuestFrame')
 
-	local temp = CreateFrame("Frame", nil, QuestNPCModel)
-	temp:SetPoint('TOPLEFT', QuestNPCModel, 'BOTTOMLEFT', 0, 0)
-	temp:SetPoint('TOPRIGHT', QuestNPCModel, 'BOTTOMRIGHT', 0, 0)
-	temp:SetSize(20,20)
-	temp:SetFrameStrata('LOW')
-	Skins.ThemeBackdrop(temp)
+	-- local temp = CreateFrame("Frame", nil, QuestNPCModel)
+	-- temp:SetPoint('TOPLEFT', QuestNPCModel, 'BOTTOMLEFT', 0, 0)
+	-- temp:SetPoint('TOPRIGHT', QuestNPCModel, 'BOTTOMRIGHT', 0, 0)
+	-- temp:SetSize(20,20)
+	-- temp:SetFrameStrata('LOW')
+	-- Skins.ThemeBackdrop(temp)
 
-	temp:SetUIBackgroundDrawLayer('BORDER', -1)
+	-- temp:SetUIBackgroundDrawLayer('BORDER', -1)
 
-	_G['QuestNPCModelNameText']:SetFont(default_font, Skins.default_font_size)
-	_G['QuestNPCModelNameText']:SetDrawLayer('OVERLAY')
+	-- _G['QuestNPCModelNameText']:SetFont(default_font, Skins.default_font_size)
+	-- _G['QuestNPCModelNameText']:SetDrawLayer('OVERLAY')
 
 	Skins.ThemeScrollBar('QuestProgressScrollFrameScrollBar')
 	Skins.ThemeScrollBar('QuestDetailScrollFrameScrollBar')

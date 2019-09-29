@@ -852,7 +852,7 @@ function UF:CreateCastBar(frame, w, h, drawticks)
 		if self.unit ~= "player" then return end
 		if not true then return end -- enable gcd
 
-		local start, duration, enabled  = GetSpellCooldown(61304) -- name
+		local start, duration, enabled  = GetSpellCooldown(E.isClassic and 29515 or 61304) -- name
 	
 		if start and start > 0 and duration <= 1.5 then
 			self.gcd:SetMinMaxValues(0, duration)
