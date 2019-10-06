@@ -622,7 +622,7 @@ function datatext:SetupTooltip(self)
 			end
 		end)
 	
-		E:CreateBackdrop(border, border, {0, 0, 0, 1}, {0, 0, 0, 0.8}, "BACKGROUND")
+		E:CreateBackdrop(border, border, {0, 0, 0, 1}, {20/255, 20/255, 20/255, 0.8}, "BACKGROUND")
 		
 		datatext.tooltip:Show()
 		datatext.tooltip:Hide()
@@ -644,7 +644,7 @@ function datatext:SetupTooltip(self)
 	
 	datatext.tooltip:ClearLines()
 	datatext.tooltip:SetAlpha(1)
-	datatext.tooltip.border:SetUIBackgroundColor(0, 0, 0, 0.8)
+	datatext.tooltip.border:SetUIBackgroundColor(20/255, 20/255, 20/255, 0.8)
 	datatext.tooltip.border:SetUIBackdropBorderColor(0, 0, 0, 1)
 	
 	GameTooltip:Hide() -- WHY??? BECAUSE FUCK GAMETOOLTIP, THATS WHY!!

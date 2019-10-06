@@ -686,7 +686,9 @@ do
 	}
 	
 	local tabTextUpdate = function(self, text)
-	
+		
+		--print('tabTextUpdate', text)
+
 		if self.conversationIcon then
 			self.conversationIcon:ClearAllPoints()
 			self.conversationIcon:Kill()
@@ -747,6 +749,14 @@ do
 
 		_G[name.."Tab"]:HookScript("OnClick", SelectChatFrame)
 		_G[name.."Tab"]:GetFontString():SetFont(E.media.default_font, E.media.default_font_size-1, "OUTLINE")
+
+		C_Timer.After(2, function()
+			_G[name.."Tab"]:GetFontString():SetFont(E.media.default_font, E.media.default_font_size-1, "OUTLINE")
+		end)
+
+
+		--print('T', _G[name.."Tab"]:GetFontString() )
+
 		frame:SetClampRectInsets(0, 0, 0, 0)
 	
 		hooksecurefunc(frame, 'SetClampRectInsets', function(self, a1,a2,a3,a4)

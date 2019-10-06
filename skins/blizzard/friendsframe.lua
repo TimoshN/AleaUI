@@ -238,7 +238,7 @@ local function Skin_FriendsFrame()
 
 		local color = class and RAID_CLASS_COLORS[class] or { r = 1, g = 1, b = 1 }
 
-		return format('|cFF%02x%02x%02x', color.r * 255, color.g * 255, color.b * 255)
+		return format('FF%02x%02x%02x', color.r * 255, color.g * 255, color.b * 255)
 	end
 	
 	local ClientColor = {
@@ -253,101 +253,156 @@ local function Skin_FriendsFrame()
 	}
 
 
-	local function BasicUpdateFriends(button)
-		local nameText, nameColor, infoText, broadcastText, _, Cooperate
-		
+	local ClassicServerNameByID = {
+		[4703] = 'Amnennar',
+		[4715] = 'Anathema',
+		[4716] = 'Arcanite Reaper',
+		[4742] = 'Ashbringer',
+		[4387] = 'Ashkandi',
+		[4372] = 'Atiesh',
+		[4669] = 'Arugal',
+		[4441] = 'Auberdine',
+		[4376] = 'Azuresong',
+		[4728] = 'Benediction',
+		[4398] = 'Bigglesworth',
+		[4397] = 'Blaumeux',
+		[4746] = 'Bloodfang',
+		[4648] = 'Bloodsail Buccaneers',
+		[4386] = 'Deviate Delight',
+		[4751] = 'Dragonfang',
+		[4756] = "Dragon's Call",
+		[4755] = 'Dreadmist',
+		[4731] = 'Earthfury',
+		[4749] = 'Earthshaker',
+		[4440] = 'Everlook',
+		[4408] = 'Faerlina',
+		[4396] = 'Fairbanks',
+		[4739] = 'Felstriker',
+		[4744] = 'Finkle',
+		[4467] = 'Firemaw',
+		[4706] = 'Flamelash',
+		[4702] = 'Gandling',
+		[4476] = 'Gehennas',
+		[4465] = 'Golemagg',
+		[4647] = 'Grobbulus',
+		[4732] = 'Heartseeker',
+		[4763] = 'Heartstriker',
+		[4406] = 'Herod',
+		[4678] = 'Hydraxian Waterlords',
+		[4698] = 'Incendius',
+		[4758] = 'Judgement',
+		[4700] = 'Kirtonos',
+		[4699] = 'Kromcrush',
+		[4399] = 'Kurinnaxx',
+		[4442] = 'Lakeshire',
+		[4801] = 'Loatheb',
+		[4463] = 'Lucifron',
+		[4813] = 'Mandokir',
+		[4384] = 'Mankrik',
+		[4454] = 'Mirage Raceway',
+		[4701] = 'Mograine',
+		[4373] = 'Myzrael',
+		[4456] = 'Nethergarde Keep',
+		[4729] = 'Netherwind',
+		[4741] = 'Noggenfogger',
+		[4374] = 'Old Blanchy',
+		[4385] = 'Pagle',
+		[4466] = 'Patchwerk',
+		[4453] = 'Pyrewood Village',
+		[4695] = 'Rattlegore',
+		[4455] = 'Razorfen',
+		[4478] = 'Razorgore',
+		[4667] = 'Remulos',
+		[4475] = 'Shazzrah',
+		[4410] = 'Skeram',
+		[4743] = 'Skullflame',
+		[4696] = 'Smolderweb',
+		[4409] = 'Stalagg',
+		[4705] = 'Stonespine',
+		[4726] = 'Sulfuras',
+		[4464] = 'Sulfuron',
+		[4737] = "Sul'thraze",
+		[4757] = 'Ten Storms',
+		[4407] = 'Thalnos',
+		[4714] = 'Thunderfury',
+		[4745] = 'Transcendence',
+		[4477] = 'Venoxis',
+		[4388] = 'Westfall',
+		[4395] = 'Whitemane',
+		[4727] = 'Windseeker',
+		[4670] = 'Yojamba',
+		[4676] = 'Zandalar Tribe',
+		[4452] = 'Хроми',
+		[4704] = 'Змейталак',
+		[4754] = 'Рок-Делар',
+		[4766] = 'Вестник Рока',
+		[4474] = 'Пламегор',
+	}
+	
+	hooksecurefunc('FriendsFrame_UpdateFriendButton', function(button)
+		local nameText, infoText
+		local status = 'Offline'
 		if button.buttonType == FRIENDS_BUTTON_TYPE_WOW then
-			local info = C_FriendList.GetFriendInfo(button.id);
-			--local name, level, class, area, connected, status = C_FriendList.GetFriendInfo(button.id)
-
-			broadcastText = nil
+			local info = C_FriendList.GetFriendInfoByIndex(button.id)
 			if info.connected then
-			--	button.status:SetTexture(StatusIcons[self.db.StatusIconPack][(status == CHAT_FLAG_DND and 'DND' or status == CHAT_FLAG_AFK and 'AFK' or 'Online')])
-				nameText = format('%s%s - %s', ClassColorCode(info.class), info.name, info.class, info.level)
-				nameColor = FRIENDS_WOW_NAME_COLOR
-				Cooperate = true
-			else
-			--	button.status:SetTexture(StatusIcons[self.db.StatusIconPack].Offline)
-				nameText = name
-				nameColor = FRIENDS_GRAY_COLOR
-			end
-			infoText = info.area
-		elseif button.buttonType == FRIENDS_BUTTON_TYPE_BNET and BNConnected() then
-			local presenceID, presenceName, battleTag, isBattleTagPresence, toonName, toonID, client, isOnline, lastOnline, isAFK, isDND, messageText, noteText, isRIDFriend, messageTime, canSoR = BNGetFriendInfoByID(button.id)
-			local realmName, realmID, faction, race, class, zoneName, level, gameText
-			broadcastText = messageText
-			local characterName = toonName
-			if presenceName then
-				nameText = presenceName
-				if isOnline and not characterName and battleTag then
-					characterName = battleTag
-				end
-			else
-				nameText = UNKNOWN
-			end
+				local name, level, class = info.name, info.level, info.className
+				local classcolor = ClassColorCode(class)
+				status = info.dnd and 'DND' or info.afk and 'AFK' or 'Online'
 
-			if characterName then
-				_, _, _, realmName, realmID, faction, race, class, _, zoneName, level, gameText = BNGetGameAccountInfo(toonID)
-				if client == BNET_CLIENT_WOW then
-					if (level == nil or tonumber(level) == nil) then level = 0 end
-					local classcolor = ClassColorCode(class)
-					local diff = level ~= 0 and format('|cFF%02x%02x%02x', GetQuestDifficultyColor(level).r * 255, GetQuestDifficultyColor(level).g * 255, GetQuestDifficultyColor(level).b * 255) or '|cFFFFFFFF'
-					local factionText = ( faction == "Horde" and "|cFFFF0000"..FACTION_HORDE.."|r" or "|cFF008eff"..FACTION_ALLIANCE.."|r" )
-					nameText = format('%s |cFFFFFFFF(|r%s%s|r - %s%s|r - %s|cFFFFFFFF)|r', nameText, classcolor, characterName, diff, level, factionText)
-					Cooperate = CanCooperateWithGameAccount(toonID)
-				else
-					nameText = format('|cFF%s%s|r', ClientColor[client] or 'FFFFFF', nameText)
-				end
+				local diff = level ~= 0 and format('FF%02x%02x%02x', GetQuestDifficultyColor(level).r * 255, GetQuestDifficultyColor(level).g * 255, GetQuestDifficultyColor(level).b * 255) or 'FFFFFFFF'
+				nameText = format('%s |cFFFFFFFF(|r%s - %s %s|cFFFFFFFF)|r', WrapTextInColorCode(name, classcolor), class, LEVEL, WrapTextInColorCode(level, diff))
+					
+				infoText = info.area
+			else
+				nameText = info.name
 			end
-
-			if isOnline then
-			--	button.status:SetTexture(StatusIcons[self.db.StatusIconPack][(status == CHAT_FLAG_DND and 'DND' or status == CHAT_FLAG_AFK and 'AFK' or 'Online')])
-				if client == BNET_CLIENT_WOW then
-					if not zoneName or zoneName == '' then
-						infoText = UNKNOWN
-					else
-						if realmName == GetRealmName() then
-							infoText = zoneName
-						else
-							infoText = format('%s - %s', zoneName, realmName)
+		elseif button.buttonType == FRIENDS_BUTTON_TYPE_BNET then
+			local info = C_BattleNet.GetFriendAccountInfo(button.id);
+			if info then
+				nameText = info.accountName
+				infoText = info.gameAccountInfo.richPresence
+				if info.gameAccountInfo.isOnline then
+					local client = info.gameAccountInfo.clientProgram
+					status = info.isDND and 'DND' or info.isAFK and 'AFK' or 'Online'
+	
+					if client == BNET_CLIENT_WOW then
+						local level = info.gameAccountInfo.characterLevel
+						local characterName = info.gameAccountInfo.characterName
+						local classcolor = ClassColorCode(info.gameAccountInfo.className)
+						if characterName then
+							local diff = level ~= 0 and format('FF%02x%02x%02x', GetQuestDifficultyColor(level).r * 255, GetQuestDifficultyColor(level).g * 255, GetQuestDifficultyColor(level).b * 255) or 'FFFFFFFF'
+							nameText = format('%s (%s - %s %s)', nameText, WrapTextInColorCode(characterName, classcolor), LEVEL, WrapTextInColorCode(level, diff))
+						end
+	
+						if info.gameAccountInfo.wowProjectID == WOW_PROJECT_CLASSIC then
+							infoText = format('%s - %s - %s', info.gameAccountInfo.areaName, ClassicServerNameByID[info.gameAccountInfo.realmID] or '', infoText)
 						end
 					end
-			--		button.gameIcon:SetTexture(GameIcons[self.db.GameIconPack][faction])
+	
+					button.gameIcon:SetTexCoord(0, 1, 0, 1)
+					button.gameIcon:SetDrawLayer('OVERLAY')
+					button.gameIcon:SetAlpha(1)
 				else
-					infoText = gameText
-			--		button.gameIcon:SetTexture(GameIcons[self.db.GameIconPack][client])
+					local lastOnline = info.lastOnlineTime
+					infoText = lastOnline == 0 and FRIENDS_LIST_OFFLINE or format(BNET_LAST_ONLINE_TIME, FriendsFrame_GetLastOnline(lastOnline))
 				end
-				nameColor = FRIENDS_BNET_NAME_COLOR
-			else
-			--	button.status:SetTexture(StatusIcons[self.db.StatusIconPack].Offline)
-				nameColor = FRIENDS_GRAY_COLOR
-				infoText = lastOnline == 0 and FRIENDS_LIST_OFFLINE or format(BNET_LAST_ONLINE_TIME, FriendsFrame_GetLastOnline(lastOnline))
 			end
 		end
-
+	
 		if button.summonButton:IsShown() then
 			button.gameIcon:SetPoint('TOPRIGHT', -50, -2)
 		else
 			button.gameIcon:SetPoint('TOPRIGHT', -21, -2)
 		end
-		button.gameIcon:Show()
-
-		if nameText then
-			button.name:SetText(nameText)
-			button.name:SetTextColor(nameColor.r, nameColor.g, nameColor.b)
-			button.info:SetText(infoText)
-			button.info:SetTextColor(.49, .52, .54)
-			if Cooperate then
-				button.info:SetTextColor(1, .96, .45)
-			end
-		--	button.name:SetFont(PA.LSM:Fetch('font', self.db.NameFont), self.db.NameFontSize, self.db.NameFontFlag)
-		--	button.info:SetFont(PA.LSM:Fetch('font', self.db.InfoFont), self.db.InfoFontSize, self.db.InfoFontFlag)
-			
-			button.info:SetPoint('TOPRIGHT', button.name, 'BOTTOMRIGHT', 0, 0)
-		end
-	end
 	
-	--hooksecurefunc('FriendsFrame_UpdateFriendButton', BasicUpdateFriends)
+		if nameText then button.name:SetText(nameText) end
+		if infoText then button.info:SetText(infoText) end
+	
+		if button.Favorite and button.Favorite:IsShown() then
+			button.Favorite:ClearAllPoints()
+			button.Favorite:SetPoint("TOPLEFT", button.name, "TOPLEFT", button.name:GetStringWidth(), 0);
+		end
+	end)
 end
 
 AleaUI:OnInit2(Skin_FriendsFrame)

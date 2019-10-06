@@ -719,14 +719,14 @@ function NP.IsUnitQuestFlagged(unit)
 		local left = _G[E.scantip:GetName().."TextLeft"..i]:GetText()
 
 		if left and questLog[left] then
-			print('Assigned quest', left, 'with', npcID)
+			--print('Assigned quest', left, 'with', npcID)
 			
 			local questText = _G[E.scantip:GetName().."TextLeft"..(i+1)]:GetText()
 			local a1, a2, a3, a4 = string.find(questText, '(%d+)/(%d+)')
 
 			local per1, per2, per3, per4 = string.find(questText, '(%d+)%%')
 
-			print(' Quest text:', questText, a3, a4, per3, per3 == '100' )
+			--print(' Quest text:', questText, a3, a4, per3, per3 == '100' )
 
 			questGUIDs[npcID] = true
 

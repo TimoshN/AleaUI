@@ -91,7 +91,8 @@ AleaUI:OnAddonLoad('Blizzard_GuildUI', function()
 	Skins.ThemeScrollBar('GuildRosterContainerScrollBar')
 	Skins.ThemeScrollBar('GuildRewardsContainerScrollBar')
 	Skins.ThemeScrollBar('GuildInfoDetailsFrameScrollBar')
-	
+	Skins.ThemeScrollBar('GuildInfoFrameInfoMOTDScrollFrameScrollBar')
+
 	Skins.ThemeButton('GuildRecruitmentInviteButton')
 	Skins.ThemeButton('GuildRecruitmentMessageButton')
 	Skins.ThemeButton('GuildRecruitmentDeclineButton')
@@ -172,9 +173,9 @@ AleaUI:OnAddonLoad('Blizzard_GuildUI', function()
 		
 	local frame1 = Skins.NewBackdrop(GuildInfoFrameInfo)
 	frame1:SetFrameLevel(1)--WardrobeCollectionFrame.SetsCollectionFrame.DetailsFrame:GetFrameLevel()-2)
-	frame1:SetSize(100, 20)
-	frame1:SetPoint('TOPLEFT', GuildInfoMOTD, 'TOPLEFT', -12, 5)
-	frame1:SetPoint('BOTTOMRIGHT', GuildInfoMOTD, 'BOTTOMRIGHT', 23, -5)
+	frame1:SetSize(20, 20)
+	frame1:SetPoint('TOPLEFT', GuildInfoFrameInfoHeader2, 'BOTTOMLEFT', 3, 5)
+	frame1:SetPoint('BOTTOMRIGHT', GuildInfoFrameInfoMOTDScrollFrameScrollBar, 'BOTTOMRIGHT', 0, -20)
 	Skins.SetTemplate(frame1, 'DARK')
 	
 	local frame2 = Skins.NewBackdrop(GuildInfoFrameInfo)
