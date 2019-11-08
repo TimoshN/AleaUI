@@ -536,7 +536,7 @@ function AM:SHOW_PVP_FACTION_LOOT_TOAST(event, ...)
 end
 
 function AM:ACHIEVEMENT_EARNED(event, achievementID, alreadyEarned)
-	print(event, achievementID, alreadyEarned)
+	--print(event, achievementID, alreadyEarned)
 	
 	local _, name, points, completed, month, day, year, description, flags, icon, rewardText, isGuildAch, wasEarnedByMe, earnedBy = GetAchievementInfo(achievementID);
 	
