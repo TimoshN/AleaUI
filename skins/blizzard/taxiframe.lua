@@ -19,5 +19,7 @@ AleaUI:OnAddonLoad('Blizzard_FlightMap', function()
 	if not AleaUI.db.skins[varName] then return end
 
 	FlightMapFrame.BorderFrame:StripTextures()
+	FlightMapFrame.BorderFrame.NineSlice:StripTextures()
+
 	Skins.ThemeBackdrop('FlightMapFrame')
 end)

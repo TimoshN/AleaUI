@@ -355,11 +355,13 @@ for port = 1, 1 do
 	_G["ContainerFrame"..port.."PortraitButton"]:SetPoint("TOPLEFT", bagsFrame, "TOPLEFT", 135 - ((portrit_size+5)*port), -8)
 	_G["ContainerFrame"..port.."PortraitButton"]:SetSize(portrit_size, portrit_size*0.7)
 	
-	_G["ContainerFrame"..port.."PortraitButton"].Highlight:SetPoint("CENTER")
-	_G["ContainerFrame"..port.."PortraitButton"].Highlight:SetSize(portrit_size, portrit_size*0.7)
-	_G["ContainerFrame"..port.."PortraitButton"].Highlight:SetTexture([[Interface\Buttons\WHITE8x8]])
-	_G["ContainerFrame"..port.."PortraitButton"].Highlight:SetVertexColor(1, 1, 1, 0.3)
-	
+	if ( _G["ContainerFrame"..port.."PortraitButton"].Highlight ) then 
+		_G["ContainerFrame"..port.."PortraitButton"].Highlight:SetPoint("CENTER")
+		_G["ContainerFrame"..port.."PortraitButton"].Highlight:SetSize(portrit_size, portrit_size*0.7)
+		_G["ContainerFrame"..port.."PortraitButton"].Highlight:SetTexture([[Interface\Buttons\WHITE8x8]])
+		_G["ContainerFrame"..port.."PortraitButton"].Highlight:SetVertexColor(1, 1, 1, 0.3)
+	end
+
 	_G["ContainerFrame"..port.."Portrait"] = _G["ContainerFrame"..port.."PortraitButton"]:CreateTexture(nil, "ARTWORK")
 	_G["ContainerFrame"..port.."Portrait"]:ClearAllPoints()
 	_G["ContainerFrame"..port.."Portrait"]:SetSize(portrit_size, portrit_size*0.7)

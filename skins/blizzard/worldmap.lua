@@ -17,48 +17,15 @@ local function Skin_WorldMap()
 	if not AleaUI.db.skins.enableAll then return end
 	if not AleaUI.db.skins[varName] then return end
 
-	_G['WorldMapFrame']:StripTextures()
+	WorldMapFrame:StripTextures()
 	WorldMapFrame.BorderFrame:StripTextures()
 	WorldMapFrame.BorderFrame.NineSlice:StripTextures()
-	--WorldMapFrame.BorderFrame.Inset:StripTextures()
 
-	_G['QuestScrollFrame']:StripTextures()
+	QuestScrollFrame:StripTextures()
 	
 	
 	WorldMapFrame.NavBar:StripTextures()
 	WorldMapFrame.NavBar.overlay:StripTextures()
-	--Skins.ThemeBackdrop('WorldMapFrameNavBar')
-	--[==[
-	local sizeUpPoints = { "BOTTOMLEFT", 'WorldMapScrollFrame', 'TOPLEFT', 0 , 0 }
-	local sizeDownPoints = { "BOTTOMLEFT", 'WorldMapScrollFrame', 'TOPLEFT', 0 , 0 }
-	
-	local defaultPoint = sizeUpPoints
-
-	local WorldMapFrameNavBar_BG = WorldMapFrameNavBar:CreateTexture()
-	WorldMapFrameNavBar_BG:SetPoint('TOPLEFT', WorldMapFrameNavBar, 'TOPLEFT', -1, -1)
-	WorldMapFrameNavBar_BG:SetPoint('BOTTOMRIGHT', WorldMapScrollFrame, 'TOPRIGHT', 0, 1)
-	WorldMapFrameNavBar_BG:SetColorTexture(0,0,0,1)
-	
-	local WorldMapFrame_BG = WorldMapScrollFrame:CreateTexture()
-	WorldMapFrame_BG:SetOutside()
-	WorldMapFrame_BG:SetColorTexture(0,0,0,1)
-
-	WorldMapFrameNavBar:ClearAllPoints()
-	WorldMapFrameNavBar:SetPoint(defaultPoint[1], _G[defaultPoint[2]], defaultPoint[3], defaultPoint[4], defaultPoint[5])
-
-	hooksecurefunc(WorldMapFrameNavBar, 'SetPoint', function(self, point, parent, anchor, xpos, ypos)
-		if ( point ~= defaultPoint[1] ) or 
-		   ( parent ~= _G[defaultPoint[2]] ) or
-		   ( anchor ~= defaultPoint[3] ) or 
-		   ( xpos ~= defaultPoint[4] ) or
-		   ( ypos ~= defaultPoint[5] ) then
-			
-			WorldMapFrameNavBar:ClearAllPoints()
-			WorldMapFrameNavBar:SetPoint(defaultPoint[1], _G[defaultPoint[2]], defaultPoint[3], defaultPoint[4], defaultPoint[5])
-
-		end
-	end)
-	]==]
 
 	Skins.ThemeScrollBar('QuestScrollFrameScrollBar')
 	Skins.ThemeBackdrop('WorldMapFrame')	
@@ -87,14 +54,6 @@ local function Skin_WorldMap()
 	hiden:Hide()
 	
 	WorldMapFrame.BorderFrame.Tutorial:SetParent(hiden)
---	WorldMapFrameTutorialButton:HookScript('OnShow', WorldMapFrameTutorialButton.Hide)
-	
---	WorldMapFrameTutorialButton.Ring:Kill()
---	WorldMapFrameTutorialButtonRingPulse:Kill()
---	WorldMapFrameTutorialButton:GetHighlightTexture():Kill()
-
---	Skins.ThemeIconButton(WorldMapFrame.UIElementsFrame.OpenQuestPanelButton, true, a1,a2,a3,a4, 0.18)
---	Skins.ThemeIconButton(WorldMapFrame.UIElementsFrame.CloseQuestPanelButton, true, a1,a2,a3,a4, 0.18)
 
 	local rewardFrames = {
 		['MoneyFrame'] = true,
@@ -149,35 +108,7 @@ local function Skin_WorldMap()
 			HandleReward(button)
 		end
 	end)
-	--[==[
-	function WorldMapFrame.UIElementsFrame.BountyBoard.GetDisplayLocation(self)
-		if InCombatLockdown() then
-			print('BountyBoard - Skip Update GetDisplayLocation')
-			return
-		end
-	 
-		return WorldMapBountyBoardMixin.GetDisplayLocation(self)
-	end
-	 
-	function WorldMapFrame.UIElementsFrame.ActionButton.GetDisplayLocation(self, useAlternateLocation)
-		if InCombatLockdown() then
-			print('ActionButton - Skip Update GetDisplayLocation')
-			return
-		end
-	 
-		return WorldMapActionButtonMixin.GetDisplayLocation(self, useAlternateLocation)
-	end
-	 
-	function WorldMapFrame.UIElementsFrame.ActionButton.Refresh(self)
-		if InCombatLockdown() then
-			print('ActionButton - Skip Update Refresh')
-			return
-		end
-	 
-		WorldMapActionButtonMixin.Refresh(self)
-	end
-	]==]
-	
+
 	local function StyleNavButton(frame, index)
 		frame:StripTextures()
 		

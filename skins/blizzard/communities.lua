@@ -22,6 +22,9 @@ AleaUI:OnAddonLoad('Blizzard_Communities', function()
 
     CommunitiesFrame.PortraitOverlay:Kill()
 
+    CommunitiesFrame.NineSlice:StripTextures()
+    --CommunitiesFrame.NineSlice:SetAlpha(0)
+    
     CommunitiesFrameCommunitiesList:StripTextures()
     CommunitiesFrameCommunitiesList.InsetFrame:StripTextures()
    -- Skins.MassKillTexture('CommunitiesFrameCommunitiesList')
@@ -32,6 +35,7 @@ AleaUI:OnAddonLoad('Blizzard_Communities', function()
 
     CommunitiesFrame.Chat.InsetFrame:StripTextures()
     CommunitiesFrame.MemberList.InsetFrame:StripTextures()
+    CommunitiesFrame.MemberList.ColumnDisplay:StripTextures()
 
     local temp = Skins.NewBackdrop(CommunitiesFrame)	
 	temp:SetBackdropColor(default_background_color[1], default_background_color[2], default_background_color[3], 1)
