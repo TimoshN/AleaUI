@@ -19,18 +19,23 @@ local color_def = {
 local runesRegen = function(self, elapsed)
 	for i=1, 6 do
 		local start, duration, runeReady = GetRuneCooldown(i);
-		local color = CBF:GetOptions('color') or color_def[4]
-		 
-		self.bars[i]:SetMinMaxValues(start, start+duration)
-		self.bars[i]:SetValue(GetTime())
-		
-		local alpha = 1
-		
-		if not runeReady then --or ( GetTime() < start+duration ) then
-			alpha = 0.5
+
+		if ( start ) then 
+			local color = CBF:GetOptions('color') or color_def[4]
+			
+			self.bars[i]:SetMinMaxValues(start, start+duration)
+			self.bars[i]:SetValue(GetTime())
+			
+			local alpha = 1
+			
+			if not runeReady then --or ( GetTime() < start+duration ) then
+				alpha = 0.5
+			end
+			
+			self.bars[i]:SetStatusBarColor(color[1]*alpha, color[2]*alpha, color[3]*alpha, color[4] or 1)
+		else 
+			print('EROR IN START TIME', start, duration, runeReady)
 		end
-		
-		self.bars[i]:SetStatusBarColor(color[1]*alpha, color[2]*alpha, color[3]*alpha, color[4] or 1)
 	end
 end
 
