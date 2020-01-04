@@ -27,7 +27,8 @@ AleaUI:OnAddonLoad('Blizzard_Communities', function()
     
     CommunitiesFrameCommunitiesList:StripTextures()
     CommunitiesFrameCommunitiesList.InsetFrame:StripTextures()
-   -- Skins.MassKillTexture('CommunitiesFrameCommunitiesList')
+    -- Skins.MassKillTexture('CommunitiesFrameCommunitiesList')
+    CommunitiesFrameCommunitiesList.InsetFrame:SetAlpha(0)
 
     CommunitiesFrameCommunitiesList.Bg:SetAlpha(0)
     CommunitiesFrameCommunitiesList.FilligreeOverlay:StripTextures()
@@ -37,9 +38,14 @@ AleaUI:OnAddonLoad('Blizzard_Communities', function()
     CommunitiesFrame.MemberList.InsetFrame:StripTextures()
     CommunitiesFrame.MemberList.ColumnDisplay:StripTextures()
 
-    local temp = Skins.NewBackdrop(CommunitiesFrame)	
-	temp:SetBackdropColor(default_background_color[1], default_background_color[2], default_background_color[3], 1)
-    temp:SetBackdropBorderColor(default_border_color[1], default_border_color[2], default_border_color[3],1)
+    CommunitiesFrame.MemberList.InsetFrame.NineSlice:StripTextures()
+
+    CommunitiesFrameInset:SetAlpha(0)
+    CommunitiesFrame.Chat.InsetFrame:SetAlpha(0)
+
+    -- local temp = Skins.NewBackdrop(CommunitiesFrame)	
+	-- temp:SetBackdropColor(default_background_color[1], default_background_color[2], default_background_color[3], 1)
+    -- temp:SetBackdropBorderColor(default_border_color[1], default_border_color[2], default_border_color[3],1)
     
     Skins.ThemeScrollBar(CommunitiesFrameCommunitiesListListScrollFrame.ScrollBar)
     Skins.ThemeScrollBar(CommunitiesFrame.Chat.MessageFrame.ScrollBar)
@@ -48,8 +54,40 @@ AleaUI:OnAddonLoad('Blizzard_Communities', function()
     Skins.ThemeDropdown(CommunitiesFrame.StreamDropDownMenu)
 
     Skins.ThemeButton(CommunitiesFrame.InviteButton)
+    Skins.ThemeButton(CommunitiesFrame.CommunitiesControlFrame.GuildRecruitmentButton)
 
     Skins.ThemeEditBox(CommunitiesFrame.ChatEditBox) --, realSize, width, height)
+
+    Skins.ThemeBackdrop('CommunitiesFrame')	
+    
+    -- CommunitiesFrame.ChatTab:DisableDrawLayer('Border')
+    -- CommunitiesFrame.RosterTab:DisableDrawLayer('Border')
+    -- CommunitiesFrame.GuildBenefitsTab:DisableDrawLayer('Border')
+    -- CommunitiesFrame.GuildInfoTab:DisableDrawLayer('Border')
+
+    local function SkinTab(tab)
+		tab:DisableDrawLayer('BORDER')
+		tab:GetNormalTexture():SetTexCoord(unpack(AleaUI.media.texCoord))
+		tab:GetNormalTexture():SetSize(20, 20)
+	
+        tab.pushed = true;
+        
+        tab.Icon:SetTexCoord(unpack(AleaUI.media.texCoord))
+		
+		local checked = tab:GetCheckedTexture()
+		local step = 0.06
+		checked:SetTexCoord(step, 1-step, step, 1-step)
+		
+		Skins.ThemeBackdrop(tab)
+
+		local point, relatedTo, point2, x, y = tab:GetPoint()
+		tab:SetPoint(point, relatedTo, point2, 1, y)
+    end
+    
+    SkinTab(CommunitiesFrame.ChatTab)
+    SkinTab(CommunitiesFrame.RosterTab)
+    SkinTab(CommunitiesFrame.GuildBenefitsTab)
+    SkinTab(CommunitiesFrame.GuildInfoTab)
 
     --[==[
 	Skins.MassKillTexture('HonorFrame')

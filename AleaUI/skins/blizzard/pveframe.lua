@@ -26,6 +26,9 @@ local function Skin_PVEFrame()
 	LFGListFrame.ApplicationViewer.RoleColumnHeader:StripTextures()
 	LFGListFrame.ApplicationViewer.ItemLevelColumnHeader:StripTextures()
 
+	LFGListFrame.CategorySelection.Inset:SetAlpha(0)
+
+
 	Skins.ThemeScrollBar('LFGListApplicationViewerScrollFrameScrollBar')
 
 	Skins.MassKillTexture('PVEFrame')
@@ -40,7 +43,9 @@ local function Skin_PVEFrame()
 	RaidFinderFrame:StripTextures()
 	RaidFinderFrameBottomInset:StripTextures()
 	RaidFinderFrameRoleInset:StripTextures()
-	
+	RaidFinderFrameRoleInset.NineSlice:StripTextures()
+	RaidFinderFrameBottomInset:SetAlpha(0)
+
 	hooksecurefunc('LFGListCategorySelection_UpdateCategoryButtons', function()	
 		for i=1, #LFGListFrame.CategorySelection.CategoryButtons do			
 			LFGListFrame.CategorySelection.CategoryButtons[i].Label:SetFont(default_font, 12, 'NONE')
@@ -135,14 +140,14 @@ local function Skin_PVEFrame()
 	
 --	AleaUI:CreateBackdrop(RaidFinderFrameBottomInset, RaidFinderFrameBottomInset, default_border_color, default_background_color)
 	
-	local blueTextureArtwork = CreateFrame('Frame', nil, PVEFrame)
-	blueTextureArtwork:SetSize(1,1)
-	blueTextureArtwork:SetAllPoints(PVEFrameBlueBg)
+	-- local blueTextureArtwork = CreateFrame('Frame', nil, PVEFrame)
+	-- blueTextureArtwork:SetSize(1,1)
+	-- blueTextureArtwork:SetAllPoints(PVEFrameBlueBg)
 	
-	AleaUI:CreateBackdrop(blueTextureArtwork, nil, default_border_color, default_background_color)
+	-- AleaUI:CreateBackdrop(blueTextureArtwork, nil, default_border_color, default_background_color)
 	
-	blueTextureArtwork:SetUIBorderDrawLayer('BORDER', -1)
-	blueTextureArtwork:SetUIBackgroundDrawLayer('BACKGROUND', -1)
+	-- blueTextureArtwork:SetUIBorderDrawLayer('BORDER', -1)
+	-- blueTextureArtwork:SetUIBackgroundDrawLayer('BACKGROUND', -1)
 	
 	local LFDQueueFrameBorder = CreateFrame('Frame', nil, LFDQueueFrameRandom)
 		LFDQueueFrameBorder:SetPoint('TOPRIGHT', LFDQueueFrame, 'TOPRIGHT', -5, -148)
@@ -198,20 +203,20 @@ local function Skin_PVEFrame()
 	AleaUI:OnAddonLoad('Blizzard_ChallengesUI', function()
 		ChallengesFrameInset:StripTextures()
 		
-		ChallengesFrame:HookScript('OnShow', function()
-			blueTextureArtwork:Hide()
-		end)
-		ChallengesFrame:HookScript('OnHide', function()
-			blueTextureArtwork:Show()
-		end)
+		-- ChallengesFrame:HookScript('OnShow', function()
+		-- 	blueTextureArtwork:Hide()
+		-- end)
+		-- ChallengesFrame:HookScript('OnHide', function()
+		-- 	blueTextureArtwork:Show()
+		-- end)
 		
-		if ChallengesFrame:IsVisible() then
-			blueTextureArtwork:Hide()
-		else
-			blueTextureArtwork:Show()
-		end
+		-- if ChallengesFrame:IsVisible() then
+		-- 	blueTextureArtwork:Hide()
+		-- else
+		-- 	blueTextureArtwork:Show()
+		-- end
 		
-		AleaUI:CreateBackdrop(ChallengesFrame, ChallengesFrameInset, default_border_color, default_background_color)
+		-- AleaUI:CreateBackdrop(ChallengesFrame, ChallengesFrameInset, default_border_color, default_background_color)
 		
 	--	local texture = Skins.GetTextureObject('ChallengesFrameDetails', [[Interface\Common\bluemenu-vert]], 0.00781250, 0.00781250, 0, 1)
 	--	texture:SetAlpha(0)

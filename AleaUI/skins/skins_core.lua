@@ -138,16 +138,58 @@ function Skins.ThemeBackdrop(frame)
 		f:SetUIBackgroundDrawLayer('BACKGROUND', -1)
 	end
 	
-	if f.NineSlice then
-		f.NineSlice:StripTextures()
+	if ( f.TitleBg ) then 
+		f.TitleBg:Kill()
+	end
 
-		f.NineSlice.TopLeftCorner:SetTexture(nil)
-		f.NineSlice.TopRightCorner:SetTexture(nil)
+	if f.BorderFrame then
+		if f.BorderFrame.NineSlice then
+			f.BorderFrame.NineSlice:StripTextures()
 
-		f.NineSlice.BottomLeftCorner:SetTexture(nil)
-		f.NineSlice.BottomRightCorner:SetTexture(nil)
+			f.BorderFrame.NineSlice.TopLeftCorner:Kill()
+			f.BorderFrame.NineSlice.TopRightCorner:Kill()
+
+			f.BorderFrame.NineSlice.BottomLeftCorner:Kill()
+			f.BorderFrame.NineSlice.BottomRightCorner:Kill()
+
+			f.BorderFrame.NineSlice.TopEdge:Kill()
+			f.BorderFrame.NineSlice.BottomEdge:Kill()
+			f.BorderFrame.NineSlice.LeftEdge:Kill()
+			f.BorderFrame.NineSlice.RightEdge:Kill()
+		end
+	else 		
+		if f.NineSlice then
+			f.NineSlice:StripTextures()
+
+			f.NineSlice.TopLeftCorner:Kill()
+			f.NineSlice.TopRightCorner:Kill()
+
+			f.NineSlice.BottomLeftCorner:Kill()
+			f.NineSlice.BottomRightCorner:Kill()
+
+			f.NineSlice.TopEdge:Kill()
+			f.NineSlice.BottomEdge:Kill()
+			f.NineSlice.LeftEdge:Kill()
+			f.NineSlice.RightEdge:Kill()
+		end
+	end 
+
+	if ( f.Border ) then 
+
+		f.Border.Bg:Kill()
+		f.Border.TopEdge:Kill()
+		f.Border.BottomEdge:Kill()
+		f.Border.LeftEdge:Kill()
+		f.Border.RightEdge:Kill()
+
+		f.Border.TopLeftCorner:Kill()
+		f.Border.TopRightCorner:Kill()
+
+		f.Border.BottomLeftCorner:Kill()
+		f.Border.BottomRightCorner:Kill()
 	end
 end
+
 
 local function OnEnterButtonBorder(self)
 	self.modborder:SetUIBackdropBorderColor(1, 1, 1, 1)

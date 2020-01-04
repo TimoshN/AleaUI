@@ -22,6 +22,8 @@ AleaUI:OnAddonLoad('Blizzard_PVPUI', function()
 	Skins.ThemeDropdown('HonorFrameTypeDropDown')
 	
 	HonorFrame.Inset:StripTextures()
+	HonorFrame.Inset:SetAlpha(0)
+
 	HonorFrameBg:SetAlpha(0)
 	HonorFrame.BonusFrame:StripTextures()
 	HonorFrame.BonusFrame.ShadowOverlay:Hide()
@@ -48,10 +50,16 @@ AleaUI:OnAddonLoad('Blizzard_PVPUI', function()
 	--Skins.ThemeButton('WarGameStartButton')
 	
 	PVPQueueFrame.HonorInset.CasualPanel:StripTextures()
-	Skins.MassKillTexture('PVPQueueFrame')
 	PVPQueueFrame.HonorInset:StripTextures()
+	PVPQueueFrame.HonorInset.NineSlice:StripTextures()
+
+	Skins.MassKillTexture('PVPQueueFrame')
 	
 	ConquestFrame:StripTextures()
+	ConquestFrame.Inset:StripTextures()
+	ConquestFrame.Inset:SetAlpha(0)
+	ConquestFrame.ShadowOverlay:SetAlpha(0)
+
 	--ConquestFrame.RoleInset:StripTextures()
 	--ConquestFrame.Inset:StripTextures()
 	--ConquestFrame.ShadowOverlay:Hide()

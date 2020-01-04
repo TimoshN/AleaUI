@@ -28,6 +28,11 @@ local function SkinCharacterFrame()
 	CharacterStatsPane.ClassBackground:SetAlpha(0)
 	CharacterLevelText:SetFont(default_font, Skins.default_font_size, 'OUTLINE')
 	
+	CharacterFrame.TitleBg:Kill()
+	CharacterFrameInset:SetAlpha(0.00001)
+	CharacterFrameInsetRight.Bg:Kill()
+	CharacterFrame.TopTileStreaks:Kill()
+
 --	_G['CharacterStatsPaneTop']:SetAlpha(0)
 --	_G['CharacterStatsPaneBottom']:SetAlpha(0)
 

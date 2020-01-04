@@ -18,7 +18,9 @@ local function EncounterJournalStyle()
 	if not AleaUI.db.skins[varName] then return end
 
 	_G['EncounterJournal']:StripTextures()
-		
+	
+	EncounterJournalInset.NineSlice:StripTextures()
+
 	local defaultPoint = "TOPLEFT"
 	local defaultParent = EncounterJournal
 	local defaultAnchor = 'TOPLEFT'
@@ -26,13 +28,11 @@ local function EncounterJournalStyle()
 	local defaultYpos = -30
 
 	Skins.ThemeBackdrop('EncounterJournal')	
---	WorldMapFrame.BorderFrame:StripTextures()
 	_G['EncounterJournalInset']:StripTextures()
 	
 	_G['EncounterJournalNavBar']:StripTextures()
 	_G['EncounterJournalNavBar'].overlay:StripTextures()
-	--Skins.ThemeBackdrop('EncounterJournalNavBar')
-	
+
 	Skins.ThemeEditBox('EncounterJournalSearchBox', true) --, realSize, width, height)
 	
 	Skins.ThemeDropdown('EncounterJournalInstanceSelectTierDropDown')

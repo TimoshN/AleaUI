@@ -358,6 +358,11 @@ function Skins:StyleTooltipsCustom(frame)
 	
 	AleaUI:CreateBackdrop(border, border, {0,0,0,1}, {0.1,0.1,0.1,0.8})
 
+	if f.RightEdge then	f.RightEdge:SetAlpha(0) end
+	if f.LeftEdge then f.LeftEdge:SetAlpha(0) end
+	if f.TopEdge then f.TopEdge:SetAlpha(0) end
+	if f.BottomEdge then f.BottomEdge:SetAlpha(0) end
+
 	if f.BorderTopLeft then	f.BorderTopLeft:SetAlpha(0) end
 	if f.BorderTopRight then	f.BorderTopRight:SetAlpha(0) end
 	if f.BorderBottomRight then	f.BorderBottomRight:SetAlpha(0) end

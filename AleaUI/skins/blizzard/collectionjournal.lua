@@ -33,8 +33,11 @@ local function SkinCollectionUI()
 	_G["ToyBox"]:StripTextures()
 	
 	ToyBox.iconsFrame:StripTextures()
+	ToyBox.iconsFrame.NineSlice:StripTextures()
+
 	HeirloomsJournal.iconsFrame:StripTextures()
-	
+	HeirloomsJournal.iconsFrame.NineSlice:StripTextures()
+
 	_G['PetJournalPetCardInset']:StripTextures()
 	
 	PetJournalTutorialButton:Kill()
@@ -148,6 +151,8 @@ local function SkinCollectionUI()
 	end
 	
 	WardrobeCollectionFrame.ItemsCollectionFrame:StripTextures()
+	WardrobeCollectionFrame.ItemsCollectionFrame.NineSlice:StripTextures()
+
 	Skins.SetTemplate(WardrobeCollectionFrame.ItemsCollectionFrame, 'DARK')
 	
 	Skins.MassKillTexture('WardrobeFrame')

@@ -22,6 +22,7 @@ local function Skin_FriendsFrame()
 
 	FriendsFrame.NineSlice:StripTextures()
 	FriendsFrameInset.NineSlice:StripTextures()
+	WhoFrameListInset.NineSlice:StripTextures()
 
 --	_G['FriendsFrameFriendsScrollFrame']:StripTextures()
 
@@ -44,7 +45,7 @@ local function Skin_FriendsFrame()
 	--	PendingListFrameMiddle:Kill()
 	--	PendingListFrameBottom:Kill()
 
-	for i=1, 3 do
+	for i=1, 4 do
 		_G["WhoFrameColumnHeader"..i]:StripTextures(true)
 	end
 		
@@ -64,7 +65,7 @@ local function Skin_FriendsFrame()
 
 	Skins.ThemeScrollBar(WhoListScrollFrame.scrollBar)
 
-	WhoFrameEditBoxInset:StripTextures()
+	WhoFrameEditBoxInset:Kill()
 		
 	local border, parent = Skins.ThemeEditBox('WhoFrameEditBox')
 	border:SetPoint('TOPLEFT', parent, 'TOPLEFT', -5, -3)
