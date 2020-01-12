@@ -1,4 +1,7 @@
-﻿local names = { 'DropDownList1MenuBackdrop', 'DropDownList2MenuBackdrop', 'DropDownList1Backdrop' }
+﻿local names = { 
+	'DropDownList1MenuBackdrop', 'DropDownList2MenuBackdrop', 
+	'DropDownList1Backdrop', 'DropDownList2Backdrop' 
+}
 
 DropDownList1MenuBackdrop:SetBackdrop({ 
 	bgFile = [[Interface\Buttons\WHITE8x8]], 

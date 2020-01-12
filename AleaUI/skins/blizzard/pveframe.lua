@@ -20,6 +20,8 @@ local function Skin_PVEFrame()
 
 	LFGListFrame.ApplicationViewer:StripTextures()
 	LFGListFrame.ApplicationViewer.Inset:StripTextures()
+	LFGListFrame.ApplicationViewer.Inset.NineSlice:StripTextures()
+
 	LFGListFrame.ApplicationViewer.InfoBackground:SetTexCoord(unpack(AleaUI.media.texCoord))
 
 	LFGListFrame.ApplicationViewer.NameColumnHeader:StripTextures()
@@ -58,28 +60,22 @@ local function Skin_PVEFrame()
 	Skins.ThemeIconButton(LFGListFrame.SearchPanel.RefreshButton, true)
 
 	LFGListFrame.CategorySelection.Inset:StripTextures()
+
 	LFGListFrame.SearchPanel.ResultsInset:StripTextures()
+	LFGListFrame.SearchPanel.ResultsInset.NineSlice:SetAlpha(0)
 
 	Skins.ThemeFilterButton(LFGListFrame.SearchPanel.FilterButton)
 
-	--LFGListFrame.CategorySelection.StartGroupButton.RightSeparator:SetAlpha(0)
 	Skins.ThemeButton(LFGListFrame.CategorySelection.StartGroupButton)
---	LFGListFrame.CategorySelection.StartGroupButton:SetHeight(16)
-
-	--LFGListFrame.CategorySelection.FindGroupButton.LeftSeparator:SetAlpha(0)
 	Skins.ThemeButton(LFGListFrame.CategorySelection.FindGroupButton)
---	LFGListFrame.CategorySelection.FindGroupButton:SetHeight(16)
-
-	--LFGListFrame.SearchPanel.BackButton.RightSeparator:SetAlpha(0)
 	Skins.ThemeButton(LFGListFrame.SearchPanel.BackButton)
---	LFGListFrame.SearchPanel.BackButton:SetHeight(16)
-
-	--LFGListFrame.SearchPanel.SignUpButton.LeftSeparator:SetAlpha(0)
 	Skins.ThemeButton(LFGListFrame.SearchPanel.SignUpButton)
---	LFGListFrame.SearchPanel.SignUpButton:SetHeight(16)
 
 	LFGListFrame.EntryCreation:StripTextures()
 	LFGListFrame.EntryCreation.Inset:StripTextures()
+
+	LFGListFrame.EntryCreation.Inset.NineSlice:SetAlpha(0)
+
 
 	Skins.ThemeButton(LFGListFrame.EntryCreation.CancelButton)
 	Skins.ThemeButton(LFGListFrame.EntryCreation.ListGroupButton)
@@ -91,13 +87,12 @@ local function Skin_PVEFrame()
 	Skins.ThemeCheckBox(LFGListFrame.EntryCreation.ItemLevel.CheckButton)
 	Skins.ThemeCheckBox(LFGListFrame.EntryCreation.VoiceChat.CheckButton)
 	
+	Skins.ThemeCheckBox(LFGListFrame.EntryCreation.PrivateGroup.CheckButton)
+
 	Skins.ThemeButton(LFGListFrame.ApplicationViewer.RemoveEntryButton)
 	Skins.ThemeButton(LFGListFrame.ApplicationViewer.EditButton)
 	Skins.ThemeCheckBox(LFGListFrame.ApplicationViewer.AutoAcceptButton)
 	
---	LFGListEntryCreationDescription:StripTextures()
---	Skins.ThemeBackdrop('LFGListEntryCreationDescription')
---	Skins.ThemeScrollBar('LFGListEntryCreationDescriptionScrollBar')
 	Skins.ThemeScrollBar('LFDQueueFrameRandomScrollFrameScrollBar')
 	Skins.ThemeScrollBar('LFDQueueFrameSpecificListScrollFrameScrollBar')
 	

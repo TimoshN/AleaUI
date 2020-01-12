@@ -966,11 +966,14 @@ do
 	--ChatFrameToggleVoiceDeafenButton:Kill()
 	--ChatFrameToggleVoiceMuteButton:Kill()
 	
-	--[==[
-	ChatFrameChannelButton:ClearAllPoints()
-	ChatFrameChannelButton:SetPoint('TOPLEFT', ChatFrame1, 'TOPRIGHT', 0, 0)
-	]==]
-	
+	if (ChatFrameChannelButton) then
+		ChatFrameChannelButton:ClearAllPoints()
+		ChatFrameChannelButton:SetPoint('TOPRIGHT', ChatFrame1, 'TOPRIGHT', 6, -38)
+		ChatFrameChannelButton:DisableDrawLayer('ARTWORK')
+		ChatFrameChannelButton.Icon:SetDesaturated(true)
+		ChatFrameChannelButton:SetAlpha(0.4)
+	end 
+
 	--Make channels sticky
 	ChatTypeInfo.SAY.sticky = 1
 	ChatTypeInfo.EMOTE.sticky = 1
@@ -1931,6 +1934,9 @@ do
 		chatframe:UpdateChatBackground()	
 		
 		E:Mover(toastButtonMover, 'toastButtonMover')
+
+
+		--ChatFrameChannelButton:SetPoint('TOPRIGHT', frame, 'TOPRIGHT', 0, 0)
 	end
 	
 	E.UpdateChatSettings = LoadChatSettings

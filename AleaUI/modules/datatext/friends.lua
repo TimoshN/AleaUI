@@ -39,17 +39,6 @@ local C_FriendList_GetFriendInfoByIndex = C_FriendList.GetFriendInfoByIndex
 local ChatFrame_SendBNetTell = ChatFrame_SendBNetTell
 local InCombatLockdown = InCombatLockdown
 
-do -- other non-english locales require this
-	E.UnlocalizedClasses = {}
-	for k,v in pairs(_G.LOCALIZED_CLASS_NAMES_MALE) do E.UnlocalizedClasses[v] = k end
-	for k,v in pairs(_G.LOCALIZED_CLASS_NAMES_FEMALE) do E.UnlocalizedClasses[v] = k end
-
-	function E:UnlocalizedClassName(className)
-		return (className and className ~= '') and E.UnlocalizedClasses[className]
-	end
-end
-
-
 -- create a popup
 if not DT.PopupDialogs then DT.PopupDialogs = {} end
 DT.PopupDialogs.SET_BN_BROADCAST = {
@@ -388,7 +377,7 @@ local function Click(self, btn)
 
 		E.EasyMenu(menuList, menuFrame, "cursor", 0, 0, "MENU", 2)
 	elseif InCombatLockdown() then
-		_G.UIErrorsFrame:AddMessage(E.InfoColor.._G.ERR_NOT_IN_COMBAT)
+		_G.UIErrorsFrame:AddMessage('|cFFFF0000'.._G.ERR_NOT_IN_COMBAT)
 	else
 		ToggleFriendsFrame(1)
 	end

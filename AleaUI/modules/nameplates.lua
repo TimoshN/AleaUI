@@ -160,32 +160,7 @@ end
 local disableMouseover = true
 
 local function DisableBlizzardNamePlates()
-	--NamePlateDriverFrame:UnregisterAllEvents()
-	--NamePlateDriverFrame:RegisterEvent("FORBIDDEN_NAME_PLATE_CREATED");
-	--NamePlateDriverFrame:RegisterEvent("FORBIDDEN_NAME_PLATE_UNIT_ADDED");
-	--NamePlateDriverFrame:RegisterEvent("FORBIDDEN_NAME_PLATE_UNIT_REMOVED");
-	--NamePlateDriverFrame.SetBaseNamePlateSize = E.noop
-
 	NamePlateDriverFrame:UnregisterEvent("UNIT_AURA");
-	
-	--[==[
-	hooksecurefunc(NamePlateDriverMixin, 'SetBaseNamePlateSize', function()
-		print('Hook', 'NamePlateDriverMixin:SetBaseNamePlateSize')
-	end)
-	hooksecurefunc(NamePlateDriverFrame, 'SetBaseNamePlateSize', function()
-		print('Hook', 'NamePlateDriverFrame:SetBaseNamePlateSize')
-	end)
-
-	hooksecurefunc(NamePlateDriverMixin, 'UpdateNamePlateOptions', function()
-		print('Hook', 'NamePlateDriverMixin:UpdateNamePlateOptions')
-		NP:UpdateBasePlateSize()
-	end)
-
-	hooksecurefunc(NamePlateDriverFrame, 'UpdateNamePlateOptions', function()
-		print('Hook', 'NamePlateDriverFrame:UpdateNamePlateOptions')
-		NP:UpdateBasePlateSize()
-	end)
-	]==]
 
 	local outcombatUpdate = CreateFrame('Frame')
 	outcombatUpdate:SetScript('OnEvent', function(self, event)
@@ -237,15 +212,8 @@ local function DisableBlizzardNamePlates()
 	end
 end
 
-AleaUI:OnInit2(function()
-	if NamePlateDriverFrame then
-		DisableBlizzardNamePlates()
-	else
-		AleaUI:OnAddonLoad('Blizzard_NamePlates', DisableBlizzardNamePlates)
-	end
-end)
-
 local defaults = {
+	enabled = true, 
 
 	reactions = {
 		tapped  		= { r = 0.6, g = 0.6, b = 0.6 },
@@ -671,20 +639,22 @@ E.default_settings.nameplates = defaults
 local GetNamePlateForUnit = C_NamePlate.GetNamePlateForUnit
 local GetNamePlates = C_NamePlate.GetNamePlates
 
-NP:RegisterEvent("NAME_PLATE_CREATED");
-NP:RegisterEvent("NAME_PLATE_UNIT_ADDED");
-NP:RegisterEvent("NAME_PLATE_UNIT_REMOVED");
-NP:RegisterEvent("PLAYER_TARGET_CHANGED");
---NP:RegisterEvent("DISPLAY_SIZE_CHANGED");
---NP:RegisterEvent("CVAR_UPDATE");
-NP:RegisterEvent("RAID_TARGET_UPDATE");
-NP:RegisterEvent('UPDATE_MOUSEOVER_UNIT')
-if ( not E.isClassic ) then
-NP:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE")
+function NP:InitEvents()
+	self:RegisterEvent("NAME_PLATE_CREATED");
+	self:RegisterEvent("NAME_PLATE_UNIT_ADDED");
+	self:RegisterEvent("NAME_PLATE_UNIT_REMOVED");
+	self:RegisterEvent("PLAYER_TARGET_CHANGED");
+	--NP:RegisterEvent("DISPLAY_SIZE_CHANGED");
+	--NP:RegisterEvent("CVAR_UPDATE");
+	self:RegisterEvent("RAID_TARGET_UPDATE");
+	self:RegisterEvent('UPDATE_MOUSEOVER_UNIT')
+	if ( not E.isClassic ) then
+		self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE")
+	end
+	self:RegisterEvent('QUEST_LOG_UPDATE')
+	self:RegisterEvent('QUEST_WATCH_UPDATE')
+	self:RegisterEvent('CURSOR_UPDATE')
 end
-NP:RegisterEvent('QUEST_LOG_UPDATE')
-NP:RegisterEvent('QUEST_WATCH_UPDATE')
-NP:RegisterEvent('CURSOR_UPDATE')
 
 local questGUIDs = {}
 local questLog = {}
@@ -796,16 +766,8 @@ function NP:NAME_PLATE_UNIT_ADDED(event, unit)
 	if ( realFrame ) then
 		numVisiblePlates = numVisiblePlates + 1
 
-	--	print('Update count plates', numVisiblePlates)
-
-		--realFrame.namePlateUnitToken = unit
-
 		realFrame.AleaNP.plateNamePlate = nil
 		realFrame.AleaNP:Show()
-		
-	--	if realFrame.UnitFrame then
-	--		realFrame.UnitFrame:SetAlpha(0)
-	--	end
 		
 		realFrame.AleaNP.overlay:Hide()
 
@@ -817,14 +779,6 @@ function NP:NAME_PLATE_UNIT_ADDED(event, unit)
 
 		realFrame.AleaNP.isMinus = UnitClassification(unit) == 'minus'
 		realFrame.AleaNP.isPlayer = UnitIsPlayer(unit)
-
-		--[==[
-			UnitCanAssist('player', unit)
-
-			UnitReaction("player", unit) and UnitReaction("player", unit) <= 4
-
-			UnitIsFriend('player', unit)
-		]==]
 
 		realFrame.AleaNP.isFriend = NP:IsFriendly(unit)
 
@@ -847,19 +801,11 @@ function NP:NAME_PLATE_UNIT_REMOVED(event, unit)
 	if ( realFrame ) then
 		numVisiblePlates = numVisiblePlates -1
 
-	--	print('Update count plates', numVisiblePlates)
-
-		--realFrame.namePlateUnitToken = nil
-
 		realFrame.AleaNP:Hide()
 		realFrame.AleaNP.FriendlyPlate:Hide()
 		realFrame.AleaNP.overlay:Hide()
-		
-	--	if realFrame.UnitFrame then
-	--		realFrame.UnitFrame:SetAlpha(0)
-	--	end
-		
-		E.ClearAnimationCutaway( realFrame.AleaNP )
+
+		--E.ClearAnimationCutaway( realFrame.AleaNP )
 
 		realFrame.AleaNP.isMinus = nil
 		realFrame.AleaNP.guid = nil
@@ -918,12 +864,12 @@ function NP:PLAYER_TARGET_CHANGED(event)
 end
 
 function NP:DISPLAY_SIZE_CHANGED(event)
+
 end
 
 
 local throttledAggroCheck = true
 local function ThrottledUpdateAggro()
---	print('ThrottledUpdateAggro')
 
 	for _, frame in pairs(GetNamePlates()) do
 		if not frame.AleaNP.disableBars then
@@ -939,7 +885,6 @@ function NP:UNIT_THREAT_SITUATION_UPDATE(event, unit)
 	if event == 'UNIT_THREAT_SITUATION_UPDATE' and ( unit == 'player' or unit == 'vehicle' or unit == 'per' ) then
 
 		if throttledAggroCheck then
-		--	ThrottledUpdateAggro()
 
 			throttledAggroCheck = false
 
@@ -958,11 +903,9 @@ function NP:UpdateCustomName()
 end
 
 function NP.EventHandler(self, event, unit)
-	if event == 'UNIT_THREAT_SITUATION_UPDATE' and ( unit == 'player' or unit == 'vehicle' or unit == 'per' ) then
+	if event == 'UNIT_THREAT_SITUATION_UPDATE' and ( unit == 'player' or unit == 'vehicle' or unit == 'pet' ) then
 
 		if throttledAggroCheck then
-		--	ThrottledUpdateAggro()
-
 			throttledAggroCheck = false
 
 			C_Timer.After(0.05, ThrottledUpdateAggro)
@@ -1066,24 +1009,12 @@ mouseoverUpdate:SetScript('OnUpdate', function(self, elapsed)
 	if UnitExists('mouseover') then
 
 		if mouseoverUpdate.overlayFrame then
-		--	if MouseIsOver(mouseoverUpdate.overlayFrame) then
-		--		if not mouseoverUpdate.overlayFrame.AleaNP.mouseIsOver then
-		--			mouseoverUpdate.overlayFrame.AleaNP.mouseIsOver = true
-					mouseoverUpdate.overlayFrame.AleaNP.overlay:Show()
-		--			mouseoverUpdate.overlayFrame.AleaNP:UpdateFrameLevel()
-		--		end
-		--	else
-		--		mouseoverUpdate.overlayFrame.AleaNP.mouseIsOver = false
-		--		mouseoverUpdate.overlayFrame.AleaNP.overlay:Hide()
-			--	mouseoverUpdate.overlayFrame.AleaNP:UpdateTargetAlpha()
-			--	mouseoverUpdate.overlayFrame.AleaNP:UpdateFrameLevel()
-		--	end
+			mouseoverUpdate.overlayFrame.AleaNP.overlay:Show()
 		end
 		return
 	end
 
 	for _, frame in pairs(GetNamePlates()) do
-	--	frame.AleaNP.mouseIsOver = false
 		frame.AleaNP.overlay:Hide()
 	end
 
@@ -1115,7 +1046,6 @@ function NP:UPDATE_MOUSEOVER_UNIT()
 end
 
 function NP:CURSOR_UPDATE()
---	print('T', 'CURSOR_UPDATE')
 
 end
 
@@ -1422,9 +1352,6 @@ function NP:UpdateHealth()
 		self.healthText:SetFormattedText('%s - %s%%', E:ShortValue(curHP), NP:ShortPercValue(curHP/maxHP*100))
 	end
 end
-
---options.spelllist[GetSpellInfo(v)] = specific_defaultSpellsOpts[v] or { show = 1, spellID = v, checkID = false, size = 2 }
---options.blacklist[GetSpellInfo(k)] = specific_defaultSpellsOpts[v] or { show = 2, spellID = k, checkID = false, size = 1 }
 
 do
 
@@ -1970,7 +1897,7 @@ function NP:OnShowUpdate()
 	self:UpdateDRs('Stun')
 	self:UpdateSize()
 
-	E.ClearAnimationCutaway( self )
+	--E.ClearAnimationCutaway( self )
 end
 
 
@@ -1996,8 +1923,6 @@ function NP:RemovePowerBar(plate)
 
 		plate:SetWidth(plate.defaultWidth)
 		plate:SetHeight(plate.defaultHeight)
---		plate:SetPoint('BOTTOMLEFT', plate.owner, 'BOTTOMLEFT', 0, 0)
---		plate:SetPoint('BOTTOMRIGHT', plate.owner, 'BOTTOMRIGHT', 0, 0)
 		plate:SetPoint('BOTTOM', plate.owner, 'BOTTOM', 0, 10)
 
 		plate.DebuffFrame:UpdatePosition()
@@ -2036,11 +1961,6 @@ function NP:SetupPowerBar(plate)
 
 		plate.DebuffFrame:UpdatePosition()
 
-	--	plate.DebuffFrame:SetPoint("BOTTOMLEFT", plate, 'TOPLEFT', 0, 2)
-	--	plate.DebuffFrame:SetPoint("BOTTOMRIGHT", plate, 'TOPRIGHT', 0, 2)
-
-	--	plate:SetPoint('BOTTOMLEFT', plate.owner, 'BOTTOMLEFT', 0, 5)
-	--	plate:SetPoint('BOTTOMRIGHT', plate.owner, 'BOTTOMRIGHT', 0, 5)
 		plate:SetPoint('BOTTOM', plate.owner, 'BOTTOM', 0, -40)
 
 		NP.powerBar:SetPoint('TOPLEFT', plate, 'BOTTOMLEFT', 0, 0)
@@ -2292,7 +2212,13 @@ function NP:UpdateVisibleParts()
 
 		self.raidIcon:SetParent(self)
 		self.raidIcon:ClearAllPoints()
-		self.raidIcon:SetPoint(E.db.nameplates.raidIcon_attachFrom, self, E.db.nameplates.raidIcon_attachTo, E.db.nameplates.raidIcon_xOffset, E.db.nameplates.raidIcon_yOffset)
+		self.raidIcon:SetPoint(
+			E.db.nameplates.raidIcon_attachFrom, 
+			self, 
+			E.db.nameplates.raidIcon_attachTo, 
+			E.db.nameplates.raidIcon_xOffset, 
+			E.db.nameplates.raidIcon_yOffset
+		)
 
 		self.BuffFrame:SetParent(self)
 		self.DebuffFrame:SetParent(self)
@@ -2359,7 +2285,10 @@ do
     end
     local function SetStatusBarColor(self,...)
         self:orig_anim_SetStatusBarColor(...)
-        self.Fader:SetVertexColor(...)
+		self.Fader:SetVertexColor(...)
+		
+		self.Fader:SetAlpha(0)
+		self.Fader:Hide()
     end
     local function SetAnimationCutaway(bar)
         local fader = bar:CreateTexture(nil,'ARTWORK')
@@ -2402,11 +2331,6 @@ do
 	E.ClearAnimationCutaway = ClearAnimationCutaway
 	E.DisableAnimationCutaway = DisableAnimationCutaway
 	E.SetAnimationCutaway = SetAnimationCutaway
-end
-
-local function SizerOnSizeChanged(self,x,y)
---	print(x,y)
-    self.f:SetPoint('CENTER',WorldFrame,'BOTTOMLEFT',floor(x)-100,floor(y)+plateFrameOffset+self.f.personalOffset)
 end
 
 function NP.UpdatePosition(self)
@@ -2544,24 +2468,6 @@ function NP:CreateNamePlateFrame(frame)
 		plate:SetParent(frame)
 		plate:SetIgnoreParentAlpha(true)
 	end
---	plate:SetPoint('BOTTOMLEFT', frame, 'BOTTOMLEFT', 0, 0)
---	plate:SetPoint('BOTTOMRIGHT', frame, 'BOTTOMRIGHT', 0, 0)
---	plate:SetPoint('BOTTOM', frame, 'BOTTOM', 0, plateFrameOffset)
-
-	--[==[
-	local scaler = CreateFrame('Frame', nil, frame)
-	scaler.scale = 1
-	scaler:SetScript('OnShow', function(self)
-		self.scale = 1
-	end)
-	scaler:SetScript('OnUpdate', function(self, elapsed)
-		if self.scale ~= frame:GetScale() then
-			self.scale = frame:GetScale()
-
-			print(self.scale)
-		end
-	end)
-	]==]
 
 	plate.hitbox_overlay = frame:CreateTexture()
 	plate.hitbox_overlay:SetAllPoints()
@@ -2573,32 +2479,7 @@ function NP:CreateNamePlateFrame(frame)
 		plate.hitbox_overlay:Hide()
 	end
 
-	---------------------
-	-- ERT NPA Support --
-	---------------------
-	--[==[
-	if not frame.UnitFrame then
-		local UnitFrame = CreateFrame('Frame', nil, UIParent)
-		UnitFrame:SetPoint('CENTER', frame, 'CENTER', 0, 0)
-	
-		UnitFrame.selectionHighlight = CreateFrame('Frame')
-		UnitFrame.castBar = CreateFrame('Frame')
-		UnitFrame.castBar.Icon = CreateFrame('Frame')
-		UnitFrame.castBar.BorderShield = CreateFrame('Frame')
-
-		frame.UnitFrame = UnitFrame
-	end
-	]==]
-	
 	plate.personalOffset = 0
-
-	--[==[
-	local positioner = CreateFrame('Frame', nil,plate)
-    positioner:SetPoint('BOTTOMLEFT',WorldFrame, -100, 0)
-    positioner:SetPoint('TOPRIGHT',frame,'CENTER')
-    positioner:SetScript('OnSizeChanged',SizerOnSizeChanged)
-    positioner.f = plate
-	]==]
 	plate.owner = frame
 
 	plate:SetAlpha(1)
@@ -2612,8 +2493,8 @@ function NP:CreateNamePlateFrame(frame)
 	plate.statusBarTexture = plate:GetStatusBarTexture()
 	plate.statusBarTexture:SetDrawLayer('ARTWORK', 0)
 
-	E.SetAnimationCutaway(plate)
-	E.ClearAnimationCutaway(plate)
+	-- E.SetAnimationCutaway(plate)
+	-- E.ClearAnimationCutaway(plate)
 
 	local totalHealPrediction = plate:CreateTexture()
 		totalHealPrediction:SetTexture([[Interface\Buttons\WHITE8x8]])
@@ -2636,13 +2517,11 @@ function NP:CreateNamePlateFrame(frame)
 		totalAbsorb:SetHeight(15)
 
 	local totalHealAbsorb = plate:CreateTexture()
-	--	totalHealAbsorb:SetTexture([[Interface\Buttons\WHITE8x8]])
 		totalHealAbsorb:SetTexture("Interface\\RaidFrame\\Absorb-Fill", true, true);
 		totalHealAbsorb:SetDrawLayer('ARTWORK', 1)
 		totalHealAbsorb:SetPoint('TOPRIGHT', plate.statusBarTexture, 'TOPRIGHT', 0, 0)
 		totalHealAbsorb:SetPoint('BOTTOMRIGHT', plate.statusBarTexture, 'BOTTOMRIGHT', 0, 0)
 		totalHealAbsorb:SetVertexColor(255/255, 0, 0, 0.9)
-	--	totalHealAbsorb:SetVertexColor(255/255, 74/255, 61/255, 0.15)
 		totalHealAbsorb:SetWidth(0)
 		totalHealAbsorb:SetHeight(15)
 
@@ -2657,31 +2536,20 @@ function NP:CreateNamePlateFrame(frame)
 	plate.sizer:Hide()
 	plate.sizer:SetScript('OnUpdate',  NP.OnSizerUpdate)
 
-	--[==[
-	plate.backArt = plate:CreateTexture()
-	plate.backArt:SetAllPoints(frame)
-	plate.backArt:SetColorTexture(1, 0, 0, 0.4)
-	plate.backArt:SetDrawLayer('OVERLAY')
-	]==]
-
 	plate.border = CreateFrame('Frame', nil, plate)
---	plate.border:SetFrameStrata("LOW")
 	plate.border:SetFrameLevel(plate:GetFrameLevel()-1)
 
 	plate.border.bg = plate.border:CreateTexture()
 	plate.border.bg:SetDrawLayer("BORDER", 0)
 
 	plate.glowIndicator = CreateFrame("Frame", nil, plate)
---	plate.glowIndicator:SetFrameStrata("LOW")
 	plate.glowIndicator:SetFrameLevel(plate:GetFrameLevel()-2)
 
 	plate.glowIndicator:SetBackdrop({
  		edgeFile = "Interface\\AddOns\\AleaUI\\media\\glow",
-		edgeSize = 5,
- 	--	insets = {left = 5, right = 5, top = 5, bottom = 5},
+		edgeSize = 5
  	})
 	plate.glowIndicator:SetBackdropBorderColor(0, 1, 0, 1)
---	plate.glowIndicator:SetScale(1)
 	plate.glowIndicator:SetPoint("TOPLEFT", plate, "TOPLEFT", -5, 5)
 	plate.glowIndicator:SetPoint("BOTTOMRIGHT", plate, "BOTTOMRIGHT", 5, -5)
 	plate.glowIndicator:SetAlpha(0.8)
@@ -2726,7 +2594,6 @@ function NP:CreateNamePlateFrame(frame)
 	plate.DebuffFrame.plate = plate
 
 	plate.DebuffFrame:SetSize(20, 20)
---	plate.DebuffFrame:SetFrameStrata("LOW")
 	plate.DebuffFrame:SetFrameLevel(plate:GetFrameLevel())
 	plate.DebuffFrame:SetPoint("BOTTOMLEFT", plate, 'TOPLEFT', 0, 12)
 	plate.DebuffFrame:SetPoint("BOTTOMRIGHT", plate, 'TOPRIGHT', 0, 12)
@@ -2737,7 +2604,6 @@ function NP:CreateNamePlateFrame(frame)
 	for i=1, 6 do
 		local iconf = CreateFrame("Frame", nil, plate.DebuffFrame)
 		iconf:SetSize(14, 14)
-	--	iconf:SetFrameStrata("LOW")
 		iconf:SetFrameLevel(plate:GetFrameLevel())
 
 		if i==1 then
@@ -2749,10 +2615,6 @@ function NP:CreateNamePlateFrame(frame)
 		iconf.icon = iconf:CreateTexture(nil, 'ARTWORK')
 		iconf.icon:SetAllPoints()
 		iconf.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
-
-	--	iconf.iconbg = iconf:CreateTexture(nil, 'ARTWORK', nil, -1)
-	--	iconf.iconbg:SetAllPoints()
-	--	iconf.iconbg:SetColorTexture(0,0,0,1)
 
 		iconf.timer = iconf:CreateFontString()
 		iconf.timer:SetFont(E.media.default_font2, 10, 'OUTLINE')
@@ -2778,7 +2640,6 @@ function NP:CreateNamePlateFrame(frame)
 
 	plate.BuffFrame = CreateFrame('Frame', nil, plate)
 	plate.BuffFrame:SetSize(20, 20)
---	plate.BuffFrame:SetFrameStrata("LOW")
 	plate.BuffFrame:SetFrameLevel(plate:GetFrameLevel())
 	plate.BuffFrame:SetPoint("BOTTOMLEFT", plate.DebuffFrame, 'TOPLEFT', 0, 1)
 	plate.BuffFrame:SetPoint("BOTTOMRIGHT", plate.DebuffFrame, 'TOPRIGHT', 0, 1)
@@ -2786,7 +2647,6 @@ function NP:CreateNamePlateFrame(frame)
 	for i=1, 6 do
 		local iconf = CreateFrame("Frame", nil, plate.BuffFrame)
 		iconf:SetSize(14, 14)
-	--	iconf:SetFrameStrata('LOW')
 		iconf:SetFrameLevel(plate:GetFrameLevel())
 
 		if i==1 then
@@ -2798,10 +2658,6 @@ function NP:CreateNamePlateFrame(frame)
 		iconf.icon = iconf:CreateTexture(nil, 'ARTWORK')
 		iconf.icon:SetAllPoints()
 		iconf.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
-
-	--	iconf.iconbg = iconf:CreateTexture(nil, 'ARTWORK', nil, -1)
-	--	iconf.iconbg:SetAllPoints()
-	--	iconf.iconbg:SetColorTexture(0,0,0,1)
 
 		iconf.timer = iconf:CreateFontString()
 		iconf.timer:SetFont(E.media.default_font2, 10, 'OUTLINE')
@@ -2845,7 +2701,6 @@ function NP:CreateNamePlateFrame(frame)
 	plate.castBar.plate = plate
 	plate.castBar:SetPoint('TOPLEFT', plate, 'BOTTOMLEFT', 0, E.db.nameplates.castBar_offset)
 	plate.castBar:SetPoint('TOPRIGHT', plate, 'BOTTOMRIGHT', 0, E.db.nameplates.castBar_offset)
---	plate.castBar:SetFrameStrata('LOW')
 	plate.castBar:SetFrameLevel(plate:GetFrameLevel())
 
 	plate.castBar:SetScript('OnUpdate', not E.isClassic and NamePlate_CastBarOnUpdate or nil)
@@ -2860,8 +2715,6 @@ function NP:CreateNamePlateFrame(frame)
 	plate.castBar.FadeIn = NP.CastBarFadeIn
 	plate.castBar.FadeOut = NP.CastBarFadeOut
 	plate.castBar.SkipFade = NP.CastBarSkipFade
-
-	--NP:CreateBackdrop(plate.castBar)
 
 	plate.castBar.border = CreateFrame('Frame', nil, plate.castBar)
 	plate.castBar.border:SetFrameLevel(plate.castBar:GetFrameLevel()-1)
@@ -2890,9 +2743,6 @@ function NP:CreateNamePlateFrame(frame)
 
 	plate.castBar.icon.border.bg = plate.castBar.icon.border:CreateTexture()
 	plate.castBar.icon.border.bg:SetDrawLayer("BORDER", 0)
-
-
---	NP:CreateBackdrop(plate.castBar, plate.castBar.icon)
 
 	plate.castBar.spark = plate.castBar:CreateTexture(nil, "OVERLAY")
 	plate.castBar.spark:SetTexture([[Interface\CastingBar\UI-CastingBar-Spark]])
@@ -2980,15 +2830,6 @@ function NP:CreateNamePlateFrame(frame)
 
 	plate.FriendlyPlate = FriendlyPlate
 
-
-	--[==[
-	local positioner = CreateFrame('Frame', nil,FriendlyPlate)
-    positioner:SetPoint('BOTTOMLEFT',WorldFrame, -100, 0)
-    positioner:SetPoint('TOPRIGHT',frame,'CENTER')
-    positioner:SetScript('OnSizeChanged',SizerOnSizeChanged)
-    positioner.f = FriendlyPlate
-	]==]
-
 	plate.FriendlyPlate.textParent = CreateFrame('Frame', nil, plate.FriendlyPlate)
 	plate.FriendlyPlate.textParent:SetAlpha(baseNonTargetAlpha)
 
@@ -3024,22 +2865,6 @@ function NP:CreateNamePlateFrame(frame)
 	plate.UpdateTextPlatePosition = NP.UpdateTextPlatePosition
 	plate.ToggleHitbox = NP.ToggleHitbox
 
-	plate.ThrottledUpdateAggro = function()
-		print('ThrottledUpdateAggro', plate, plate.unit)
-	end
-
---	NP:CreateBackdrop(plate)
-
-	--[==[
-	plate._testBar = CreateFrame('Frame', nil, frame)
-	plate._testBar:SetSize(200, 18)
-	plate._testBar:SetPoint('BOTTOM', frame, 'TOP', 0, 40)
-	plate._testBar.texture = plate._testBar:CreateTexture()
-	plate._testBar.texture:SetColorTexture(1,1,1,0.8)
-	plate._testBar.texture:SetAllPoints()
-	plate._testBar:SetScale(UIParent:GetEffectiveScale())
-	]==]
-
 	plate:SetScale(UIParent:GetEffectiveScale())
 	NP.CreatedPlates[#NP.CreatedPlates+1] = plate
 
@@ -3047,10 +2872,7 @@ function NP:CreateNamePlateFrame(frame)
 	
 	
 	if frame.UnitFrame and not frame.AleaNP.onShowHooked then
-		frame.UnitFrame:HookScript("OnShow", function(self)
-			self:Hide() --Hide Blizzard's Nameplate
-		end)
-		--print('Hooked on NAME_PLATE_CREATED')
+		frame.UnitFrame:HookScript("OnShow", self.Hide)
 		frame.AleaNP.onShowHooked = true
 	end
 	
@@ -3095,11 +2917,6 @@ function NP.UpdateSettings(plate)
 	plate.totalHealAbsorb:SetVertexColor(E.db.unitframes.colors.myHealAbsorb[1],
 		E.db.unitframes.colors.myHealAbsorb[2],E.db.unitframes.colors.myHealAbsorb[3],E.db.unitframes.colors.myHealAbsorb[4])
 	plate.totalHealAbsorb:SetHeight(E.db.nameplates.healthBar_height)
-
---	plate:SetBorderColor(E.db.nameplates.bordercolor[1], E.db.nameplates.bordercolor[2],E.db.nameplates.bordercolor[3],E.db.nameplates.bordercolor[4])
---	plate.backdrop:SetColorTexture(E.db.nameplates.backdropfadecolor[1], E.db.nameplates.backdropfadecolor[2],E.db.nameplates.backdropfadecolor[3],E.db.nameplates.backdropfadecolor[4])
-
---	print('Test', 'multi', multi)
 
 	plate.border:SetBackdrop({
 	  edgeFile = E:GetBorder(E.db.nameplates.borderTexture),
@@ -3170,11 +2987,6 @@ function NP.UpdateSettings(plate)
 	local iconSize = E.db.nameplates.castBar_height + E.db.nameplates.healthBar_height + E.db.nameplates.castBar_offset
 	plate.castBar.icon:SetSize(iconSize,iconSize)
 
---	castBar_bordercolor = { .06, .06, .06,  0.3 },
---	castBar_background  = { 0,0,0,1 },
-
-
-
 	local sparkMod = 10/15*E.db.nameplates.castBar_height
 
 	plate.castBar.spark:SetSize(10,15)
@@ -3221,10 +3033,7 @@ end
 
 function NP:CreateBackdrop(parent, point)
 	point = point or parent
-	local noscalemult = 1-- * UIParent:GetScale()/WorldFrame:GetScale()
-
---	print(noscalemult)
---	print(1 * UIParent:GetScale()/WorldFrame:GetScale())
+	local noscalemult = 1
 
 	if point.bordertop then return end
 
@@ -3292,13 +3101,6 @@ function NP:UpdateBasePlateSize()
 	C_NamePlate.SetNamePlateEnemySize(E.db.nameplates.hitbox_width, E.db.nameplates.hitbox_height);
 	C_NamePlate.SetNamePlateSelfSize(E.db.nameplates.hitbox_width-20, 1);
 	ignoreSizeChange = false
-
-	--[==[
-	C_Timer.After(0.5, function()
-		E:LockCVar('nameplateOverlapV', 1.4)
-		E:LockCVar('nameplateOverlapH', 1.2)
-	end)
-	]==]
 end
 
 
@@ -3342,1879 +3144,8 @@ function NP:CVarUpdate()
 	E:LockCVar('nameplateOverlapV', E.db.nameplates.overlapV)
 
 	E:LockCVar('nameplateOccludedAlphaMult', 1.0)
-
-	--[==[
-	E:LockCVar("UnitNameFriendlySpecialNPCName", "1");
-	E:LockCVar("UnitNameNPC", "0");
-	E:LockCVar("UnitNameHostleNPC", "0");
-	E:LockCVar("UnitNameInteractiveNPC", "0");
-	E:LockCVar("ShowQuestUnitCircles", "1");
-	]==]
 end
 
-function NP.OnInit()
-	NP:UpdateBasePlateSize()
-
-	SystemFont_LargeNamePlateFixed:SetFont(STANDARD_TEXT_FONT, 10, 'OUTLINE') 
-	SystemFont_NamePlateFixed:SetFont(STANDARD_TEXT_FONT, 10, 'OUTLINE') 
-	SystemFont_LargeNamePlate:SetFont(STANDARD_TEXT_FONT, 10, 'OUTLINE') 
-	SystemFont_NamePlate:SetFont(STANDARD_TEXT_FONT, 10, 'OUTLINE') 
-end
-
-function NP:UpdateProfileSettings()
-	NP:UpdateAllPlates()
-	NP:UpdateBasePlateSize()
-	NP:CVarUpdate()
-end
-
-E:OnInit2(NP.OnInit)
-E:OnInit(function()
-	NP:CVarUpdate()
-
-	local function CVarCheck(cvarName, value)
-		if cvarName == 'nameplateShowEnemies' or cvarName == 'nameplateShowFriends' then
-			E.db.nameplates.nameplateShowFriends = GetCVarBool("nameplateShowFriends")
-			E.db.nameplates.nameplateShowEnemies = GetCVarBool("nameplateShowEnemies")
-		end
-	end
-
-	hooksecurefunc("SetCVar", CVarCheck)
-
-	if ( not E.isClassic ) then 
-		local iname = 'InterfaceOptionsNamesPanelUnitNameplates'
-
-		_G[iname..'PersonalResource']:SetScale(0.00001)
-		_G[iname..'PersonalResource']:SetAlpha(0)
-
-		_G[iname..'PersonalResourceOnEnemy']:SetScale(0.00001)
-		_G[iname..'PersonalResourceOnEnemy']:SetAlpha(0)
-
-		_G[iname..'MakeLarger']:SetScale(0.00001)
-		_G[iname..'MakeLarger']:SetAlpha(0)
-
-		_G[iname..'AggroFlash']:SetScale(0.00001)
-		_G[iname..'AggroFlash']:SetAlpha(0)
-
-		_G[iname..'ShowAll']:SetScale(0.00001)
-		_G[iname..'ShowAll']:SetAlpha(0)
-
-		_G[iname..'Enemies']:SetScale(0.00001)
-		_G[iname..'Enemies']:SetAlpha(0)
-
-		_G[iname..'EnemyMinions']:SetScale(0.00001)
-		_G[iname..'EnemyMinions']:SetAlpha(0)
-
-		_G[iname..'EnemyMinus']:SetScale(0.00001)
-		_G[iname..'EnemyMinus']:SetAlpha(0)
-
-		_G[iname..'Friends']:SetScale(0.00001)
-		_G[iname..'Friends']:SetAlpha(0)
-
-		_G[iname..'FriendlyMinions']:SetScale(0.00001)
-		_G[iname..'FriendlyMinions']:SetAlpha(0)
-
-		_G[iname..'MotionDropDown']:SetScale(0.00001)
-		_G[iname..'MotionDropDown']:SetAlpha(0)
-	end
-
-	local f = CreateFrame('Button', nil, _G[ 'InterfaceOptionsNamesPanelUnitNameplates'], "UIPanelButtonTemplate")
-	f:SetSize(160, 22)
-	f:SetText(L['Nameplate settings'])
-	f:SetPoint('TOPLEFT', 0, -15)
-	f:SetScript('OnClick', function()
-		InterfaceOptionsFrame:Hide();
-		HideUIPanel(GameMenuFrame);
-		AleaUI_GUI:Open('AleaUI')
-		AleaUI_GUI:SelectGroup("AleaUI", "NamePlates")
-		PlaySound(SOUNDKIT and SOUNDKIT.IG_MAINMENU_OPTION or "igMainMenuOption");
-	end)
-end)
------------------------
--- Interface
------------------------
-E.GUI.args.NamePlates = {
-	name = L['Nameplates'],
-	type = "group",
-	order = 5,
-	args = {},
-}
-
-E.GUI.args.NamePlates.args.tabSettings = {
-	name = L["Tabs"],
-	type = "tabgroup",
-	width = 'full',
-	order = 2,
-	args = {}
-}
-
-
-E.GUI.args.NamePlates.args.tabSettings.args.blizzardSettings = {
-	name = L["Blizzard Settings"],
-	type = "group",
-	order = 1,
-	embend = true,
-	args = {},
-}
-
-
-E.GUI.args.NamePlates.args.tabSettings.args.generals = {
-	name = L['General'],
-	type = "group",
-	order = 1.2,
-	embend = true,
-	args = {},
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.blizzardSettings.args.nameplateShowAll = {
-	name = L['Show always'],
-	order = 0.1,
-	type = "toggle",
-	width = 'full',
-	set = function(self, value)
-		E.db.nameplates.nameplateShowAll = not E.db.nameplates.nameplateShowAll
-		E:LockCVar("nameplateShowAll", E.db.nameplates.nameplateShowAll and 1 or 0)
-	end,
-	get = function(self)
-		return E.db.nameplates.nameplateShowAll
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.blizzardSettings.args.nameplateShowEnemies = {
-	name = L['Show enemies'],
-	order = 0.2,
-	type = "toggle",
-	set = function(self, value)
-		SetCVar("nameplateShowEnemies", GetCVarBool("nameplateShowEnemies") and 0 or 1)
-		E.db.nameplates.nameplateShowEnemies = GetCVarBool("nameplateShowEnemies")
-	end,
-	get = function(self)
-		return GetCVarBool("nameplateShowEnemies")
-	end,
-}
-E.GUI.args.NamePlates.args.tabSettings.args.blizzardSettings.args.nameplateShowEnemyMinions = {
-	name = L['Show enemy minions'],
-	order = 0.4,
-	type = "toggle", newLine = true,
-	set = function(self, value)
-		E.db.nameplates.nameplateShowEnemyMinions = not E.db.nameplates.nameplateShowEnemyMinions
-		E:LockCVar("nameplateShowEnemyMinions", E.db.nameplates.nameplateShowEnemyMinions and 1 or 0)
-	end,
-	get = function(self)
-		return E.db.nameplates.nameplateShowEnemyMinions
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.blizzardSettings.args.nameplateShowEnemyPets = {
-	name = L['Show enemy pets'],
-	order = 0.6,
-	type = "toggle",  newLine = true,
-	set = function(self, value)
-		E.db.nameplates.nameplateShowEnemyPets = not E.db.nameplates.nameplateShowEnemyPets
-		E:LockCVar("nameplateShowEnemyPets", E.db.nameplates.nameplateShowEnemyPets and 1 or 0)
-	end,
-	get = function(self)
-		return E.db.nameplates.nameplateShowEnemyPets
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.blizzardSettings.args.nameplateShowEnemyGuardians = {
-	name = L['Show enemy guardians'],
-	order = 0.8,
-	type = "toggle",  newLine = true,
-	set = function(self, value)
-		E.db.nameplates.nameplateShowEnemyGuardians = not E.db.nameplates.nameplateShowEnemyGuardians
-		E:LockCVar("nameplateShowEnemyGuardians", E.db.nameplates.nameplateShowEnemyGuardians and 1 or 0)
-	end,
-	get = function(self)
-		return E.db.nameplates.nameplateShowEnemyGuardians
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.blizzardSettings.args.nameplateShowEnemyTotems = {
-	name = L['Show enemy totems'],
-	order = 1.0,
-	type = "toggle",  newLine = true,
-	set = function(self, value)
-		E.db.nameplates.nameplateShowEnemyTotems = not E.db.nameplates.nameplateShowEnemyTotems
-		E:LockCVar("nameplateShowEnemyTotems", E.db.nameplates.nameplateShowEnemyTotems and 1 or 0)
-	end,
-	get = function(self)
-		return E.db.nameplates.nameplateShowEnemyTotems
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.blizzardSettings.args.nameplateShowEnemyMinus = {
-	name = L['Show enemy minus'],
-	order = 1.2,
-	type = "toggle", width = 'full',
-	set = function(self, value)
-		E.db.nameplates.nameplateShowEnemyMinus = not E.db.nameplates.nameplateShowEnemyMinus
-		E:LockCVar("nameplateShowEnemyMinus", E.db.nameplates.nameplateShowEnemyMinus and 1 or 0)
-	end,
-	get = function(self)
-		return E.db.nameplates.nameplateShowEnemyMinus
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.blizzardSettings.args.nameplateShowSelf = {
-	name = DISPLAY_PERSONAL_RESOURCE,
-	order = 2,
-	type = "toggle", width = 'full',
-	set = function(self, value)
-		E.db.nameplates.nameplateShowSelf = not E.db.nameplates.nameplateShowSelf
-		E:LockCVar("nameplateShowSelf", E.db.nameplates.nameplateShowSelf and 1 or 0)
-	end,
-	get = function(self)
-		return E.db.nameplates.nameplateShowSelf
-	end,
-}
-
-
-E.GUI.args.NamePlates.args.tabSettings.args.blizzardSettings.args.nameplateShowFriends = {
-	name = L['Show friends'],
-	order = 0.3,
-	type = "toggle",
-	set = function(self, value)
-		SetCVar("nameplateShowFriends", GetCVarBool("nameplateShowFriends") and 0 or 1)
-		E.db.nameplates.nameplateShowFriends = GetCVarBool("nameplateShowFriends")
-	end,
-	get = function(self)
-		return GetCVarBool("nameplateShowFriends")
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.blizzardSettings.args.nameplateShowFriendlyMinions = {
-	name = L['Show friendly minions'],
-	order = 0.5,
-	type = "toggle",
-	set = function(self, value)
-		E.db.nameplates.nameplateShowFriendlyMinions = not E.db.nameplates.nameplateShowFriendlyMinions
-		E:LockCVar("nameplateShowFriendlyMinions", E.db.nameplates.nameplateShowFriendlyMinions and 1 or 0)
-	end,
-	get = function(self)
-		return E.db.nameplates.nameplateShowFriendlyMinions
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.blizzardSettings.args.nameplateShowFriendlyPets = {
-	name = L['Show friendly pets'],
-	order = 0.7,
-	type = "toggle",
-	set = function(self, value)
-		E.db.nameplates.nameplateShowFriendlyPets = not E.db.nameplates.nameplateShowFriendlyPets
-		E:LockCVar("nameplateShowFriendlyPets", E.db.nameplates.nameplateShowFriendlyPets and 1 or 0)
-	end,
-	get = function(self)
-		return E.db.nameplates.nameplateShowFriendlyPets
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.blizzardSettings.args.nameplateShowFriendlyGuardians = {
-	name = L['Show friendly guardians'],
-	order = 0.9,
-	type = "toggle",
-	set = function(self, value)
-		E.db.nameplates.nameplateShowFriendlyGuardians = not E.db.nameplates.nameplateShowFriendlyGuardians
-		E:LockCVar("nameplateShowFriendlyGuardians", E.db.nameplates.nameplateShowFriendlyGuardians and 1 or 0)
-	end,
-	get = function(self)
-		return E.db.nameplates.nameplateShowFriendlyGuardians
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.blizzardSettings.args.nameplateShowFriendlyTotems = {
-	name = L['Show friendly totems'],
-	order = 1.1,
-	type = "toggle",
-	set = function(self, value)
-		E.db.nameplates.nameplateShowFriendlyTotems = not E.db.nameplates.nameplateShowFriendlyTotems
-		E:LockCVar("nameplateShowFriendlyTotems", E.db.nameplates.nameplateShowFriendlyTotems and 1 or 0)
-	end,
-	get = function(self)
-		return E.db.nameplates.nameplateShowFriendlyTotems
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.blizzardSettings.args.nameplateMaxDistance = {
-	name = L['Distance'],
-	order = 4,
-	type = "slider",
-	min = 30, max = 60, step = 1,
-	set = function(self, value)
-		E.db.nameplates.nameplateMaxDistance = value
-		E:LockCVar("nameplateMaxDistance", value)
-	end,
-	get = function(self)
-		return E.db.nameplates.nameplateMaxDistance
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.blizzardSettings.args.nameplateOffsets = {
-	name = L['Enable sticking'],
-	order = 5,
-	type = "toggle",
-
-	set = function(self, value)
-		E.db.nameplates.nameplateOffsets = not E.db.nameplates.nameplateOffsets
-
-		E:LockCVar("nameplateOtherTopInset", E.db.nameplates.nameplateOffsets  and '.08' or '-1')
-		E:LockCVar("nameplateOtherBottomInset",  E.db.nameplates.nameplateOffsets  and '.1' or '-1')
-
-	end,
-	get = function(self)
-		return E.db.nameplates.nameplateOffsets
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.blizzardSettings.args.nameplatePosition = {
-	name = L['Position'],
-	order = 6,
-	type = "dropdown",
-	values = {
-		[-1] = 'Bottom',
-		[0] = 'Top',
-		[1] = 'Middle',
-	},
-	set = function(self, value)
-		E.db.nameplates.nameplatePosition = value
-		E:LockCVar("nameplateOtherAtBase", E.db.nameplates.nameplatePosition)
-	end,
-	get = function(self)
-		return E.db.nameplates.nameplatePosition
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.blizzardSettings.args.nameplateMotion = {
-	name = L["Motion"],
-	order = 7,
-	type = "dropdown",
-	values = {
-		['STACKED'] = UNIT_NAMEPLATES_TYPE_2,
-		['OVERLAP'] = UNIT_NAMEPLATES_TYPE_1,
-	},
-	set = function(self, value)
-		E.db.nameplates.nameplateMotion = value
-		E:LockCVar("nameplateMotion", E.db.nameplates.nameplateMotion == "STACKED" and 1 or 0)
-	end,
-	get = function(self)
-		return E.db.nameplates.nameplateMotion
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.blizzardSettings.args.toggleHitboxHighlight = {
-	name = L["Show hitbox"],
-	type = "execute",
-	order = 8,
-	newLine = true,
-	set = function(self)
-		NP:ToggleAllHitbox()
-
-		if ( showHitbox ) then
-			E.GUI.args.NamePlates.args.tabSettings.args.blizzardSettings.args.toggleHitboxHighlight.name = L["Hide hitbox"]
-		else
-			E.GUI.args.NamePlates.args.tabSettings.args.blizzardSettings.args.toggleHitboxHighlight.name = L["Show hitbox"]
-		end
-	end,
-	get = function(self)
-		return ''
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.blizzardSettings.args.hitbox_width = {
-	name = L['Hitbox width'],
-	order = 10,
-	type = "slider",
-	newLine = true,
-	min = 10, max = 600, step = 1,
-	set = function(self, value)
-		E.db.nameplates.hitbox_width = value
-
-		NP:UpdateBasePlateSize()
-	end,
-	get = function(self)
-		return E.db.nameplates.hitbox_width
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.blizzardSettings.args.hitbox_height = {
-	name = L['Hitbox height'],
-	order = 11,
-	type = "slider",
-	min = 10, max = 600, step = 1,
-	set = function(self, value)
-		E.db.nameplates.hitbox_height = value
-		NP:UpdateBasePlateSize()
-	end,
-	get = function(self)
-		return E.db.nameplates.hitbox_height
-	end,
-}
-
-
-E.GUI.args.NamePlates.args.tabSettings.args.blizzardSettings.args.overlapH = {
-	name = L['Horizontal spacing'],
-	order = 12,
-	type = "slider",
-	min = 0, max = 3, step = 0.1,
-	newLine = true,
-	set = function(self, value)
-		E.db.nameplates.overlapH = value
-
-		E:LockCVar('nameplateOverlapH', E.db.nameplates.overlapH)
-	end,
-	get = function(self)
-		return E.db.nameplates.overlapH
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.blizzardSettings.args.overlapV = {
-	name = L['Vertical spacing'],
-	order = 13,
-	type = "slider",
-	min = 0, max = 3, step = 0.1,
-	set = function(self, value)
-		E.db.nameplates.overlapV = value
-
-		E:LockCVar('nameplateOverlapV', E.db.nameplates.overlapV)
-	end,
-	get = function(self)
-		return E.db.nameplates.overlapV
-	end,
-}
-
---[==[
-E.GUI.args.NamePlates.args.blizzardSettings.args.nameplateShowFriendlyMinions = {
-	name = "ƒружественные питомцы",
-	order = 1.2,
-	type = "toggle",
-
-	set = function(self, value)
-		E.db.nameplates.nameplateShowFriendlyMinions = not E.db.nameplates.nameplateShowFriendlyMinions
-		E:LockCVar("nameplateShowFriendlyMinions", E.db.nameplates.nameplateShowFriendlyMinions and 1 or 0)
-	end,
-	get = function(self)
-		return E.db.nameplates.nameplateShowFriendlyMinions
-	end,
-}
-
-E.GUI.args.NamePlates.args.blizzardSettings.args.nameplateShowEnemyMinions = {
-	name = "¬ражеские питомцы",
-	order = 1.2,
-	type = "toggle",
-
-	set = function(self, value)
-		E.db.nameplates.nameplateShowEnemyMinions = not E.db.nameplates.nameplateShowEnemyMinions
-		E:LockCVar("nameplateShowEnemyMinions", E.db.nameplates.nameplateShowEnemyMinions and 1 or 0)
-	end,
-	get = function(self)
-		return E.db.nameplates.nameplateShowEnemyMinions
-	end,
-}
-
-E.GUI.args.NamePlates.args.blizzardSettings.args.nameplateShowEnemyMinus = {
-	name = "¬ражеские слабые мобы",
-	order = 1.3,
-	type = "toggle",
-
-	set = function(self, value)
-		E.db.nameplates.nameplateShowEnemyMinus = not E.db.nameplates.nameplateShowEnemyMinus
-		E:LockCVar("nameplateShowEnemyMinus", E.db.nameplates.nameplateShowEnemyMinus and 1 or 0)
-	end,
-	get = function(self)
-		return E.db.nameplates.nameplateShowEnemyMinus
-	end,
-}
-
-]==]
-
-E.GUI.args.NamePlates.args.tabSettings.args.generals.args.buff_amount = {
-	name = L['Buff amount'],
-	order = 3,
-	type = "slider",
-	min = 0, max = 6, step = 1,
-	set = function(self, value)
-		E.db.nameplates.buffs.numAuras = value
-		NP:UpdateAllPlates()
-	end,
-	get = function(self)
-		return E.db.nameplates.buffs.numAuras
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.generals.args.debuff_amount = {
-	name = L['Debuff amount'],
-	order = 4,
-	type = "slider",
-	min = 0, max = 6, step = 1,
-	set = function(self, value)
-		E.db.nameplates.debuffs.numAuras = value
-		NP:UpdateAllPlates()
-	end,
-	get = function(self)
-		return E.db.nameplates.debuffs.numAuras
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.generals.args.FriendlyUnits = {
-	name = L['Friendly units'],
-	type = "group",
-	order = 4.1,
-	embend = true,
-	args = {},
-}
-E.GUI.args.NamePlates.args.tabSettings.args.generals.args.FriendlyUnits.args.buff_amount = {
-	name = L['Buff amount'],
-	order = 3,
-	type = "slider",
-	min = 0, max = 6, step = 1,
-	set = function(self, value)
-		E.db.nameplates.buffs.friendlynumAuras = value
-		NP:UpdateAllPlates()
-	end,
-	get = function(self)
-		return E.db.nameplates.buffs.friendlynumAuras
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.generals.args.FriendlyUnits.args.debuff_amount = {
-	name = L['Debuff amount'],
-	order = 4,
-	type = "slider",
-	min = 0, max = 6, step = 1,
-	set = function(self, value)
-		E.db.nameplates.debuffs.friendlynumAuras = value
-		NP:UpdateAllPlates()
-	end,
-	get = function(self)
-		return E.db.nameplates.debuffs.friendlynumAuras
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.generals.args.showmyauras = {
-	name = L['Show my auras'],
-	order = 1,
-	type = "toggle",
-
-	set = function(self, value)
-		E.db.nameplates.showmyauras = not E.db.nameplates.showmyauras
-	end,
-	get = function(self)
-		return E.db.nameplates.showmyauras
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.generals.args.showfromspelllist = {
-	name = L['Show from spell list'],
-	order = 2,
-	type = "toggle",
-	set = function(self, value)
-		E.db.nameplates.showfromspelllist = not E.db.nameplates.showfromspelllist
-	end,
-	get = function(self)
-		return E.db.nameplates.showfromspelllist
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.generals.args.showpurge = {
-	name = L['Show dispellable auras'],
-	order = 2,
-	type = "toggle",
-	set = function(self, value)
-		E.db.nameplates.showpurge = not E.db.nameplates.showpurge
-	end,
-	get = function(self)
-		return E.db.nameplates.showpurge
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.generals.args.easyPlatesForFriendly = {
-	name = L['Easy plates for friendly units'], width = 'full',
-	order = 2,
-	type = "toggle",
-	set = function(self, value)
-		E.db.nameplates.easyPlatesForFriendly = not E.db.nameplates.easyPlatesForFriendly
-		NP:UpdateBasePlateSize()
-	end,
-	get = function(self)
-		return E.db.nameplates.easyPlatesForFriendly
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.generals.args.stretchTexture = {
-	name = L['Stretch icon texture'], width = 'full',
-	order = 2,
-	type = "toggle",
-	set = function(self, value)
-		E.db.nameplates.stretchTexture = not E.db.nameplates.stretchTexture
-
-		NP:UpdateAllPlates()
-	end,
-	get = function(self)
-		return E.db.nameplates.stretchTexture
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.generals.args.plateFont = {
-	name = L["Fonts"],
-	type = "group",
-	order = 10,
-	embend = true,
-	args = {},
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.generals.args.plateFont.args.font = {
-	name = L["Font"],
-	order = 1,
-	type = "font",
-	values = E.GetFontList,
-	set = function(self, value)
-		E.db.nameplates.font = value
-		NP:UpdateAllPlates()
-	end,
-	get = function(self)
-		return E.db.nameplates.font
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.generals.args.plateFont.args.fontSize = {
-	name = L["Size"],
-	order = 1,
-	type = "slider",
-	min = 1, max = 32, step = 1,
-	set = function(self, value)
-		E.db.nameplates.fontSize = value
-		NP:UpdateAllPlates()
-	end,
-	get = function(self)
-		return E.db.nameplates.fontSize
-	end,
-}
-E.GUI.args.NamePlates.args.tabSettings.args.generals.args.plateFont.args.fontOutline = {
-	name = L["Outline"],
-	order = 3,
-	type = "dropdown",
-	values = {
-		[""] = NO,
-		["OUTLINE"] = "OUTLINE",
-	},
-	set = function(self, value)
-		E.db.nameplates.fontOutline = value
-		NP:UpdateAllPlates()
-	end,
-	get = function(self)
-		return E.db.nameplates.fontOutline
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.generals.args.friendlyPlateFont = {
-	name = L["Friendly plate fonts"],
-	type = "group",
-	order = 10.1,
-	embend = true,
-	args = {},
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.generals.args.friendlyPlateFont.args.font = {
-	name = L["Font"],
-	order = 1,
-	type = "font",
-	values = E.GetFontList,
-	set = function(self, value)
-		E.db.nameplates.friendlyFont = value
-		NP:UpdateAllPlates()
-	end,
-	get = function(self)
-		return E.db.nameplates.friendlyFont
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.generals.args.friendlyPlateFont.args.fontSize = {
-	name = L["Size"],
-	order = 1,
-	type = "slider",
-	min = 1, max = 72, step = 1,
-	set = function(self, value)
-		E.db.nameplates.friendlyFontSize = value
-		NP:UpdateAllPlates()
-	end,
-	get = function(self)
-		return E.db.nameplates.friendlyFontSize
-	end,
-}
-E.GUI.args.NamePlates.args.tabSettings.args.generals.args.friendlyPlateFont.args.fontOutline = {
-	name = L["Outline"],
-	order = 3,
-	type = "dropdown",
-	values = {
-		[""] = NO,
-		["OUTLINE"] = "OUTLINE",
-	},
-	set = function(self, value)
-		E.db.nameplates.friendlyFontOutline = value
-		NP:UpdateAllPlates()
-	end,
-	get = function(self)
-		return E.db.nameplates.friendlyFontOutline
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.plateColors = {
-	name = L["Colors"],
-	type = "group",
-	order = 1.3,
-	embend = true,
-	args = {},
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.plateColors.args.reactionColors = {
-	name = L["Reaction colors"],
-	type = "group",
-	order = 1.5,
-	embend = true,
-	args = {},
-}
-
-for k,v in pairs(defaults.reactions) do
-
-	E.GUI.args.NamePlates.args.tabSettings.args.plateColors.args.reactionColors.args[k] = {
-		name = L[k], desc = k,
-		order = 1,
-		type = "color",
-		set = function(self, r,g,b)
-			E.db.nameplates.reactions[k] = { r=r, g=g, b=b, 1 }
-		end,
-		get = function(self)
-			return E.db.nameplates.reactions[k].r, E.db.nameplates.reactions[k].g, E.db.nameplates.reactions[k].b, 1
-		end,
-	}
-end
-
-E.GUI.args.NamePlates.args.tabSettings.args.plateColors.args.auratypeColors = {
-	name = L["Aura type colors"],
-	type = "group",
-	order = 1.5,
-	embend = true,
-	args = {},
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.plateColors.args.auratypeColors.args.colorbytype = {
-	name = L["Color by type"],
-	order = 1,
-	width = "full",
-	type = "toggle",
-	set = function(self, value)
-		E.db.nameplates.colorByType = not E.db.nameplates.colorByType
-	end,
-	get = function(self)
-		return E.db.nameplates.colorByType
-	end,
-}
-
-for k,v in pairs(defaults.typecolors) do
-
-	E.GUI.args.NamePlates.args.tabSettings.args.plateColors.args.auratypeColors.args[k] = {
-		name = L['colorType'..colorToTypeName[k]],
-		order = 2,
-		type = "color",
-		set = function(self, r,g,b)
-			E.db.nameplates.typecolors[k] = {r,g,b,1}
-		end,
-		get = function(self)
-			return E.db.nameplates.typecolors[k][1], E.db.nameplates.typecolors[k][2], E.db.nameplates.typecolors[k][3], 1
-		end,
-	}
-end
-
-
-E.GUI.args.NamePlates.args.tabSettings.args.plateHealth = {
-	name = L["Health bar"],
-	type = "group",
-	order = 2,
-	embend = true,
-	args = {},
-}
-
-
-E.GUI.args.NamePlates.args.tabSettings.args.plateHealth.args.BorderOpts = {
-	name = L['Borders'],
-	order = -1,
-	embend = true,
-	type = "group",
-	args = {}
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.plateHealth.args.BorderOpts.args.border = {
-	name = L["Borders"],
-	order = 1,
-	type = "color",
-	hasAlpha = true,
-	set = function(self, r,g,b,a)
-		E.db.nameplates.bordercolor = { r, g, b, a }
-		NP:UpdateAllPlates()
-	end,
-	get = function(self)
-		return E.db.nameplates.bordercolor[1], E.db.nameplates.bordercolor[2], E.db.nameplates.bordercolor[3], E.db.nameplates.bordercolor[4]
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.plateHealth.args.BorderOpts.args.backgroundcolor = {
-	name = L["Background"],
-	order = 2,
-	type = "color",
-	hasAlpha = true,
-	set = function(self, r,g,b,a)
-		E.db.nameplates.backdropfadecolor = { r, g, b, a }
-		NP:UpdateAllPlates()
-	end,
-	get = function(self)
-		return E.db.nameplates.backdropfadecolor[1], E.db.nameplates.backdropfadecolor[2], E.db.nameplates.backdropfadecolor[3], E.db.nameplates.backdropfadecolor[4]
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.plateHealth.args.BorderOpts.args.BorderTexture = {
-	order = 2.1,
-	type = 'border',
-	name = L['Border texture'],
-	values = E:GetBorderList(),
-	set = function(info,value)
-		E.db.nameplates.borderTexture = value
-		NP:UpdateAllPlates()
-	end,
-	get = function(info) return E.db.nameplates.borderTexture end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.plateHealth.args.BorderOpts.args.BackgroundTexture = {
-	order = 2.2,
-	type = 'statusbar',
-	name = L['Background texture'],
-	values = E.GetTextureList,
-	set = function(info,value)
-		E.db.nameplates.background_texture = value;
-		NP:UpdateAllPlates()
-	end,
-	get = function(info) return E.db.nameplates.background_texture end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.plateHealth.args.BorderOpts.args.BorderSize = {
-	name = L['Border size'],
-	type = "slider",
-	order	= 2.3,
-	min		= 1,
-	max		= 32,
-	step	= 1,
-	set = function(info,val)
-		E.db.nameplates.borderSize = val
-		NP:UpdateAllPlates()
-	end,
-	get =function(info)
-		return E.db.nameplates.borderSize
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.plateHealth.args.BorderOpts.args.BorderInset = {
-	name = L['Border inset'],
-	type = "slider",
-	order	= 2.4,
-	min		= -32,
-	max		= 32,
-	step	= 1,
-	set = function(info,val)
-		E.db.nameplates.borderInset = val
-		NP:UpdateAllPlates()
-	end,
-	get =function(info)
-		return E.db.nameplates.borderInset
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.plateHealth.args.BorderOpts.args.backgroundInset = {
-	name = L['Background inset'],
-	type = "slider",
-	order	= 2.5,
-	min		= -32,
-	max		= 32,
-	step	= 1,
-	set = function(info,val)
-		E.db.nameplates.backgroundInset = val
-		NP:UpdateAllPlates()
-	end,
-	get =function(info)
-		return E.db.nameplates.backgroundInset
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.plateHealth.args.width = {
-	name = L["Width"],
-	order = 3,
-	type = "slider",
-	min = 1, max = 300, step = 1,
-	set = function(self, value)
-		E.db.nameplates.healthBar_width = value
-
-	--	NP:UpdateBasePlateSize()
-
-		NP:UpdateAllPlates()
-	end,
-	get = function(self)
-		return E.db.nameplates.healthBar_width
-	end,
-}
-E.GUI.args.NamePlates.args.tabSettings.args.plateHealth.args.height = {
-	name = L["Height"],
-	order = 4,
-	type = "slider",
-	min = 1, max = 50, step = 1,
-	set = function(self, value)
-		E.db.nameplates.healthBar_height = value
-
-	--	NP:UpdateBasePlateSize()
-
-		NP:UpdateAllPlates()
-	end,
-	get = function(self)
-		return E.db.nameplates.healthBar_height
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.plateHealth.args.texture = {
-	name = L["Texture"],
-	order = 5,
-	type = "statusbar",
-	values = E.GetTextureList,
-	set = function(self, value)
-		E.db.nameplates.healthBar_texture = value
-		NP:UpdateAllPlates()
-	end,
-	get = function(self)
-		return E.db.nameplates.healthBar_texture
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.plateHealth.args.auraSize = {
-	name = L["Aura size"],
-	order = 6,
-	type = "slider",
-	min = 1, max = 32, step = 1,
-	set = function(self, value)
-		E.db.nameplates.auraSize = value
-		NP:UpdateAllPlates()
-	end,
-	get = function(self)
-		return E.db.nameplates.auraSize
-	end,
-}
---[==[
-E.GUI.args.NamePlates.args.AuraParen = {
-	name = " репление аур",
-	type = "group",
-	order = 2.2,
-	embend = true,
-	args = {},
-}
-
-E.GUI.args.NamePlates.args.AuraParen.args.xOffset = {
-	name = "xOffset",
-	order = 1,
-	type = "slider",
-	min = -200, max = 200, step = 1,
-	set = function(self, value)
-		E.db.nameplates.aura_xOffset = value
-		NP:UpdateAllPlates()
-	end,
-	get = function(self)
-		return E.db.nameplates.aura_xOffset
-	end,
-}
-E.GUI.args.NamePlates.args.AuraParen.args.yOffset = {
-	name = "yOffset",
-	order = 1,
-	type = "slider",
-	min = -200, max = 200, step = 1,
-	set = function(self, value)
-		E.db.nameplates.aura_yOffset = value
-		NP:UpdateAllPlates()
-	end,
-	get = function(self)
-		return E.db.nameplates.aura_yOffset
-	end,
-}
-]==]
-E.GUI.args.NamePlates.args.tabSettings.args.plateCastBar = {
-	name = L["Cast Bar"],
-	type = "group",
-	order = 3,
-	embend = true,
-	args = {},
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.plateCastBar.args.height = {
-	name = L["Height"],
-	order = 4,
-	type = "slider",
-	min = 1, max = 50, step = 1,
-	set = function(self, value)
-		E.db.nameplates.castBar_height = value
-		NP:UpdateAllPlates()
-	end,
-	get = function(self)
-		return E.db.nameplates.castBar_height
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.plateCastBar.args.color = {
-	name = L["Interruptable"],
-	order = 3,
-	type = "color",
-	set = function(self, r,g,b)
-		E.db.nameplates.castBar_color = { r, g, b, 1 }
-	end,
-	get = function(self)
-		return E.db.nameplates.castBar_color[1], E.db.nameplates.castBar_color[2], E.db.nameplates.castBar_color[3], 1
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.plateCastBar.args.noInterrupt = {
-	name = L["Not Interruptable"],
-	order = 5,
-	type = "color",
-	set = function(self, r,g,b)
-		E.db.nameplates.castBar_noInterrupt = { r, g, b, 1 }
-	end,
-	get = function(self)
-		return E.db.nameplates.castBar_noInterrupt[1], E.db.nameplates.castBar_noInterrupt[2], E.db.nameplates.castBar_noInterrupt[3], 1
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.plateCastBar.args.offset = {
-	name = L["Offset"],
-	order = 6,
-	type = "slider",
-	min = -50, max = 50, step = 1,
-	set = function(self, value)
-		E.db.nameplates.castBar_offset = value
-		NP:UpdateAllPlates()
-	end,
-	get = function(self)
-		return E.db.nameplates.castBar_offset
-	end,
-}
-
-
---[==[
-E.GUI.args.NamePlates.args.plateCastBar.args.border = {
-	name = L["Borders"],
-	order = 1,
-	type = "color",
-	hasAlpha = true,
-	set = function(self, r,g,b,a)
-		E.db.nameplates.castBar_bordercolor = { r, g, b, a }
-
-		NP:UpdateAllPlates()
-	end,
-	get = function(self)
-		return E.db.nameplates.castBar_bordercolor[1], E.db.nameplates.castBar_bordercolor[2], E.db.nameplates.castBar_bordercolor[3], E.db.nameplates.castBar_bordercolor[4]
-	end,
-}
-
-E.GUI.args.NamePlates.args.plateCastBar.args.backgroundcolor = {
-	name = L["Background"],
-	order = 2,
-	type = "color",
-	hasAlpha = true,
-	set = function(self, r,g,b,a)
-		E.db.nameplates.castBar_background = { r, g, b, a }
-		NP:UpdateAllPlates()
-	end,
-	get = function(self)
-		return E.db.nameplates.castBar_background[1], E.db.nameplates.castBar_background[2], E.db.nameplates.castBar_background[3], E.db.nameplates.castBar_background[4]
-	end,
-}
-]==]
-
-E.GUI.args.NamePlates.args.tabSettings.args.plateCastBar.args.BorderOpts = {
-	name = L['Borders'],
-	order = -1,
-	embend = true,
-	type = "group",
-	args = {}
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.plateCastBar.args.BorderOpts.args.border = {
-	name = L["Borders"],
-	order = 1,
-	type = "color",
-	hasAlpha = true,
-	set = function(self, r,g,b,a)
-		E.db.nameplates.castBar_bordercolor = { r, g, b, a }
-		NP:UpdateAllPlates()
-	end,
-	get = function(self)
-		return E.db.nameplates.castBar_bordercolor[1], E.db.nameplates.castBar_bordercolor[2], E.db.nameplates.castBar_bordercolor[3], E.db.nameplates.castBar_bordercolor[4]
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.plateCastBar.args.BorderOpts.args.backgroundcolor = {
-	name = L["Background"],
-	order = 2,
-	type = "color",
-	hasAlpha = true,
-	set = function(self, r,g,b,a)
-		E.db.nameplates.castBar_background = { r, g, b, a }
-		NP:UpdateAllPlates()
-	end,
-	get = function(self)
-		return E.db.nameplates.castBar_background[1], E.db.nameplates.castBar_background[2], E.db.nameplates.castBar_background[3], E.db.nameplates.castBar_background[4]
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.plateCastBar.args.BorderOpts.args.BorderTexture = {
-	order = 2.1,
-	type = 'border',
-	name = L['Border texture'],
-	values = E:GetBorderList(),
-	set = function(info,value)
-		E.db.nameplates.castBar_borderTexture = value
-		NP:UpdateAllPlates()
-	end,
-	get = function(info) return E.db.nameplates.castBar_borderTexture end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.plateCastBar.args.BorderOpts.args.BackgroundTexture = {
-	order = 2.2,
-	type = 'statusbar',
-	name = L['Background texture'],
-	values = E.GetTextureList,
-	set = function(info,value)
-		E.db.nameplates.castBar_background_texture = value;
-		NP:UpdateAllPlates()
-	end,
-	get = function(info) return E.db.nameplates.castBar_background_texture end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.plateCastBar.args.BorderOpts.args.BorderSize = {
-	name = L['Border size'],
-	type = "slider",
-	order	= 2.3,
-	min		= 1,
-	max		= 32,
-	step	= 1,
-	set = function(info,val)
-		E.db.nameplates.castBar_borderSize = val
-		NP:UpdateAllPlates()
-	end,
-	get =function(info)
-		return E.db.nameplates.castBar_borderSize
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.plateCastBar.args.BorderOpts.args.BorderInset = {
-	name = L['Border inset'],
-	type = "slider",
-	order	= 2.4,
-	min		= -32,
-	max		= 32,
-	step	= 1,
-	set = function(info,val)
-		E.db.nameplates.castBar_borderInset = val
-		NP:UpdateAllPlates()
-	end,
-	get =function(info)
-		return E.db.nameplates.castBar_borderInset
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.plateCastBar.args.BorderOpts.args.backgroundInset = {
-	name = L['Background inset'],
-	type = "slider",
-	order	= 2.5,
-	min		= -32,
-	max		= 32,
-	step	= 1,
-	set = function(info,val)
-		E.db.nameplates.castBar_backgroundInset = val
-		NP:UpdateAllPlates()
-	end,
-	get =function(info)
-		return E.db.nameplates.castBar_backgroundInset
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.healthBar_nameText = {
-	name = L['Name text'],
-	type = "group",
-	order = 3.1,
-	embend = true,
-	args = {},
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.healthBar_nameText.args.Visability = {
-	order = 0.1,
-	type = 'dropdown',
-	name = L['Visability'],
-	values = {
-		L['Always'],
-		L['Only target'],
-		L['Never'],
-	},
-	set = function(info,value)
-		E.db.nameplates.healthBar_name_visability = value;
-		NP:UpdateAllPlates()
-		NP:UpdateCustomName()
-	end,
-	get = function(info) return E.db.nameplates.healthBar_name_visability end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.healthBar_nameText.args.attachTo = {
-	order = 0.2,
-	type = 'dropdown',
-	name = L['Attach To'],
-	values = {
-		['TOPLEFT'] = L['Top left'],
-		['TOPRIGHT'] = L['Top right'],
-		['CENTER'] = L['Center'],
-		['BOTTOMLEFT'] = L['Bottom left'],
-		['BOTTOMRIGHT'] = L['Bottom right'],
-		['BOTTOM'] = L['Bottom'],
-		['TOP'] = L['Top'],
-		['LEFT'] = L['Left'],
-		['RIGHT'] = L['Right'],
-	},
-	set = function(info,value)
-		E.db.nameplates.healthBar_name_attachTo = value;
-		NP:UpdateAllPlates()
-	end,
-	get = function(info) return E.db.nameplates.healthBar_name_attachTo end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.healthBar_nameText.args.widthUpTo = {
-	order = 0.3,
-	type = 'dropdown',
-	name = L['Width adjustment'],
-	values = {
-		L['To level text'],
-		L['To bar'],
-		L['Full width'],
-		L['To health text'],
-	},
-	set = function(info,value)
-		E.db.nameplates.healthBar_name_widthUpTo = value;
-		NP:UpdateAllPlates()
-	end,
-	get = function(info) return E.db.nameplates.healthBar_name_widthUpTo end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.healthBar_nameText.args.xOffset = {
-	name = L["Horizontal offset"],
-	order = 1,
-	type = "slider",
-	min = -200, max = 200, step = 1,
-	set = function(self, value)
-		E.db.nameplates.healthBar_name_xOffset = value
-		NP:UpdateAllPlates()
-	end,
-	get = function(self)
-		return E.db.nameplates.healthBar_name_xOffset
-	end,
-}
-E.GUI.args.NamePlates.args.tabSettings.args.healthBar_nameText.args.yOffset = {
-	name = L["Vertical offset"],
-	order = 1,
-	type = "slider",
-	min = -200, max = 200, step = 1,
-	set = function(self, value)
-		E.db.nameplates.healthBar_name_yOffset = value
-		NP:UpdateAllPlates()
-	end,
-	get = function(self)
-		return E.db.nameplates.healthBar_name_yOffset
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.healthBar_hpText = {
-	name = L['Health text'],
-	type = "group",
-	order = 3.2,
-	embend = true,
-	args = {},
-}
-E.GUI.args.NamePlates.args.tabSettings.args.healthBar_hpText.args.textFormat = {
-	name = L['Format'],
-	type = 'dropdown',
-	order = 0.1,
-	values = {
-		NO,
-		L['Percent'],
-		L['Current value'],
-		L['Both'],
-		L['Short percent']
-	},
-	set = function(info, value)
-		E.db.nameplates.healthBar_hp_format = value
-
-	end,
-	get = function(info)
-		return E.db.nameplates.healthBar_hp_format
-	end,
-}
-E.GUI.args.NamePlates.args.tabSettings.args.healthBar_hpText.args.attachTo = {
-	order = 0.2,
-	type = 'dropdown',
-	name = L['Attach To'],
-	values = {
-		['TOPLEFT'] = L['Top left'],
-		['TOPRIGHT'] = L['Top right'],
-		['CENTER'] = L['Center'],
-		['BOTTOMLEFT'] = L['Bottom left'],
-		['BOTTOMRIGHT'] = L['Bottom right'],
-		['BOTTOM'] = L['Bottom'],
-		['TOP'] = L['Top'],
-		['LEFT'] = L['Left'],
-		['RIGHT'] = L['Right'],
-	},
-	set = function(info,value)
-		E.db.nameplates.healthBar_hp_attachTo = value;
-		NP:UpdateAllPlates()
-	end,
-	get = function(info) return E.db.nameplates.healthBar_hp_attachTo end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.healthBar_hpText.args.xOffset = {
-	name = L["Horizontal offset"],
-	order = 1,
-	type = "slider",
-	min = -200, max = 200, step = 1,
-	set = function(self, value)
-		E.db.nameplates.healthBar_hp_xOffset = value
-		NP:UpdateAllPlates()
-	end,
-	get = function(self)
-		return E.db.nameplates.healthBar_hp_xOffset
-	end,
-}
-E.GUI.args.NamePlates.args.tabSettings.args.healthBar_hpText.args.yOffset = {
-	name = L["Vertical offset"],
-	order = 1,
-	type = "slider",
-	min = -200, max = 200, step = 1,
-	set = function(self, value)
-		E.db.nameplates.healthBar_hp_yOffset = value
-		NP:UpdateAllPlates()
-	end,
-	get = function(self)
-		return E.db.nameplates.healthBar_hp_yOffset
-	end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.healthBar_lvlText = {
-	name = L['Level text'],
-	type = "group",
-	order = 3.2,
-	embend = true,
-	args = {},
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.healthBar_lvlText.args.Visability = {
-	order = 0.1,
-	type = 'dropdown',
-	name = L['Visability'],
-	values = {
-		L['Always'],
-		L['Only target'],
-		L['Never'],
-	},
-	set = function(info,value)
-		E.db.nameplates.healthBar_lvl_visability = value;
-		NP:UpdateAllPlates()
-		NP:UpdateCustomName()
-	end,
-	get = function(info) return E.db.nameplates.healthBar_lvl_visability end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.healthBar_lvlText.args.attachTo = {
-	order = 0.2,
-	type = 'dropdown',
-	name = L['Attach To'],
-	values = {
-		['TOPLEFT'] = L['Top left'],
-		['TOPRIGHT'] = L['Top right'],
-		['CENTER'] = L['Center'],
-		['BOTTOMLEFT'] = L['Bottom left'],
-		['BOTTOMRIGHT'] = L['Bottom right'],
-		['BOTTOM'] = L['Bottom'],
-		['TOP'] = L['Top'],
-		['LEFT'] = L['Left'],
-		['RIGHT'] = L['Right'],
-	},
-	set = function(info,value)
-		E.db.nameplates.healthBar_lvl_attachTo = value;
-		NP:UpdateAllPlates()
-	end,
-	get = function(info) return E.db.nameplates.healthBar_lvl_attachTo end,
-}
-
-E.GUI.args.NamePlates.args.tabSettings.args.healthBar_lvlText.args.xOffset = {
-	name = L["Horizontal offset"],
-	order = 1,
-	type = "slider",
-	min = -200, max = 200, step = 1,
-	set = function(self, value)
-		E.db.nameplates.healthBar_lvl_xOffset = value
-		NP:UpdateAllPlates()
-	end,
-	get = function(self)
-		return E.db.nameplates.healthBar_lvl_xOffset
-	end,
-}
-E.GUI.args.NamePlates.args.tabSettings.args.healthBar_lvlText.args.yOffset = {
-	name = L["Vertical offset"],
-	order = 1,
-	type = "slider",
-	min = -200, max = 200, step = 1,
-	set = function(self, value)
-		E.db.nameplates.healthBar_lvl_yOffset = value
-		NP:UpdateAllPlates()
-	end,
-	get = function(self)
-		return E.db.nameplates.healthBar_lvl_yOffset
-	end,
-}
-
-E.GUI.args.NamePlates.args.spellList = {
-	name = L["Spell List"],
-	type = "group",
-	order = 1,
-	args = {},
-}
-
-E.GUI.args.NamePlates.args.spellList.args.create = {
-	name = "",
-	type = "group",
-	order = 1,
-	embend = true,
-	args = {},
-}
-
-E.GUI.args.NamePlates.args.spellList.args.settings = {
-	name = "",
-	type = "group",
-	order = 2,
-	embend = true,
-	args = {},
-}
-
-E.GUI.args.NamePlates.args.spellList.args.create.args.spellid = {
-	name = "SpellID",
-	type = "editbox",
-	order = 1,
-	set = function(self, value)
-		local num = tonumber(value)
-		if num and GetSpellInfo(num) then
-			if not E.db.nameplates.spelllist[GetSpellInfo(num)] then
-
-				E.db.nameplates.spelllist[GetSpellInfo(num)] = {}
-				E.db.nameplates.spelllist[GetSpellInfo(num)].show = 1
-				E.db.nameplates.spelllist[GetSpellInfo(num)].size = 1
-				E.db.nameplates.spelllist[GetSpellInfo(num)].checkID = false
-				E.db.nameplates.spelllist[GetSpellInfo(num)].spellID = num
-				E.db.nameplates.spelllist[GetSpellInfo(num)].filter = 3
-			end
-
-			selectedspell = GetSpellInfo(num)
-		end
-	end,
-	get = function(self)
-		return ''
-	end,
-
-}
-
-local spellListFilter = nil
-
-E.GUI.args.NamePlates.args.spellList.args.create.args.spelllist = {
-	name = L["Select spell"], width = 'full',
-	type = "dropdown",
-	order = 3,
-	values = function()
-		local t = {}
-
-		for spellname, params in pairs(E.db.nameplates.spelllist) do
-			if not spellListFilter or spellListFilter == 1 then
-				t[spellname] = NP:SpellString(params.spellID)
-			elseif spellListFilter == 3 and not params.filter then
-				t[spellname] = NP:SpellString(params.spellID)
-			elseif spellListFilter == params.filter then
-				t[spellname] = NP:SpellString(params.spellID)
-			end
-			--t[spellname] = (spellname).." "..( params.size or 1 ).." "..( params.show and "SHOW" or "HIDE" ).." "..(params.spellID or "000000").." "..(params.checkID and "CheckID" or "NoCheckID")
-		end
-
-		return t
-	end,
-	set = function(self, value)
-		selectedspell = value
-	end,
-	get = function(self)
-		return selectedspell
-	end,
-}
-
-
-E.GUI.args.NamePlates.args.spellList.args.create.args.spelllistFilter = {
-	name = L['Filter'],
-	order = 2,
-	type = 'dropdown',
-	values = {
-		'All',
-		'Embend',
-		'Custom',
-	},
-	set = function(self, value)
-		spellListFilter = value
-	end,
-	get = function(self)
-		return 1
-	end
-}
-
-E.GUI.args.NamePlates.args.spellList.args.settings.args.show = {
-	name = L["Show"],
-	type = "dropdown",
-	order = 4,
-	values = {
-		 L["Always"],
-		 L["Never"],
-		 L["Only mine"],
-		 L["Only on enemy"],
-		 L["Only on friendly"],
-	},
-	set = function(self, value)
-		if selectedspell then
-			E.db.nameplates.spelllist[selectedspell].show = value
-		end
-	end,
-	get = function(self)
-		if selectedspell then
-			return E.db.nameplates.spelllist[selectedspell].show or 1
-		else
-			return 1
-		end
-	end,
-}
-
-E.GUI.args.NamePlates.args.spellList.args.settings.args.spellID = {
-	name = "SpellID",
-	type = "editbox",
-	order = 4,
-	set = function(self, value)
-		local num = tonumber(value)
-
-		if selectedspell and num then
-			E.db.nameplates.spelllist[selectedspell].spellID = num
-		end
-	end,
-	get = function(self)
-		if selectedspell then
-			return E.db.nameplates.spelllist[selectedspell].spellID or ''
-		else
-			return ''
-		end
-	end,
-}
-
-E.GUI.args.NamePlates.args.spellList.args.settings.args.checkID = {
-	name = "CheckID",
-	type = "toggle",
-	order = 4,
-	set = function(self, value)
-		if selectedspell then
-			E.db.nameplates.spelllist[selectedspell].checkID = not E.db.nameplates.spelllist[selectedspell].checkID
-		end
-	end,
-	get = function(self)
-		if selectedspell then
-			return E.db.nameplates.spelllist[selectedspell].checkID or false
-		else
-			return false
-		end
-	end,
-}
-
-E.GUI.args.NamePlates.args.spellList.args.settings.args.size = {
-	name = L["Size"],
-	type = "slider", min = 1, max = 2, step = 0.1,
-	order = 4,
-	set = function(self, value)
-		if selectedspell then
-			E.db.nameplates.spelllist[selectedspell].size = value
-		end
-	end,
-	get = function(self)
-		if selectedspell then
-			return E.db.nameplates.spelllist[selectedspell].size or 1
-		else
-			return 1
-		end
-	end,
-}
-
-
-E.GUI.args.NamePlates.args.nameList = {
-	name = L["Name List"],
-	type = "group",
-	order = 1,
-	args = {},
-}
-
-E.GUI.args.NamePlates.args.nameList.args.create = {
-	name = "",
-	type = "group",
-	order = 1,
-	embend = true,
-	args = {},
-}
-
-E.GUI.args.NamePlates.args.nameList.args.settings = {
-	name = "",
-	type = "group",
-	order = 2,
-	embend = true,
-	args = {},
-}
-
-E.GUI.args.NamePlates.args.nameList.args.create.args.spellid = {
-	name = L["Name"],
-	type = "editbox",
-	order = 1,
-	set = function(self, value)
-		if value and #value > 0 then
-			if not E.db.nameplates.namelist[value] then
-				E.db.nameplates.namelist[value] = {
-					show = true,
-					subname = value
-				}
-			end
-			selectedname = value
-
-			NP:UpdateCustomName()
-		end
-	end,
-	get = function(self)
-		return ''
-	end,
-
-}
-
-
-E.GUI.args.NamePlates.args.nameList.args.create.args.namelist = {
-	name = L["Select name"],
-	type = "dropdown",
-	order = 2,
-	values = function()
-		local t = {}
-
-		for name,params in pairs(E.db.nameplates.namelist) do
-			t[name] = name
-		end
-
-		NP:UpdateCustomName()
-
-		return t
-	end,
-	set = function(self, value)
-		selectedname = value
-	end,
-	get = function(self)
-		return selectedname
-	end,
-}
-
-E.GUI.args.NamePlates.args.nameList.args.create.args.namefromtarget = {
-	name = L["Name from target"],
-	type = "execute",
-	order = 3,
-	set = function(self, value)
-		if UnitExists("target") and not UnitIsPlayer("target") then
-			local name = UnitName("target")
-			E.db.nameplates.namelist[name] = {
-				show = true,
-				subname = name
-			}
-
-			NP:UpdateCustomName()
-
-			selectedname = name
-		end
-	end,
-	get = function(self)
-		return ''
-	end,
-
-}
-
-E.GUI.args.NamePlates.args.nameList.args.settings.args.checkID = {
-	name = L["Enable"],
-	type = "toggle",
-	order = 4,
-	set = function(self, value)
-		if selectedname then
-			E.db.nameplates.namelist[selectedname].show = not E.db.nameplates.namelist[selectedname].show
-			NP:UpdateCustomName()
-		end
-	end,
-	get = function(self)
-		if selectedname then
-			return E.db.nameplates.namelist[selectedname].show
-		else
-			return false
-		end
-	end,
-}
-
-E.GUI.args.NamePlates.args.nameList.args.settings.args.subname = {
-	name = L["Name"],
-	type = "editbox",
-	width = 'full',
-	order = 1,
-	set = function(self, value)
-		if selectedname then
-			if value and #value > 0 then
-				E.db.nameplates.namelist[selectedname].subname = value
-				NP:UpdateCustomName()
-			end
-		end
-	end,
-	get = function(self)
-		if selectedname then
-			return E.db.nameplates.namelist[selectedname].subname or ''
-		else
-			return ''
-		end
-	end,
-
-}
-
-E.GUI.args.NamePlates.args.blackList = {
-	name = L["Black List"],
-	type = "group",
-	order = 1,
-	args = {},
-}
-
-E.GUI.args.NamePlates.args.blackList.args.create = {
-	name = "",
-	type = "group",
-	order = 1,
-	embend = true,
-	args = {},
-}
-
-E.GUI.args.NamePlates.args.blackList.args.settings = {
-	name = "",
-	type = "group",
-	order = 2,
-	embend = true,
-	args = {},
-}
-
-E.GUI.args.NamePlates.args.blackList.args.create.args.spellid = {
-	name = L["Name"],
-	type = "editbox",
-	order = 1,
-	set = function(self, value)
-		if value and #value > 0 then
-			local name, rank, icon, castingTime, minRange, maxRange, spellID = GetSpellInfo(value)
-
-			if name then
-				E.db.nameplates.blacklist[name] = { enable = true, spellID = spellID }
-			end
-
-			selectedspellbl = name
-		end
-	end,
-	get = function(self)
-		return ''
-	end,
-
-}
-
-
-E.GUI.args.NamePlates.args.blackList.args.create.args.namelist = {
-	name = L["Select spell"],
-	type = "dropdown",
-	order = 2,
-	values = function()
-		local t = {}
-
-		for spellname,params in pairs(E.db.nameplates.blacklist) do
-			t[spellname] = NP:SpellString(params.spellID)
-		end
-
-		return t
-	end,
-	set = function(self, value)
-		selectedspellbl = value
-	end,
-	get = function(self)
-		return selectedspellbl
-	end,
-}
-
-
-E.GUI.args.NamePlates.args.blackList.args.settings.args.enable = {
-	name = L["Enable"],
-	type = "toggle",
-	order = 4,
-	set = function(self, value)
-		if selectedspellbl then
-			E.db.nameplates.blacklist[selectedspellbl].enable = not E.db.nameplates.blacklist[selectedspellbl].enable
-		end
-	end,
-	get = function(self)
-		if selectedspellbl then
-			return E.db.nameplates.blacklist[selectedspellbl].enable
-		else
-			return false
-		end
-	end,
-}
-
-E.GUI.args.NamePlates.args.blackList.args.settings.args.spellID = {
-	name = "SpellID",
-	type = "editbox",
-	order = 4,
-	set = function(self, value)
-		local num = tonumber(value)
-
-		if selectedspellbl and num then
-			E.db.nameplates.blacklist[selectedspellbl].spellID = num
-		end
-	end,
-	get = function(self)
-		if selectedspellbl then
-			return E.db.nameplates.blacklist[selectedspellbl].spellID or ''
-		else
-			return ''
-		end
-	end,
-}
-
-E.GUI.args.NamePlates.args.blackList.args.settings.args.checkID = {
-	name = "CheckID",
-	type = "toggle",
-	order = 4,
-	set = function(self, value)
-		if selectedspellbl then
-			E.db.nameplates.blacklist[selectedspellbl].checkID = not E.db.nameplates.blacklist[selectedspellbl].checkID
-		end
-	end,
-	get = function(self)
-		if selectedspellbl then
-			return E.db.nameplates.blacklist[selectedspellbl].checkID or false
-		else
-			return false
-		end
-	end,
-}
 
 do
 	local hidegametooltip = CreateFrame("Frame")
@@ -5376,3 +3307,1954 @@ function NP:COMBAT_LOG_EVENT_UNFILTERED(event, ...)
 		end
 	end
 end
+
+
+-----------------------
+-- Interface
+-----------------------
+
+local NAMEPLATE_GUI_DISABLED = {
+	name = L['Nameplates'],
+	type = "group",
+	order = 5,
+	args = {},
+}
+
+NAMEPLATE_GUI_DISABLED.args.tabSettings = {
+	name = L["Tabs"],
+	type = "tabgroup",
+	width = 'full',
+	order = 2,
+	args = {}
+}
+
+NAMEPLATE_GUI_DISABLED.args.tabSettings.args.generals = {
+	name = L['General'],
+	type = "group",
+	order = 1.2,
+	embend = true,
+	args = {},
+}
+
+NAMEPLATE_GUI_DISABLED.args.tabSettings.args.generals.args.enable = {
+	name = L['Enable'],
+	order = 0.1,
+	type = "toggle",
+	width = 'full',
+	set = function(self, value)
+		E.db.nameplates.enabled = not E.db.nameplates.enabled
+
+		AleaUI_GUI.ShowPopUp("AleaUI", L['Blizzard raid frames are disabled. You need to enable them and reload ui.'],
+			{ name = "Yes", OnClick = function() ReloadUI() end},
+			{ name = "No", OnClick = function() end})
+	end,
+	get = function(self)
+		return E.db.nameplates.enabled
+	end,
+}
+
+
+local NAMEPLATE_GUI = {
+	name = L['Nameplates'],
+	type = "group",
+	order = 5,
+	args = {},
+}
+
+NAMEPLATE_GUI.args.tabSettings = {
+	name = L["Tabs"],
+	type = "tabgroup",
+	width = 'full',
+	order = 2,
+	args = {}
+}
+
+
+NAMEPLATE_GUI.args.tabSettings.args.blizzardSettings = {
+	name = L["Blizzard Settings"],
+	type = "group",
+	order = 1,
+	embend = true,
+	args = {},
+}
+
+
+NAMEPLATE_GUI.args.tabSettings.args.generals = {
+	name = L['General'],
+	type = "group",
+	order = 1.2,
+	embend = true,
+	args = {},
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.blizzardSettings.args.nameplateShowAll = {
+	name = L['Show always'],
+	order = 0.1,
+	type = "toggle",
+	width = 'full',
+	set = function(self, value)
+		E.db.nameplates.nameplateShowAll = not E.db.nameplates.nameplateShowAll
+		E:LockCVar("nameplateShowAll", E.db.nameplates.nameplateShowAll and 1 or 0)
+	end,
+	get = function(self)
+		return E.db.nameplates.nameplateShowAll
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.blizzardSettings.args.nameplateShowEnemies = {
+	name = L['Show enemies'],
+	order = 0.2,
+	type = "toggle",
+	set = function(self, value)
+		SetCVar("nameplateShowEnemies", GetCVarBool("nameplateShowEnemies") and 0 or 1)
+		E.db.nameplates.nameplateShowEnemies = GetCVarBool("nameplateShowEnemies")
+	end,
+	get = function(self)
+		return GetCVarBool("nameplateShowEnemies")
+	end,
+}
+NAMEPLATE_GUI.args.tabSettings.args.blizzardSettings.args.nameplateShowEnemyMinions = {
+	name = L['Show enemy minions'],
+	order = 0.4,
+	type = "toggle", newLine = true,
+	set = function(self, value)
+		E.db.nameplates.nameplateShowEnemyMinions = not E.db.nameplates.nameplateShowEnemyMinions
+		E:LockCVar("nameplateShowEnemyMinions", E.db.nameplates.nameplateShowEnemyMinions and 1 or 0)
+	end,
+	get = function(self)
+		return E.db.nameplates.nameplateShowEnemyMinions
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.blizzardSettings.args.nameplateShowEnemyPets = {
+	name = L['Show enemy pets'],
+	order = 0.6,
+	type = "toggle",  newLine = true,
+	set = function(self, value)
+		E.db.nameplates.nameplateShowEnemyPets = not E.db.nameplates.nameplateShowEnemyPets
+		E:LockCVar("nameplateShowEnemyPets", E.db.nameplates.nameplateShowEnemyPets and 1 or 0)
+	end,
+	get = function(self)
+		return E.db.nameplates.nameplateShowEnemyPets
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.blizzardSettings.args.nameplateShowEnemyGuardians = {
+	name = L['Show enemy guardians'],
+	order = 0.8,
+	type = "toggle",  newLine = true,
+	set = function(self, value)
+		E.db.nameplates.nameplateShowEnemyGuardians = not E.db.nameplates.nameplateShowEnemyGuardians
+		E:LockCVar("nameplateShowEnemyGuardians", E.db.nameplates.nameplateShowEnemyGuardians and 1 or 0)
+	end,
+	get = function(self)
+		return E.db.nameplates.nameplateShowEnemyGuardians
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.blizzardSettings.args.nameplateShowEnemyTotems = {
+	name = L['Show enemy totems'],
+	order = 1.0,
+	type = "toggle",  newLine = true,
+	set = function(self, value)
+		E.db.nameplates.nameplateShowEnemyTotems = not E.db.nameplates.nameplateShowEnemyTotems
+		E:LockCVar("nameplateShowEnemyTotems", E.db.nameplates.nameplateShowEnemyTotems and 1 or 0)
+	end,
+	get = function(self)
+		return E.db.nameplates.nameplateShowEnemyTotems
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.blizzardSettings.args.nameplateShowEnemyMinus = {
+	name = L['Show enemy minus'],
+	order = 1.2,
+	type = "toggle", width = 'full',
+	set = function(self, value)
+		E.db.nameplates.nameplateShowEnemyMinus = not E.db.nameplates.nameplateShowEnemyMinus
+		E:LockCVar("nameplateShowEnemyMinus", E.db.nameplates.nameplateShowEnemyMinus and 1 or 0)
+	end,
+	get = function(self)
+		return E.db.nameplates.nameplateShowEnemyMinus
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.blizzardSettings.args.nameplateShowSelf = {
+	name = DISPLAY_PERSONAL_RESOURCE,
+	order = 2,
+	type = "toggle", width = 'full',
+	set = function(self, value)
+		E.db.nameplates.nameplateShowSelf = not E.db.nameplates.nameplateShowSelf
+		E:LockCVar("nameplateShowSelf", E.db.nameplates.nameplateShowSelf and 1 or 0)
+	end,
+	get = function(self)
+		return E.db.nameplates.nameplateShowSelf
+	end,
+}
+
+
+NAMEPLATE_GUI.args.tabSettings.args.blizzardSettings.args.nameplateShowFriends = {
+	name = L['Show friends'],
+	order = 0.3,
+	type = "toggle",
+	set = function(self, value)
+		SetCVar("nameplateShowFriends", GetCVarBool("nameplateShowFriends") and 0 or 1)
+		E.db.nameplates.nameplateShowFriends = GetCVarBool("nameplateShowFriends")
+	end,
+	get = function(self)
+		return GetCVarBool("nameplateShowFriends")
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.blizzardSettings.args.nameplateShowFriendlyMinions = {
+	name = L['Show friendly minions'],
+	order = 0.5,
+	type = "toggle",
+	set = function(self, value)
+		E.db.nameplates.nameplateShowFriendlyMinions = not E.db.nameplates.nameplateShowFriendlyMinions
+		E:LockCVar("nameplateShowFriendlyMinions", E.db.nameplates.nameplateShowFriendlyMinions and 1 or 0)
+	end,
+	get = function(self)
+		return E.db.nameplates.nameplateShowFriendlyMinions
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.blizzardSettings.args.nameplateShowFriendlyPets = {
+	name = L['Show friendly pets'],
+	order = 0.7,
+	type = "toggle",
+	set = function(self, value)
+		E.db.nameplates.nameplateShowFriendlyPets = not E.db.nameplates.nameplateShowFriendlyPets
+		E:LockCVar("nameplateShowFriendlyPets", E.db.nameplates.nameplateShowFriendlyPets and 1 or 0)
+	end,
+	get = function(self)
+		return E.db.nameplates.nameplateShowFriendlyPets
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.blizzardSettings.args.nameplateShowFriendlyGuardians = {
+	name = L['Show friendly guardians'],
+	order = 0.9,
+	type = "toggle",
+	set = function(self, value)
+		E.db.nameplates.nameplateShowFriendlyGuardians = not E.db.nameplates.nameplateShowFriendlyGuardians
+		E:LockCVar("nameplateShowFriendlyGuardians", E.db.nameplates.nameplateShowFriendlyGuardians and 1 or 0)
+	end,
+	get = function(self)
+		return E.db.nameplates.nameplateShowFriendlyGuardians
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.blizzardSettings.args.nameplateShowFriendlyTotems = {
+	name = L['Show friendly totems'],
+	order = 1.1,
+	type = "toggle",
+	set = function(self, value)
+		E.db.nameplates.nameplateShowFriendlyTotems = not E.db.nameplates.nameplateShowFriendlyTotems
+		E:LockCVar("nameplateShowFriendlyTotems", E.db.nameplates.nameplateShowFriendlyTotems and 1 or 0)
+	end,
+	get = function(self)
+		return E.db.nameplates.nameplateShowFriendlyTotems
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.blizzardSettings.args.nameplateMaxDistance = {
+	name = L['Distance'],
+	order = 4,
+	type = "slider",
+	min = 30, max = 60, step = 1,
+	set = function(self, value)
+		E.db.nameplates.nameplateMaxDistance = value
+		E:LockCVar("nameplateMaxDistance", value)
+	end,
+	get = function(self)
+		return E.db.nameplates.nameplateMaxDistance
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.blizzardSettings.args.nameplateOffsets = {
+	name = L['Enable sticking'],
+	order = 5,
+	type = "toggle",
+
+	set = function(self, value)
+		E.db.nameplates.nameplateOffsets = not E.db.nameplates.nameplateOffsets
+
+		E:LockCVar("nameplateOtherTopInset", E.db.nameplates.nameplateOffsets  and '.08' or '-1')
+		E:LockCVar("nameplateOtherBottomInset",  E.db.nameplates.nameplateOffsets  and '.1' or '-1')
+
+	end,
+	get = function(self)
+		return E.db.nameplates.nameplateOffsets
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.blizzardSettings.args.nameplatePosition = {
+	name = L['Position'],
+	order = 6,
+	type = "dropdown",
+	values = {
+		[-1] = 'Bottom',
+		[0] = 'Top',
+		[1] = 'Middle',
+	},
+	set = function(self, value)
+		E.db.nameplates.nameplatePosition = value
+		E:LockCVar("nameplateOtherAtBase", E.db.nameplates.nameplatePosition)
+	end,
+	get = function(self)
+		return E.db.nameplates.nameplatePosition
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.blizzardSettings.args.nameplateMotion = {
+	name = L["Motion"],
+	order = 7,
+	type = "dropdown",
+	values = {
+		['STACKED'] = UNIT_NAMEPLATES_TYPE_2,
+		['OVERLAP'] = UNIT_NAMEPLATES_TYPE_1,
+	},
+	set = function(self, value)
+		E.db.nameplates.nameplateMotion = value
+		E:LockCVar("nameplateMotion", E.db.nameplates.nameplateMotion == "STACKED" and 1 or 0)
+	end,
+	get = function(self)
+		return E.db.nameplates.nameplateMotion
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.blizzardSettings.args.toggleHitboxHighlight = {
+	name = L["Show hitbox"],
+	type = "execute",
+	order = 8,
+	newLine = true,
+	set = function(self)
+		NP:ToggleAllHitbox()
+
+		if ( showHitbox ) then
+			NAMEPLATE_GUI.args.tabSettings.args.blizzardSettings.args.toggleHitboxHighlight.name = L["Hide hitbox"]
+		else
+			NAMEPLATE_GUI.args.tabSettings.args.blizzardSettings.args.toggleHitboxHighlight.name = L["Show hitbox"]
+		end
+	end,
+	get = function(self)
+		return ''
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.blizzardSettings.args.hitbox_width = {
+	name = L['Hitbox width'],
+	order = 10,
+	type = "slider",
+	newLine = true,
+	min = 10, max = 600, step = 1,
+	set = function(self, value)
+		E.db.nameplates.hitbox_width = value
+
+		NP:UpdateBasePlateSize()
+	end,
+	get = function(self)
+		return E.db.nameplates.hitbox_width
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.blizzardSettings.args.hitbox_height = {
+	name = L['Hitbox height'],
+	order = 11,
+	type = "slider",
+	min = 10, max = 600, step = 1,
+	set = function(self, value)
+		E.db.nameplates.hitbox_height = value
+		NP:UpdateBasePlateSize()
+	end,
+	get = function(self)
+		return E.db.nameplates.hitbox_height
+	end,
+}
+
+
+NAMEPLATE_GUI.args.tabSettings.args.blizzardSettings.args.overlapH = {
+	name = L['Horizontal spacing'],
+	order = 12,
+	type = "slider",
+	min = 0, max = 3, step = 0.1,
+	newLine = true,
+	set = function(self, value)
+		E.db.nameplates.overlapH = value
+
+		E:LockCVar('nameplateOverlapH', E.db.nameplates.overlapH)
+	end,
+	get = function(self)
+		return E.db.nameplates.overlapH
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.blizzardSettings.args.overlapV = {
+	name = L['Vertical spacing'],
+	order = 13,
+	type = "slider",
+	min = 0, max = 3, step = 0.1,
+	set = function(self, value)
+		E.db.nameplates.overlapV = value
+
+		E:LockCVar('nameplateOverlapV', E.db.nameplates.overlapV)
+	end,
+	get = function(self)
+		return E.db.nameplates.overlapV
+	end,
+}
+
+--[==[
+NAMEPLATE_GUI.args.blizzardSettings.args.nameplateShowFriendlyMinions = {
+	name = "ƒружественные питомцы",
+	order = 1.2,
+	type = "toggle",
+
+	set = function(self, value)
+		E.db.nameplates.nameplateShowFriendlyMinions = not E.db.nameplates.nameplateShowFriendlyMinions
+		E:LockCVar("nameplateShowFriendlyMinions", E.db.nameplates.nameplateShowFriendlyMinions and 1 or 0)
+	end,
+	get = function(self)
+		return E.db.nameplates.nameplateShowFriendlyMinions
+	end,
+}
+
+NAMEPLATE_GUI.args.blizzardSettings.args.nameplateShowEnemyMinions = {
+	name = "¬ражеские питомцы",
+	order = 1.2,
+	type = "toggle",
+
+	set = function(self, value)
+		E.db.nameplates.nameplateShowEnemyMinions = not E.db.nameplates.nameplateShowEnemyMinions
+		E:LockCVar("nameplateShowEnemyMinions", E.db.nameplates.nameplateShowEnemyMinions and 1 or 0)
+	end,
+	get = function(self)
+		return E.db.nameplates.nameplateShowEnemyMinions
+	end,
+}
+
+NAMEPLATE_GUI.args.blizzardSettings.args.nameplateShowEnemyMinus = {
+	name = "¬ражеские слабые мобы",
+	order = 1.3,
+	type = "toggle",
+
+	set = function(self, value)
+		E.db.nameplates.nameplateShowEnemyMinus = not E.db.nameplates.nameplateShowEnemyMinus
+		E:LockCVar("nameplateShowEnemyMinus", E.db.nameplates.nameplateShowEnemyMinus and 1 or 0)
+	end,
+	get = function(self)
+		return E.db.nameplates.nameplateShowEnemyMinus
+	end,
+}
+
+]==]
+
+NAMEPLATE_GUI.args.tabSettings.args.generals.args.enable = {
+	name = L['Enable'],
+	order = 0.1,
+	type = "toggle",
+	width = 'full',
+	set = function(self, value)
+		E.db.nameplates.enabled = not E.db.nameplates.enabled
+
+		AleaUI_GUI.ShowPopUp("AleaUI", L['Blizzard raid frames are disabled. You need to enable them and reload ui.'],
+			{ name = "Yes", OnClick = function() ReloadUI() end},
+			{ name = "No", OnClick = function() end})
+	end,
+	get = function(self)
+		return E.db.nameplates.enabled
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.generals.args.buff_amount = {
+	name = L['Buff amount'],
+	order = 3,
+	type = "slider",
+	min = 0, max = 6, step = 1,
+	set = function(self, value)
+		E.db.nameplates.buffs.numAuras = value
+		NP:UpdateAllPlates()
+	end,
+	get = function(self)
+		return E.db.nameplates.buffs.numAuras
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.generals.args.debuff_amount = {
+	name = L['Debuff amount'],
+	order = 4,
+	type = "slider",
+	min = 0, max = 6, step = 1,
+	set = function(self, value)
+		E.db.nameplates.debuffs.numAuras = value
+		NP:UpdateAllPlates()
+	end,
+	get = function(self)
+		return E.db.nameplates.debuffs.numAuras
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.generals.args.FriendlyUnits = {
+	name = L['Friendly units'],
+	type = "group",
+	order = 4.1,
+	embend = true,
+	args = {},
+}
+NAMEPLATE_GUI.args.tabSettings.args.generals.args.FriendlyUnits.args.buff_amount = {
+	name = L['Buff amount'],
+	order = 3,
+	type = "slider",
+	min = 0, max = 6, step = 1,
+	set = function(self, value)
+		E.db.nameplates.buffs.friendlynumAuras = value
+		NP:UpdateAllPlates()
+	end,
+	get = function(self)
+		return E.db.nameplates.buffs.friendlynumAuras
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.generals.args.FriendlyUnits.args.debuff_amount = {
+	name = L['Debuff amount'],
+	order = 4,
+	type = "slider",
+	min = 0, max = 6, step = 1,
+	set = function(self, value)
+		E.db.nameplates.debuffs.friendlynumAuras = value
+		NP:UpdateAllPlates()
+	end,
+	get = function(self)
+		return E.db.nameplates.debuffs.friendlynumAuras
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.generals.args.showmyauras = {
+	name = L['Show my auras'],
+	order = 1,
+	type = "toggle",
+
+	set = function(self, value)
+		E.db.nameplates.showmyauras = not E.db.nameplates.showmyauras
+	end,
+	get = function(self)
+		return E.db.nameplates.showmyauras
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.generals.args.showfromspelllist = {
+	name = L['Show from spell list'],
+	order = 2,
+	type = "toggle",
+	set = function(self, value)
+		E.db.nameplates.showfromspelllist = not E.db.nameplates.showfromspelllist
+	end,
+	get = function(self)
+		return E.db.nameplates.showfromspelllist
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.generals.args.showpurge = {
+	name = L['Show dispellable auras'],
+	order = 2,
+	type = "toggle",
+	set = function(self, value)
+		E.db.nameplates.showpurge = not E.db.nameplates.showpurge
+	end,
+	get = function(self)
+		return E.db.nameplates.showpurge
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.generals.args.easyPlatesForFriendly = {
+	name = L['Easy plates for friendly units'], width = 'full',
+	order = 2,
+	type = "toggle",
+	set = function(self, value)
+		E.db.nameplates.easyPlatesForFriendly = not E.db.nameplates.easyPlatesForFriendly
+		NP:UpdateBasePlateSize()
+	end,
+	get = function(self)
+		return E.db.nameplates.easyPlatesForFriendly
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.generals.args.stretchTexture = {
+	name = L['Stretch icon texture'], width = 'full',
+	order = 2,
+	type = "toggle",
+	set = function(self, value)
+		E.db.nameplates.stretchTexture = not E.db.nameplates.stretchTexture
+
+		NP:UpdateAllPlates()
+	end,
+	get = function(self)
+		return E.db.nameplates.stretchTexture
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.generals.args.plateFont = {
+	name = L["Fonts"],
+	type = "group",
+	order = 10,
+	embend = true,
+	args = {},
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.generals.args.plateFont.args.font = {
+	name = L["Font"],
+	order = 1,
+	type = "font",
+	values = E.GetFontList,
+	set = function(self, value)
+		E.db.nameplates.font = value
+		NP:UpdateAllPlates()
+	end,
+	get = function(self)
+		return E.db.nameplates.font
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.generals.args.plateFont.args.fontSize = {
+	name = L["Size"],
+	order = 1,
+	type = "slider",
+	min = 1, max = 32, step = 1,
+	set = function(self, value)
+		E.db.nameplates.fontSize = value
+		NP:UpdateAllPlates()
+	end,
+	get = function(self)
+		return E.db.nameplates.fontSize
+	end,
+}
+NAMEPLATE_GUI.args.tabSettings.args.generals.args.plateFont.args.fontOutline = {
+	name = L["Outline"],
+	order = 3,
+	type = "dropdown",
+	values = {
+		[""] = NO,
+		["OUTLINE"] = "OUTLINE",
+	},
+	set = function(self, value)
+		E.db.nameplates.fontOutline = value
+		NP:UpdateAllPlates()
+	end,
+	get = function(self)
+		return E.db.nameplates.fontOutline
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.generals.args.friendlyPlateFont = {
+	name = L["Friendly plate fonts"],
+	type = "group",
+	order = 10.1,
+	embend = true,
+	args = {},
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.generals.args.friendlyPlateFont.args.font = {
+	name = L["Font"],
+	order = 1,
+	type = "font",
+	values = E.GetFontList,
+	set = function(self, value)
+		E.db.nameplates.friendlyFont = value
+		NP:UpdateAllPlates()
+	end,
+	get = function(self)
+		return E.db.nameplates.friendlyFont
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.generals.args.friendlyPlateFont.args.fontSize = {
+	name = L["Size"],
+	order = 1,
+	type = "slider",
+	min = 1, max = 72, step = 1,
+	set = function(self, value)
+		E.db.nameplates.friendlyFontSize = value
+		NP:UpdateAllPlates()
+	end,
+	get = function(self)
+		return E.db.nameplates.friendlyFontSize
+	end,
+}
+NAMEPLATE_GUI.args.tabSettings.args.generals.args.friendlyPlateFont.args.fontOutline = {
+	name = L["Outline"],
+	order = 3,
+	type = "dropdown",
+	values = {
+		[""] = NO,
+		["OUTLINE"] = "OUTLINE",
+	},
+	set = function(self, value)
+		E.db.nameplates.friendlyFontOutline = value
+		NP:UpdateAllPlates()
+	end,
+	get = function(self)
+		return E.db.nameplates.friendlyFontOutline
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.plateColors = {
+	name = L["Colors"],
+	type = "group",
+	order = 1.3,
+	embend = true,
+	args = {},
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.plateColors.args.reactionColors = {
+	name = L["Reaction colors"],
+	type = "group",
+	order = 1.5,
+	embend = true,
+	args = {},
+}
+
+for k,v in pairs(defaults.reactions) do
+
+	NAMEPLATE_GUI.args.tabSettings.args.plateColors.args.reactionColors.args[k] = {
+		name = L[k], desc = k,
+		order = 1,
+		type = "color",
+		set = function(self, r,g,b)
+			E.db.nameplates.reactions[k] = { r=r, g=g, b=b, 1 }
+		end,
+		get = function(self)
+			return E.db.nameplates.reactions[k].r, E.db.nameplates.reactions[k].g, E.db.nameplates.reactions[k].b, 1
+		end,
+	}
+end
+
+NAMEPLATE_GUI.args.tabSettings.args.plateColors.args.auratypeColors = {
+	name = L["Aura type colors"],
+	type = "group",
+	order = 1.5,
+	embend = true,
+	args = {},
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.plateColors.args.auratypeColors.args.colorbytype = {
+	name = L["Color by type"],
+	order = 1,
+	width = "full",
+	type = "toggle",
+	set = function(self, value)
+		E.db.nameplates.colorByType = not E.db.nameplates.colorByType
+	end,
+	get = function(self)
+		return E.db.nameplates.colorByType
+	end,
+}
+
+for k,v in pairs(defaults.typecolors) do
+
+	NAMEPLATE_GUI.args.tabSettings.args.plateColors.args.auratypeColors.args[k] = {
+		name = L['colorType'..colorToTypeName[k]],
+		order = 2,
+		type = "color",
+		set = function(self, r,g,b)
+			E.db.nameplates.typecolors[k] = {r,g,b,1}
+		end,
+		get = function(self)
+			return E.db.nameplates.typecolors[k][1], E.db.nameplates.typecolors[k][2], E.db.nameplates.typecolors[k][3], 1
+		end,
+	}
+end
+
+
+NAMEPLATE_GUI.args.tabSettings.args.plateHealth = {
+	name = L["Health bar"],
+	type = "group",
+	order = 2,
+	embend = true,
+	args = {},
+}
+
+
+NAMEPLATE_GUI.args.tabSettings.args.plateHealth.args.BorderOpts = {
+	name = L['Borders'],
+	order = -1,
+	embend = true,
+	type = "group",
+	args = {}
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.plateHealth.args.BorderOpts.args.border = {
+	name = L["Borders"],
+	order = 1,
+	type = "color",
+	hasAlpha = true,
+	set = function(self, r,g,b,a)
+		E.db.nameplates.bordercolor = { r, g, b, a }
+		NP:UpdateAllPlates()
+	end,
+	get = function(self)
+		return E.db.nameplates.bordercolor[1], E.db.nameplates.bordercolor[2], E.db.nameplates.bordercolor[3], E.db.nameplates.bordercolor[4]
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.plateHealth.args.BorderOpts.args.backgroundcolor = {
+	name = L["Background"],
+	order = 2,
+	type = "color",
+	hasAlpha = true,
+	set = function(self, r,g,b,a)
+		E.db.nameplates.backdropfadecolor = { r, g, b, a }
+		NP:UpdateAllPlates()
+	end,
+	get = function(self)
+		return E.db.nameplates.backdropfadecolor[1], E.db.nameplates.backdropfadecolor[2], E.db.nameplates.backdropfadecolor[3], E.db.nameplates.backdropfadecolor[4]
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.plateHealth.args.BorderOpts.args.BorderTexture = {
+	order = 2.1,
+	type = 'border',
+	name = L['Border texture'],
+	values = E:GetBorderList(),
+	set = function(info,value)
+		E.db.nameplates.borderTexture = value
+		NP:UpdateAllPlates()
+	end,
+	get = function(info) return E.db.nameplates.borderTexture end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.plateHealth.args.BorderOpts.args.BackgroundTexture = {
+	order = 2.2,
+	type = 'statusbar',
+	name = L['Background texture'],
+	values = E.GetTextureList,
+	set = function(info,value)
+		E.db.nameplates.background_texture = value;
+		NP:UpdateAllPlates()
+	end,
+	get = function(info) return E.db.nameplates.background_texture end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.plateHealth.args.BorderOpts.args.BorderSize = {
+	name = L['Border size'],
+	type = "slider",
+	order	= 2.3,
+	min		= 1,
+	max		= 32,
+	step	= 1,
+	set = function(info,val)
+		E.db.nameplates.borderSize = val
+		NP:UpdateAllPlates()
+	end,
+	get =function(info)
+		return E.db.nameplates.borderSize
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.plateHealth.args.BorderOpts.args.BorderInset = {
+	name = L['Border inset'],
+	type = "slider",
+	order	= 2.4,
+	min		= -32,
+	max		= 32,
+	step	= 1,
+	set = function(info,val)
+		E.db.nameplates.borderInset = val
+		NP:UpdateAllPlates()
+	end,
+	get =function(info)
+		return E.db.nameplates.borderInset
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.plateHealth.args.BorderOpts.args.backgroundInset = {
+	name = L['Background inset'],
+	type = "slider",
+	order	= 2.5,
+	min		= -32,
+	max		= 32,
+	step	= 1,
+	set = function(info,val)
+		E.db.nameplates.backgroundInset = val
+		NP:UpdateAllPlates()
+	end,
+	get =function(info)
+		return E.db.nameplates.backgroundInset
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.plateHealth.args.width = {
+	name = L["Width"],
+	order = 3,
+	type = "slider",
+	min = 1, max = 300, step = 1,
+	set = function(self, value)
+		E.db.nameplates.healthBar_width = value
+
+	--	NP:UpdateBasePlateSize()
+
+		NP:UpdateAllPlates()
+	end,
+	get = function(self)
+		return E.db.nameplates.healthBar_width
+	end,
+}
+NAMEPLATE_GUI.args.tabSettings.args.plateHealth.args.height = {
+	name = L["Height"],
+	order = 4,
+	type = "slider",
+	min = 1, max = 50, step = 1,
+	set = function(self, value)
+		E.db.nameplates.healthBar_height = value
+
+	--	NP:UpdateBasePlateSize()
+
+		NP:UpdateAllPlates()
+	end,
+	get = function(self)
+		return E.db.nameplates.healthBar_height
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.plateHealth.args.texture = {
+	name = L["Texture"],
+	order = 5,
+	type = "statusbar",
+	values = E.GetTextureList,
+	set = function(self, value)
+		E.db.nameplates.healthBar_texture = value
+		NP:UpdateAllPlates()
+	end,
+	get = function(self)
+		return E.db.nameplates.healthBar_texture
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.plateHealth.args.auraSize = {
+	name = L["Aura size"],
+	order = 6,
+	type = "slider",
+	min = 1, max = 32, step = 1,
+	set = function(self, value)
+		E.db.nameplates.auraSize = value
+		NP:UpdateAllPlates()
+	end,
+	get = function(self)
+		return E.db.nameplates.auraSize
+	end,
+}
+--[==[
+NAMEPLATE_GUI.args.AuraParen = {
+	name = " репление аур",
+	type = "group",
+	order = 2.2,
+	embend = true,
+	args = {},
+}
+
+NAMEPLATE_GUI.args.AuraParen.args.xOffset = {
+	name = "xOffset",
+	order = 1,
+	type = "slider",
+	min = -200, max = 200, step = 1,
+	set = function(self, value)
+		E.db.nameplates.aura_xOffset = value
+		NP:UpdateAllPlates()
+	end,
+	get = function(self)
+		return E.db.nameplates.aura_xOffset
+	end,
+}
+NAMEPLATE_GUI.args.AuraParen.args.yOffset = {
+	name = "yOffset",
+	order = 1,
+	type = "slider",
+	min = -200, max = 200, step = 1,
+	set = function(self, value)
+		E.db.nameplates.aura_yOffset = value
+		NP:UpdateAllPlates()
+	end,
+	get = function(self)
+		return E.db.nameplates.aura_yOffset
+	end,
+}
+]==]
+NAMEPLATE_GUI.args.tabSettings.args.plateCastBar = {
+	name = L["Cast Bar"],
+	type = "group",
+	order = 3,
+	embend = true,
+	args = {},
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.plateCastBar.args.height = {
+	name = L["Height"],
+	order = 4,
+	type = "slider",
+	min = 1, max = 50, step = 1,
+	set = function(self, value)
+		E.db.nameplates.castBar_height = value
+		NP:UpdateAllPlates()
+	end,
+	get = function(self)
+		return E.db.nameplates.castBar_height
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.plateCastBar.args.color = {
+	name = L["Interruptable"],
+	order = 3,
+	type = "color",
+	set = function(self, r,g,b)
+		E.db.nameplates.castBar_color = { r, g, b, 1 }
+	end,
+	get = function(self)
+		return E.db.nameplates.castBar_color[1], E.db.nameplates.castBar_color[2], E.db.nameplates.castBar_color[3], 1
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.plateCastBar.args.noInterrupt = {
+	name = L["Not Interruptable"],
+	order = 5,
+	type = "color",
+	set = function(self, r,g,b)
+		E.db.nameplates.castBar_noInterrupt = { r, g, b, 1 }
+	end,
+	get = function(self)
+		return E.db.nameplates.castBar_noInterrupt[1], E.db.nameplates.castBar_noInterrupt[2], E.db.nameplates.castBar_noInterrupt[3], 1
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.plateCastBar.args.offset = {
+	name = L["Offset"],
+	order = 6,
+	type = "slider",
+	min = -50, max = 50, step = 1,
+	set = function(self, value)
+		E.db.nameplates.castBar_offset = value
+		NP:UpdateAllPlates()
+	end,
+	get = function(self)
+		return E.db.nameplates.castBar_offset
+	end,
+}
+
+
+--[==[
+NAMEPLATE_GUI.args.plateCastBar.args.border = {
+	name = L["Borders"],
+	order = 1,
+	type = "color",
+	hasAlpha = true,
+	set = function(self, r,g,b,a)
+		E.db.nameplates.castBar_bordercolor = { r, g, b, a }
+
+		NP:UpdateAllPlates()
+	end,
+	get = function(self)
+		return E.db.nameplates.castBar_bordercolor[1], E.db.nameplates.castBar_bordercolor[2], E.db.nameplates.castBar_bordercolor[3], E.db.nameplates.castBar_bordercolor[4]
+	end,
+}
+
+NAMEPLATE_GUI.args.plateCastBar.args.backgroundcolor = {
+	name = L["Background"],
+	order = 2,
+	type = "color",
+	hasAlpha = true,
+	set = function(self, r,g,b,a)
+		E.db.nameplates.castBar_background = { r, g, b, a }
+		NP:UpdateAllPlates()
+	end,
+	get = function(self)
+		return E.db.nameplates.castBar_background[1], E.db.nameplates.castBar_background[2], E.db.nameplates.castBar_background[3], E.db.nameplates.castBar_background[4]
+	end,
+}
+]==]
+
+NAMEPLATE_GUI.args.tabSettings.args.plateCastBar.args.BorderOpts = {
+	name = L['Borders'],
+	order = -1,
+	embend = true,
+	type = "group",
+	args = {}
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.plateCastBar.args.BorderOpts.args.border = {
+	name = L["Borders"],
+	order = 1,
+	type = "color",
+	hasAlpha = true,
+	set = function(self, r,g,b,a)
+		E.db.nameplates.castBar_bordercolor = { r, g, b, a }
+		NP:UpdateAllPlates()
+	end,
+	get = function(self)
+		return E.db.nameplates.castBar_bordercolor[1], E.db.nameplates.castBar_bordercolor[2], E.db.nameplates.castBar_bordercolor[3], E.db.nameplates.castBar_bordercolor[4]
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.plateCastBar.args.BorderOpts.args.backgroundcolor = {
+	name = L["Background"],
+	order = 2,
+	type = "color",
+	hasAlpha = true,
+	set = function(self, r,g,b,a)
+		E.db.nameplates.castBar_background = { r, g, b, a }
+		NP:UpdateAllPlates()
+	end,
+	get = function(self)
+		return E.db.nameplates.castBar_background[1], E.db.nameplates.castBar_background[2], E.db.nameplates.castBar_background[3], E.db.nameplates.castBar_background[4]
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.plateCastBar.args.BorderOpts.args.BorderTexture = {
+	order = 2.1,
+	type = 'border',
+	name = L['Border texture'],
+	values = E:GetBorderList(),
+	set = function(info,value)
+		E.db.nameplates.castBar_borderTexture = value
+		NP:UpdateAllPlates()
+	end,
+	get = function(info) return E.db.nameplates.castBar_borderTexture end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.plateCastBar.args.BorderOpts.args.BackgroundTexture = {
+	order = 2.2,
+	type = 'statusbar',
+	name = L['Background texture'],
+	values = E.GetTextureList,
+	set = function(info,value)
+		E.db.nameplates.castBar_background_texture = value;
+		NP:UpdateAllPlates()
+	end,
+	get = function(info) return E.db.nameplates.castBar_background_texture end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.plateCastBar.args.BorderOpts.args.BorderSize = {
+	name = L['Border size'],
+	type = "slider",
+	order	= 2.3,
+	min		= 1,
+	max		= 32,
+	step	= 1,
+	set = function(info,val)
+		E.db.nameplates.castBar_borderSize = val
+		NP:UpdateAllPlates()
+	end,
+	get =function(info)
+		return E.db.nameplates.castBar_borderSize
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.plateCastBar.args.BorderOpts.args.BorderInset = {
+	name = L['Border inset'],
+	type = "slider",
+	order	= 2.4,
+	min		= -32,
+	max		= 32,
+	step	= 1,
+	set = function(info,val)
+		E.db.nameplates.castBar_borderInset = val
+		NP:UpdateAllPlates()
+	end,
+	get =function(info)
+		return E.db.nameplates.castBar_borderInset
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.plateCastBar.args.BorderOpts.args.backgroundInset = {
+	name = L['Background inset'],
+	type = "slider",
+	order	= 2.5,
+	min		= -32,
+	max		= 32,
+	step	= 1,
+	set = function(info,val)
+		E.db.nameplates.castBar_backgroundInset = val
+		NP:UpdateAllPlates()
+	end,
+	get =function(info)
+		return E.db.nameplates.castBar_backgroundInset
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.healthBar_nameText = {
+	name = L['Name text'],
+	type = "group",
+	order = 3.1,
+	embend = true,
+	args = {},
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.healthBar_nameText.args.Visability = {
+	order = 0.1,
+	type = 'dropdown',
+	name = L['Visability'],
+	values = {
+		L['Always'],
+		L['Only target'],
+		L['Never'],
+	},
+	set = function(info,value)
+		E.db.nameplates.healthBar_name_visability = value;
+		NP:UpdateAllPlates()
+		NP:UpdateCustomName()
+	end,
+	get = function(info) return E.db.nameplates.healthBar_name_visability end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.healthBar_nameText.args.attachTo = {
+	order = 0.2,
+	type = 'dropdown',
+	name = L['Attach To'],
+	values = {
+		['TOPLEFT'] = L['Top left'],
+		['TOPRIGHT'] = L['Top right'],
+		['CENTER'] = L['Center'],
+		['BOTTOMLEFT'] = L['Bottom left'],
+		['BOTTOMRIGHT'] = L['Bottom right'],
+		['BOTTOM'] = L['Bottom'],
+		['TOP'] = L['Top'],
+		['LEFT'] = L['Left'],
+		['RIGHT'] = L['Right'],
+	},
+	set = function(info,value)
+		E.db.nameplates.healthBar_name_attachTo = value;
+		NP:UpdateAllPlates()
+	end,
+	get = function(info) return E.db.nameplates.healthBar_name_attachTo end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.healthBar_nameText.args.widthUpTo = {
+	order = 0.3,
+	type = 'dropdown',
+	name = L['Width adjustment'],
+	values = {
+		L['To level text'],
+		L['To bar'],
+		L['Full width'],
+		L['To health text'],
+	},
+	set = function(info,value)
+		E.db.nameplates.healthBar_name_widthUpTo = value;
+		NP:UpdateAllPlates()
+	end,
+	get = function(info) return E.db.nameplates.healthBar_name_widthUpTo end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.healthBar_nameText.args.xOffset = {
+	name = L["Horizontal offset"],
+	order = 1,
+	type = "slider",
+	min = -200, max = 200, step = 1,
+	set = function(self, value)
+		E.db.nameplates.healthBar_name_xOffset = value
+		NP:UpdateAllPlates()
+	end,
+	get = function(self)
+		return E.db.nameplates.healthBar_name_xOffset
+	end,
+}
+NAMEPLATE_GUI.args.tabSettings.args.healthBar_nameText.args.yOffset = {
+	name = L["Vertical offset"],
+	order = 1,
+	type = "slider",
+	min = -200, max = 200, step = 1,
+	set = function(self, value)
+		E.db.nameplates.healthBar_name_yOffset = value
+		NP:UpdateAllPlates()
+	end,
+	get = function(self)
+		return E.db.nameplates.healthBar_name_yOffset
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.healthBar_hpText = {
+	name = L['Health text'],
+	type = "group",
+	order = 3.2,
+	embend = true,
+	args = {},
+}
+NAMEPLATE_GUI.args.tabSettings.args.healthBar_hpText.args.textFormat = {
+	name = L['Format'],
+	type = 'dropdown',
+	order = 0.1,
+	values = {
+		NO,
+		L['Percent'],
+		L['Current value'],
+		L['Both'],
+		L['Short percent']
+	},
+	set = function(info, value)
+		E.db.nameplates.healthBar_hp_format = value
+
+	end,
+	get = function(info)
+		return E.db.nameplates.healthBar_hp_format
+	end,
+}
+NAMEPLATE_GUI.args.tabSettings.args.healthBar_hpText.args.attachTo = {
+	order = 0.2,
+	type = 'dropdown',
+	name = L['Attach To'],
+	values = {
+		['TOPLEFT'] = L['Top left'],
+		['TOPRIGHT'] = L['Top right'],
+		['CENTER'] = L['Center'],
+		['BOTTOMLEFT'] = L['Bottom left'],
+		['BOTTOMRIGHT'] = L['Bottom right'],
+		['BOTTOM'] = L['Bottom'],
+		['TOP'] = L['Top'],
+		['LEFT'] = L['Left'],
+		['RIGHT'] = L['Right'],
+	},
+	set = function(info,value)
+		E.db.nameplates.healthBar_hp_attachTo = value;
+		NP:UpdateAllPlates()
+	end,
+	get = function(info) return E.db.nameplates.healthBar_hp_attachTo end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.healthBar_hpText.args.xOffset = {
+	name = L["Horizontal offset"],
+	order = 1,
+	type = "slider",
+	min = -200, max = 200, step = 1,
+	set = function(self, value)
+		E.db.nameplates.healthBar_hp_xOffset = value
+		NP:UpdateAllPlates()
+	end,
+	get = function(self)
+		return E.db.nameplates.healthBar_hp_xOffset
+	end,
+}
+NAMEPLATE_GUI.args.tabSettings.args.healthBar_hpText.args.yOffset = {
+	name = L["Vertical offset"],
+	order = 1,
+	type = "slider",
+	min = -200, max = 200, step = 1,
+	set = function(self, value)
+		E.db.nameplates.healthBar_hp_yOffset = value
+		NP:UpdateAllPlates()
+	end,
+	get = function(self)
+		return E.db.nameplates.healthBar_hp_yOffset
+	end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.healthBar_lvlText = {
+	name = L['Level text'],
+	type = "group",
+	order = 3.2,
+	embend = true,
+	args = {},
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.healthBar_lvlText.args.Visability = {
+	order = 0.1,
+	type = 'dropdown',
+	name = L['Visability'],
+	values = {
+		L['Always'],
+		L['Only target'],
+		L['Never'],
+	},
+	set = function(info,value)
+		E.db.nameplates.healthBar_lvl_visability = value;
+		NP:UpdateAllPlates()
+		NP:UpdateCustomName()
+	end,
+	get = function(info) return E.db.nameplates.healthBar_lvl_visability end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.healthBar_lvlText.args.attachTo = {
+	order = 0.2,
+	type = 'dropdown',
+	name = L['Attach To'],
+	values = {
+		['TOPLEFT'] = L['Top left'],
+		['TOPRIGHT'] = L['Top right'],
+		['CENTER'] = L['Center'],
+		['BOTTOMLEFT'] = L['Bottom left'],
+		['BOTTOMRIGHT'] = L['Bottom right'],
+		['BOTTOM'] = L['Bottom'],
+		['TOP'] = L['Top'],
+		['LEFT'] = L['Left'],
+		['RIGHT'] = L['Right'],
+	},
+	set = function(info,value)
+		E.db.nameplates.healthBar_lvl_attachTo = value;
+		NP:UpdateAllPlates()
+	end,
+	get = function(info) return E.db.nameplates.healthBar_lvl_attachTo end,
+}
+
+NAMEPLATE_GUI.args.tabSettings.args.healthBar_lvlText.args.xOffset = {
+	name = L["Horizontal offset"],
+	order = 1,
+	type = "slider",
+	min = -200, max = 200, step = 1,
+	set = function(self, value)
+		E.db.nameplates.healthBar_lvl_xOffset = value
+		NP:UpdateAllPlates()
+	end,
+	get = function(self)
+		return E.db.nameplates.healthBar_lvl_xOffset
+	end,
+}
+NAMEPLATE_GUI.args.tabSettings.args.healthBar_lvlText.args.yOffset = {
+	name = L["Vertical offset"],
+	order = 1,
+	type = "slider",
+	min = -200, max = 200, step = 1,
+	set = function(self, value)
+		E.db.nameplates.healthBar_lvl_yOffset = value
+		NP:UpdateAllPlates()
+	end,
+	get = function(self)
+		return E.db.nameplates.healthBar_lvl_yOffset
+	end,
+}
+
+NAMEPLATE_GUI.args.spellList = {
+	name = L["Spell List"],
+	type = "group",
+	order = 1,
+	args = {},
+}
+
+NAMEPLATE_GUI.args.spellList.args.create = {
+	name = "",
+	type = "group",
+	order = 1,
+	embend = true,
+	args = {},
+}
+
+NAMEPLATE_GUI.args.spellList.args.settings = {
+	name = "",
+	type = "group",
+	order = 2,
+	embend = true,
+	args = {},
+}
+
+NAMEPLATE_GUI.args.spellList.args.create.args.spellid = {
+	name = "SpellID",
+	type = "editbox",
+	order = 1,
+	set = function(self, value)
+		local num = tonumber(value)
+		if num and GetSpellInfo(num) then
+			if not E.db.nameplates.spelllist[GetSpellInfo(num)] then
+
+				E.db.nameplates.spelllist[GetSpellInfo(num)] = {}
+				E.db.nameplates.spelllist[GetSpellInfo(num)].show = 1
+				E.db.nameplates.spelllist[GetSpellInfo(num)].size = 1
+				E.db.nameplates.spelllist[GetSpellInfo(num)].checkID = false
+				E.db.nameplates.spelllist[GetSpellInfo(num)].spellID = num
+				E.db.nameplates.spelllist[GetSpellInfo(num)].filter = 3
+			end
+
+			selectedspell = GetSpellInfo(num)
+		end
+	end,
+	get = function(self)
+		return ''
+	end,
+
+}
+
+local spellListFilter = nil
+
+NAMEPLATE_GUI.args.spellList.args.create.args.spelllist = {
+	name = L["Select spell"], width = 'full',
+	type = "dropdown",
+	order = 3,
+	values = function()
+		local t = {}
+
+		for spellname, params in pairs(E.db.nameplates.spelllist) do
+			if not spellListFilter or spellListFilter == 1 then
+				t[spellname] = NP:SpellString(params.spellID)
+			elseif spellListFilter == 3 and not params.filter then
+				t[spellname] = NP:SpellString(params.spellID)
+			elseif spellListFilter == params.filter then
+				t[spellname] = NP:SpellString(params.spellID)
+			end
+			--t[spellname] = (spellname).." "..( params.size or 1 ).." "..( params.show and "SHOW" or "HIDE" ).." "..(params.spellID or "000000").." "..(params.checkID and "CheckID" or "NoCheckID")
+		end
+
+		return t
+	end,
+	set = function(self, value)
+		selectedspell = value
+	end,
+	get = function(self)
+		return selectedspell
+	end,
+}
+
+
+NAMEPLATE_GUI.args.spellList.args.create.args.spelllistFilter = {
+	name = L['Filter'],
+	order = 2,
+	type = 'dropdown',
+	values = {
+		'All',
+		'Embend',
+		'Custom',
+	},
+	set = function(self, value)
+		spellListFilter = value
+	end,
+	get = function(self)
+		return 1
+	end
+}
+
+NAMEPLATE_GUI.args.spellList.args.settings.args.show = {
+	name = L["Show"],
+	type = "dropdown",
+	order = 4,
+	values = {
+		 L["Always"],
+		 L["Never"],
+		 L["Only mine"],
+		 L["Only on enemy"],
+		 L["Only on friendly"],
+	},
+	set = function(self, value)
+		if selectedspell then
+			E.db.nameplates.spelllist[selectedspell].show = value
+		end
+	end,
+	get = function(self)
+		if selectedspell then
+			return E.db.nameplates.spelllist[selectedspell].show or 1
+		else
+			return 1
+		end
+	end,
+}
+
+NAMEPLATE_GUI.args.spellList.args.settings.args.spellID = {
+	name = "SpellID",
+	type = "editbox",
+	order = 4,
+	set = function(self, value)
+		local num = tonumber(value)
+
+		if selectedspell and num then
+			E.db.nameplates.spelllist[selectedspell].spellID = num
+		end
+	end,
+	get = function(self)
+		if selectedspell then
+			return E.db.nameplates.spelllist[selectedspell].spellID or ''
+		else
+			return ''
+		end
+	end,
+}
+
+NAMEPLATE_GUI.args.spellList.args.settings.args.checkID = {
+	name = "CheckID",
+	type = "toggle",
+	order = 4,
+	set = function(self, value)
+		if selectedspell then
+			E.db.nameplates.spelllist[selectedspell].checkID = not E.db.nameplates.spelllist[selectedspell].checkID
+		end
+	end,
+	get = function(self)
+		if selectedspell then
+			return E.db.nameplates.spelllist[selectedspell].checkID or false
+		else
+			return false
+		end
+	end,
+}
+
+NAMEPLATE_GUI.args.spellList.args.settings.args.size = {
+	name = L["Size"],
+	type = "slider", min = 1, max = 2, step = 0.1,
+	order = 4,
+	set = function(self, value)
+		if selectedspell then
+			E.db.nameplates.spelllist[selectedspell].size = value
+		end
+	end,
+	get = function(self)
+		if selectedspell then
+			return E.db.nameplates.spelllist[selectedspell].size or 1
+		else
+			return 1
+		end
+	end,
+}
+
+
+NAMEPLATE_GUI.args.nameList = {
+	name = L["Name List"],
+	type = "group",
+	order = 1,
+	args = {},
+}
+
+NAMEPLATE_GUI.args.nameList.args.create = {
+	name = "",
+	type = "group",
+	order = 1,
+	embend = true,
+	args = {},
+}
+
+NAMEPLATE_GUI.args.nameList.args.settings = {
+	name = "",
+	type = "group",
+	order = 2,
+	embend = true,
+	args = {},
+}
+
+NAMEPLATE_GUI.args.nameList.args.create.args.spellid = {
+	name = L["Name"],
+	type = "editbox",
+	order = 1,
+	set = function(self, value)
+		if value and #value > 0 then
+			if not E.db.nameplates.namelist[value] then
+				E.db.nameplates.namelist[value] = {
+					show = true,
+					subname = value
+				}
+			end
+			selectedname = value
+
+			NP:UpdateCustomName()
+		end
+	end,
+	get = function(self)
+		return ''
+	end,
+
+}
+
+
+NAMEPLATE_GUI.args.nameList.args.create.args.namelist = {
+	name = L["Select name"],
+	type = "dropdown",
+	order = 2,
+	values = function()
+		local t = {}
+
+		for name,params in pairs(E.db.nameplates.namelist) do
+			t[name] = name
+		end
+
+		NP:UpdateCustomName()
+
+		return t
+	end,
+	set = function(self, value)
+		selectedname = value
+	end,
+	get = function(self)
+		return selectedname
+	end,
+}
+
+NAMEPLATE_GUI.args.nameList.args.create.args.namefromtarget = {
+	name = L["Name from target"],
+	type = "execute",
+	order = 3,
+	set = function(self, value)
+		if UnitExists("target") and not UnitIsPlayer("target") then
+			local name = UnitName("target")
+			E.db.nameplates.namelist[name] = {
+				show = true,
+				subname = name
+			}
+
+			NP:UpdateCustomName()
+
+			selectedname = name
+		end
+	end,
+	get = function(self)
+		return ''
+	end,
+
+}
+
+NAMEPLATE_GUI.args.nameList.args.settings.args.checkID = {
+	name = L["Enable"],
+	type = "toggle",
+	order = 4,
+	set = function(self, value)
+		if selectedname then
+			E.db.nameplates.namelist[selectedname].show = not E.db.nameplates.namelist[selectedname].show
+			NP:UpdateCustomName()
+		end
+	end,
+	get = function(self)
+		if selectedname then
+			return E.db.nameplates.namelist[selectedname].show
+		else
+			return false
+		end
+	end,
+}
+
+NAMEPLATE_GUI.args.nameList.args.settings.args.subname = {
+	name = L["Name"],
+	type = "editbox",
+	width = 'full',
+	order = 1,
+	set = function(self, value)
+		if selectedname then
+			if value and #value > 0 then
+				E.db.nameplates.namelist[selectedname].subname = value
+				NP:UpdateCustomName()
+			end
+		end
+	end,
+	get = function(self)
+		if selectedname then
+			return E.db.nameplates.namelist[selectedname].subname or ''
+		else
+			return ''
+		end
+	end,
+
+}
+
+NAMEPLATE_GUI.args.blackList = {
+	name = L["Black List"],
+	type = "group",
+	order = 1,
+	args = {},
+}
+
+NAMEPLATE_GUI.args.blackList.args.create = {
+	name = "",
+	type = "group",
+	order = 1,
+	embend = true,
+	args = {},
+}
+
+NAMEPLATE_GUI.args.blackList.args.settings = {
+	name = "",
+	type = "group",
+	order = 2,
+	embend = true,
+	args = {},
+}
+
+NAMEPLATE_GUI.args.blackList.args.create.args.spellid = {
+	name = L["Name"],
+	type = "editbox",
+	order = 1,
+	set = function(self, value)
+		if value and #value > 0 then
+			local name, rank, icon, castingTime, minRange, maxRange, spellID = GetSpellInfo(value)
+
+			if name then
+				E.db.nameplates.blacklist[name] = { enable = true, spellID = spellID }
+			end
+
+			selectedspellbl = name
+		end
+	end,
+	get = function(self)
+		return ''
+	end,
+
+}
+
+
+NAMEPLATE_GUI.args.blackList.args.create.args.namelist = {
+	name = L["Select spell"],
+	type = "dropdown",
+	order = 2,
+	values = function()
+		local t = {}
+
+		for spellname,params in pairs(E.db.nameplates.blacklist) do
+			t[spellname] = NP:SpellString(params.spellID)
+		end
+
+		return t
+	end,
+	set = function(self, value)
+		selectedspellbl = value
+	end,
+	get = function(self)
+		return selectedspellbl
+	end,
+}
+
+
+NAMEPLATE_GUI.args.blackList.args.settings.args.enable = {
+	name = L["Enable"],
+	type = "toggle",
+	order = 4,
+	set = function(self, value)
+		if selectedspellbl then
+			E.db.nameplates.blacklist[selectedspellbl].enable = not E.db.nameplates.blacklist[selectedspellbl].enable
+		end
+	end,
+	get = function(self)
+		if selectedspellbl then
+			return E.db.nameplates.blacklist[selectedspellbl].enable
+		else
+			return false
+		end
+	end,
+}
+
+NAMEPLATE_GUI.args.blackList.args.settings.args.spellID = {
+	name = "SpellID",
+	type = "editbox",
+	order = 4,
+	set = function(self, value)
+		local num = tonumber(value)
+
+		if selectedspellbl and num then
+			E.db.nameplates.blacklist[selectedspellbl].spellID = num
+		end
+	end,
+	get = function(self)
+		if selectedspellbl then
+			return E.db.nameplates.blacklist[selectedspellbl].spellID or ''
+		else
+			return ''
+		end
+	end,
+}
+
+NAMEPLATE_GUI.args.blackList.args.settings.args.checkID = {
+	name = "CheckID",
+	type = "toggle",
+	order = 4,
+	set = function(self, value)
+		if selectedspellbl then
+			E.db.nameplates.blacklist[selectedspellbl].checkID = not E.db.nameplates.blacklist[selectedspellbl].checkID
+		end
+	end,
+	get = function(self)
+		if selectedspellbl then
+			return E.db.nameplates.blacklist[selectedspellbl].checkID or false
+		else
+			return false
+		end
+	end,
+}
+
+
+
+function NP.OnInit()
+	if ( E.db.nameplates.enabled ) then 
+		E.GUI.args.NamePlates = NAMEPLATE_GUI
+	else 
+		E.GUI.args.NamePlates = NAMEPLATE_GUI_DISABLED
+
+		return
+	end 
+
+	if NamePlateDriverFrame then
+		DisableBlizzardNamePlates()
+	else
+		AleaUI:OnAddonLoad('Blizzard_NamePlates', DisableBlizzardNamePlates)
+	end
+
+	NP:UpdateBasePlateSize()
+
+	SystemFont_LargeNamePlateFixed:SetFont(STANDARD_TEXT_FONT, 10, 'OUTLINE') 
+	SystemFont_NamePlateFixed:SetFont(STANDARD_TEXT_FONT, 10, 'OUTLINE') 
+	SystemFont_LargeNamePlate:SetFont(STANDARD_TEXT_FONT, 10, 'OUTLINE') 
+	SystemFont_NamePlate:SetFont(STANDARD_TEXT_FONT, 10, 'OUTLINE') 
+
+	NP:InitEvents()
+end
+
+function NP:UpdateProfileSettings()
+	if ( not E.db.nameplates.enabled ) then 
+		return
+	end 
+	
+	NP:UpdateAllPlates()
+	NP:UpdateBasePlateSize()
+	NP:CVarUpdate()
+end
+
+E:OnInit2(NP.OnInit)
+E:OnInit(function()
+	if ( not E.db.nameplates.enabled ) then 
+		return
+	end 
+
+	NP:CVarUpdate()
+
+	local function CVarCheck(cvarName, value)
+		if cvarName == 'nameplateShowEnemies' or cvarName == 'nameplateShowFriends' then
+			E.db.nameplates.nameplateShowFriends = GetCVarBool("nameplateShowFriends")
+			E.db.nameplates.nameplateShowEnemies = GetCVarBool("nameplateShowEnemies")
+		end
+	end
+
+	hooksecurefunc("SetCVar", CVarCheck)
+
+	if ( not E.isClassic ) then 
+		local iname = 'InterfaceOptionsNamesPanelUnitNameplates'
+
+		_G[iname..'PersonalResource']:SetScale(0.00001)
+		_G[iname..'PersonalResource']:SetAlpha(0)
+
+		_G[iname..'PersonalResourceOnEnemy']:SetScale(0.00001)
+		_G[iname..'PersonalResourceOnEnemy']:SetAlpha(0)
+
+		_G[iname..'MakeLarger']:SetScale(0.00001)
+		_G[iname..'MakeLarger']:SetAlpha(0)
+
+		_G[iname..'AggroFlash']:SetScale(0.00001)
+		_G[iname..'AggroFlash']:SetAlpha(0)
+
+		_G[iname..'ShowAll']:SetScale(0.00001)
+		_G[iname..'ShowAll']:SetAlpha(0)
+
+		_G[iname..'Enemies']:SetScale(0.00001)
+		_G[iname..'Enemies']:SetAlpha(0)
+
+		_G[iname..'EnemyMinions']:SetScale(0.00001)
+		_G[iname..'EnemyMinions']:SetAlpha(0)
+
+		_G[iname..'EnemyMinus']:SetScale(0.00001)
+		_G[iname..'EnemyMinus']:SetAlpha(0)
+
+		_G[iname..'Friends']:SetScale(0.00001)
+		_G[iname..'Friends']:SetAlpha(0)
+
+		_G[iname..'FriendlyMinions']:SetScale(0.00001)
+		_G[iname..'FriendlyMinions']:SetAlpha(0)
+
+		_G[iname..'MotionDropDown']:SetScale(0.00001)
+		_G[iname..'MotionDropDown']:SetAlpha(0)
+	end
+
+	local f = CreateFrame('Button', nil, _G[ 'InterfaceOptionsNamesPanelUnitNameplates'], "UIPanelButtonTemplate")
+	f:SetSize(160, 22)
+	f:SetText(L['Nameplate settings'])
+	f:SetPoint('TOPLEFT', 0, -15)
+	f:SetScript('OnClick', function()
+		InterfaceOptionsFrame:Hide();
+		HideUIPanel(GameMenuFrame);
+		AleaUI_GUI:Open('AleaUI')
+		AleaUI_GUI:SelectGroup("AleaUI", "NamePlates")
+		PlaySound(SOUNDKIT and SOUNDKIT.IG_MAINMENU_OPTION or "igMainMenuOption");
+	end)
+end)

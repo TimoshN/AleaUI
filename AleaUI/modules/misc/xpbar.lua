@@ -98,6 +98,10 @@ local function IsMaxLevel()
 	end
 end
 
+local function ArtifactMaxed()
+	return HasArtifactEquipped() and not C_ArtifactUI.IsEquippedArtifactMaxed() and not C_ArtifactUI.IsEquippedArtifactDisabled();
+end 
+
 -- Framework -------------
 --------------------------
 
@@ -322,7 +326,7 @@ local function updateStatus()
 		end
 	end
 	
-	if E.db.xpbar.enableArtifact and not E.isClassic then
+	if E.db.xpbar.enableArtifact and not E.isClassic and ArtifactMaxed() then
 
 		local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem(); 
 		
@@ -416,6 +420,7 @@ local function updateStatus()
 	mouseFrame:SetWidth(barWidth)
 
 	mouseFrame:SetScript("OnEnter", function()
+
 		GameTooltip:SetOwner(mouseFrame, "ANCHOR_BOTTOMLEFT", -3, barHeight)
 		GameTooltip:ClearLines()
 		if not IsMaxLevel() then
@@ -433,6 +438,10 @@ local function updateStatus()
 
 			if azeriteItemLocation then
 				if not IsMaxLevel() then GameTooltip:AddLine(" ") end
+				
+				artifactBar.xp, artifactBar.totalLevelXP = C_AzeriteItem.GetAzeriteItemXPInfo(azeriteItemLocation);
+				artifactBar.currentLevel = C_AzeriteItem.GetPowerLevel(azeriteItemLocation); 
+				artifactBar.xpToNextLevel = artifactBar.totalLevelXP - artifactBar.xp; 
 
 				local itemName, itemLink, _, _, _, _, _, _, _, itemIcon = GetItemInfo(158075)
 

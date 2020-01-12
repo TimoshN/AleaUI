@@ -50,7 +50,8 @@
 	<Script file='artifactframe.lua'/>
 	<Script file='trainerframe.lua'/>
 	<Script file='talkinghead.lua'/>
-	
+	<Script file='channelframe.lua'/>
+    
 	<Frame name="AleaUISpellActivationAlert" virtual="true">
         <Animations>
             <AnimationGroup parentKey="animIn">

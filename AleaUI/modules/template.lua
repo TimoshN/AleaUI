@@ -2907,60 +2907,62 @@ do
 	local defaultBackdropColor = { 0, 0, 0, 1 }
 	local defaultColor = { 0, 0, 0, 1 }
 	
+	local storage = {}
+
 	local function SetUIBorderAlpha(self, ...)
-		self.al_backdrop:SetAlpha(...)
-		self.al_bordertop:SetAlpha(...)
-		self.al_borderbottom:SetAlpha(...)
-		self.al_borderleft:SetAlpha(...)
-		self.al_borderright:SetAlpha(...)
+		storage[self].al_backdrop:SetAlpha(...)
+		storage[self].al_bordertop:SetAlpha(...)
+		storage[self].al_borderbottom:SetAlpha(...)
+		storage[self].al_borderleft:SetAlpha(...)
+		storage[self].al_borderright:SetAlpha(...)
 	end
 		
 	local function SetUIBackgroundColor(self,r,g,b,a)
-		self.al_backdrop:SetColorTexture(r,g,b,a)		
+		storage[self].al_backdrop:SetColorTexture(r,g,b,a)		
 	end
 	
 	local function SetUIBackdropBorderColor(self, r,g,b,a)
-		self.al_bordertop:SetColorTexture(r,g,b,a)
-		self.al_borderbottom:SetColorTexture(r,g,b,a)
-		self.al_borderleft:SetColorTexture(r,g,b,a)
-		self.al_borderright:SetColorTexture(r,g,b,a)		
+		storage[self].al_bordertop:SetColorTexture(r,g,b,a)
+		storage[self].al_borderbottom:SetColorTexture(r,g,b,a)
+		storage[self].al_borderleft:SetColorTexture(r,g,b,a)
+		storage[self].al_borderright:SetColorTexture(r,g,b,a)		
 	end
 		
 	local function SetUIBorderDrawLayer(self, layer, sublayer)
 		sublayer = sublayer or 0
 		
-		self.al_bordertop:SetDrawLayer(layer, sublayer)	
-		self.al_borderbottom:SetDrawLayer(layer, sublayer)	
-		self.al_borderleft:SetDrawLayer(layer, sublayer)	
-		self.al_borderright:SetDrawLayer(layer, sublayer)	
+		storage[self].al_bordertop:SetDrawLayer(layer, sublayer)	
+		storage[self].al_borderbottom:SetDrawLayer(layer, sublayer)	
+		storage[self].al_borderleft:SetDrawLayer(layer, sublayer)	
+		storage[self].al_borderright:SetDrawLayer(layer, sublayer)	
 	end
 	
 	local function SetUIBackgroundDrawLayer(self, layer, sublayer)
 		sublayer = sublayer or 0
 		
-		self.al_backdrop:SetDrawLayer(layer, sublayer)
+		storage[self].al_backdrop:SetDrawLayer(layer, sublayer)
 	end
 	
 	local function SetUIDisabledBackdrop(self)		
-		self.al_bordertop:Hide()
-		self.al_borderbottom:Hide()
-		self.al_borderleft:Hide()
-		self.al_borderright:Hide()
-		self.al_backdrop:Hide()
+		storage[self].al_bordertop:Hide()
+		storage[self].al_borderbottom:Hide()
+		storage[self].al_borderleft:Hide()
+		storage[self].al_borderright:Hide()
+		storage[self].al_backdrop:Hide()
 	end
 	
 	local function SetUIEnabledBackdop(self)
-		self.al_bordertop:Show()
-		self.al_borderbottom:Show()
-		self.al_borderleft:Show()
-		self.al_borderright:Show()
-		self.al_backdrop:Show()
+		storage[self].al_bordertop:Show()
+		storage[self].al_borderbottom:Show()
+		storage[self].al_borderleft:Show()
+		storage[self].al_borderright:Show()
+		storage[self].al_backdrop:Show()
 	end
 	
 	function E:CreateBackdrop(parent, point, color, backdropcolor, background, size,step)
 		point = point or parent
 		
-		if point.al_backdrop then return end
+		if storage[point] then return point end
 		
 		local size = size or 1
 		local step = step or 0
@@ -2972,48 +2974,48 @@ do
 		
 		local background = background and "BACKGROUND" or "BORDER"
 		
-		point.al_backdrop = parent:CreateTexture(nil, background)
-		point.al_backdrop:SetSnapToPixelGrid(false)
-		point.al_backdrop:SetTexelSnappingBias(0)
-		point.al_backdrop:SetDrawLayer(background, -4)
-		point.al_backdrop:SetAllPoints(point)
-		point.al_backdrop:SetColorTexture(unpack(backdropcolor))		
+		local al_backdrop = parent:CreateTexture(nil, background)
+		al_backdrop:SetSnapToPixelGrid(false)
+		al_backdrop:SetTexelSnappingBias(0)
+		al_backdrop:SetDrawLayer(background, -4)
+		al_backdrop:SetAllPoints(point)
+		al_backdrop:SetColorTexture(unpack(backdropcolor))		
 
-		point.al_bordertop = parent:CreateTexture(nil, "BORDER")
-		point.al_bordertop:SetSnapToPixelGrid(false)
-		point.al_bordertop:SetTexelSnappingBias(0)
-		point.al_bordertop:SetPoint("TOPRIGHT",point,"TOPLEFT",0,noscalemult+step)
-		point.al_bordertop:SetPoint("BOTTOMRIGHT",point,"BOTTOMLEFT",0,-noscalemult-step)	
-		point.al_bordertop:SetSize(noscalemult,noscalemult)		
-		point.al_bordertop:SetColorTexture(unpack(color))	
-		point.al_bordertop:SetDrawLayer("BORDER", 1)
+		local al_bordertop = parent:CreateTexture(nil, "BORDER")
+		al_bordertop:SetSnapToPixelGrid(false)
+		al_bordertop:SetTexelSnappingBias(0)
+		al_bordertop:SetPoint("TOPRIGHT",point,"TOPLEFT",0,noscalemult+step)
+		al_bordertop:SetPoint("BOTTOMRIGHT",point,"BOTTOMLEFT",0,-noscalemult-step)	
+		al_bordertop:SetSize(noscalemult,noscalemult)		
+		al_bordertop:SetColorTexture(unpack(color))	
+		al_bordertop:SetDrawLayer("BORDER", 1)
 			
-		point.al_borderbottom = parent:CreateTexture(nil, "BORDER")
-		point.al_borderbottom:SetSnapToPixelGrid(false)
-		point.al_borderbottom:SetTexelSnappingBias(0)
-		point.al_borderbottom:SetPoint("BOTTOMRIGHT",point,"TOPRIGHT",noscalemult+step,0)
-		point.al_borderbottom:SetPoint("BOTTOMLEFT",point,"TOPLEFT",-noscalemult-step,0)
-		point.al_borderbottom:SetSize(noscalemult,noscalemult)
-		point.al_borderbottom:SetColorTexture(unpack(color))	
-		point.al_borderbottom:SetDrawLayer("BORDER", 1)
+		local al_borderbottom = parent:CreateTexture(nil, "BORDER")
+		al_borderbottom:SetSnapToPixelGrid(false)
+		al_borderbottom:SetTexelSnappingBias(0)
+		al_borderbottom:SetPoint("BOTTOMRIGHT",point,"TOPRIGHT",noscalemult+step,0)
+		al_borderbottom:SetPoint("BOTTOMLEFT",point,"TOPLEFT",-noscalemult-step,0)
+		al_borderbottom:SetSize(noscalemult,noscalemult)
+		al_borderbottom:SetColorTexture(unpack(color))	
+		al_borderbottom:SetDrawLayer("BORDER", 1)
 			
-		point.al_borderleft = parent:CreateTexture(nil, "BORDER")
-		point.al_borderleft:SetSnapToPixelGrid(false)
-		point.al_borderleft:SetTexelSnappingBias(0)
-		point.al_borderleft:SetPoint("TOPLEFT",point,"TOPRIGHT",0,noscalemult+step)
-		point.al_borderleft:SetPoint("BOTTOMLEFT",point,"BOTTOMRIGHT",0,-noscalemult-step)
-		point.al_borderleft:SetSize(noscalemult,noscalemult)
-		point.al_borderleft:SetColorTexture(unpack(color))	
-		point.al_borderleft:SetDrawLayer("BORDER", 1)
+		local al_borderleft = parent:CreateTexture(nil, "BORDER")
+		al_borderleft:SetSnapToPixelGrid(false)
+		al_borderleft:SetTexelSnappingBias(0)
+		al_borderleft:SetPoint("TOPLEFT",point,"TOPRIGHT",0,noscalemult+step)
+		al_borderleft:SetPoint("BOTTOMLEFT",point,"BOTTOMRIGHT",0,-noscalemult-step)
+		al_borderleft:SetSize(noscalemult,noscalemult)
+		al_borderleft:SetColorTexture(unpack(color))	
+		al_borderleft:SetDrawLayer("BORDER", 1)
 			
-		point.al_borderright = parent:CreateTexture(nil, "BORDER")
-		point.al_borderright:SetSnapToPixelGrid(false)
-		point.al_borderright:SetTexelSnappingBias(0)
-		point.al_borderright:SetPoint("TOPRIGHT",point,"BOTTOMRIGHT",noscalemult+step,0)
-		point.al_borderright:SetPoint("TOPLEFT",point,"BOTTOMLEFT",-noscalemult-step,0)
-		point.al_borderright:SetSize(noscalemult,noscalemult)
-		point.al_borderright:SetColorTexture(unpack(color))
-		point.al_borderright:SetDrawLayer("BORDER", 1)	
+		local al_borderright = parent:CreateTexture(nil, "BORDER")
+		al_borderright:SetSnapToPixelGrid(false)
+		al_borderright:SetTexelSnappingBias(0)
+		al_borderright:SetPoint("TOPRIGHT",point,"BOTTOMRIGHT",noscalemult+step,0)
+		al_borderright:SetPoint("TOPLEFT",point,"BOTTOMLEFT",-noscalemult-step,0)
+		al_borderright:SetSize(noscalemult,noscalemult)
+		al_borderright:SetColorTexture(unpack(color))
+		al_borderright:SetDrawLayer("BORDER", 1)	
 		
 		point.SetUIBorderAlpha = SetUIBorderAlpha	
 		point.SetUIBorderDrawLayer = SetUIBorderDrawLayer	
@@ -3024,6 +3026,15 @@ do
 		point.SetUIDisabledBackdrop = SetUIDisabledBackdrop
 		point.SetUIEnabledBackdop = SetUIEnabledBackdop
 		
+		storage[point] = {
+			al_backdrop = al_backdrop,
+			al_bordertop = al_bordertop,
+			al_borderbottom = al_borderbottom,
+			al_borderleft = al_borderleft,
+			al_borderright = al_borderright,
+		}
+
+		return point
 	end
 	
 	local secures = {}
@@ -3043,51 +3054,48 @@ do
 			
 			local background = background and "BACKGROUND" or "BORDER"
 			
-			root.al_backdrop = parent:CreateTexture(nil, background)
-			root.al_backdrop:SetSnapToPixelGrid(false)
-			root.al_backdrop:SetTexelSnappingBias(0)
-		
-			root.al_backdrop:SetDrawLayer(background, -4)
-			root.al_backdrop:SetAllPoints(point)
-			root.al_backdrop:SetColorTexture(unpack(backdropcolor))		
+			local al_backdrop = parent:CreateTexture(nil, background)
+			al_backdrop:SetSnapToPixelGrid(false)
+			al_backdrop:SetTexelSnappingBias(0)	
+			al_backdrop:SetDrawLayer(background, -4)
+			al_backdrop:SetAllPoints(point)
+			al_backdrop:SetColorTexture(unpack(backdropcolor))		
 
-			root.al_bordertop = parent:CreateTexture(nil, "BORDER")
-			root.al_bordertop:SetSnapToPixelGrid(false)
-			root.al_bordertop:SetTexelSnappingBias(0)
-			
-			root.al_bordertop:SetPoint("TOPRIGHT",point,"TOPLEFT",0,noscalemult+step)
-			root.al_bordertop:SetPoint("BOTTOMRIGHT",point,"BOTTOMLEFT",0,-noscalemult-step)	
-			root.al_bordertop:SetSize(noscalemult,noscalemult)		
-			root.al_bordertop:SetColorTexture(unpack(color))	
-			root.al_bordertop:SetDrawLayer("BORDER", 1)
+			local al_bordertop = parent:CreateTexture(nil, "BORDER")
+			al_bordertop:SetSnapToPixelGrid(false)
+			al_bordertop:SetTexelSnappingBias(0)
+			al_bordertop:SetPoint("TOPRIGHT",point,"TOPLEFT",0,noscalemult+step)
+			al_bordertop:SetPoint("BOTTOMRIGHT",point,"BOTTOMLEFT",0,-noscalemult-step)	
+			al_bordertop:SetSize(noscalemult,noscalemult)		
+			al_bordertop:SetColorTexture(unpack(color))	
+			al_bordertop:SetDrawLayer("BORDER", 1)
 				
-			root.al_borderbottom = parent:CreateTexture(nil, "BORDER")
-			root.al_borderbottom:SetSnapToPixelGrid(false)
-			root.al_borderbottom:SetTexelSnappingBias(0)
-			
-			root.al_borderbottom:SetPoint("BOTTOMRIGHT",point,"TOPRIGHT",noscalemult+step,0)
-			root.al_borderbottom:SetPoint("BOTTOMLEFT",point,"TOPLEFT",-noscalemult-step,0)
-			root.al_borderbottom:SetSize(noscalemult,noscalemult)
-			root.al_borderbottom:SetColorTexture(unpack(color))	
-			root.al_borderbottom:SetDrawLayer("BORDER", 1)
+			local al_borderbottom = parent:CreateTexture(nil, "BORDER")
+			al_borderbottom:SetSnapToPixelGrid(false)
+			al_borderbottom:SetTexelSnappingBias(0)		
+			al_borderbottom:SetPoint("BOTTOMRIGHT",point,"TOPRIGHT",noscalemult+step,0)
+			al_borderbottom:SetPoint("BOTTOMLEFT",point,"TOPLEFT",-noscalemult-step,0)
+			al_borderbottom:SetSize(noscalemult,noscalemult)
+			al_borderbottom:SetColorTexture(unpack(color))	
+			al_borderbottom:SetDrawLayer("BORDER", 1)
 				
-			root.al_borderleft = parent:CreateTexture(nil, "BORDER")
-			root.al_borderleft:SetSnapToPixelGrid(false)
-			root.al_borderleft:SetTexelSnappingBias(0)
-			root.al_borderleft:SetPoint("TOPLEFT",point,"TOPRIGHT",0,noscalemult+step)
-			root.al_borderleft:SetPoint("BOTTOMLEFT",point,"BOTTOMRIGHT",0,-noscalemult-step)
-			root.al_borderleft:SetSize(noscalemult,noscalemult)
-			root.al_borderleft:SetColorTexture(unpack(color))	
-			root.al_borderleft:SetDrawLayer("BORDER", 1)
+			local al_borderleft = parent:CreateTexture(nil, "BORDER")
+			al_borderleft:SetSnapToPixelGrid(false)
+			al_borderleft:SetTexelSnappingBias(0)
+			al_borderleft:SetPoint("TOPLEFT",point,"TOPRIGHT",0,noscalemult+step)
+			al_borderleft:SetPoint("BOTTOMLEFT",point,"BOTTOMRIGHT",0,-noscalemult-step)
+			al_borderleft:SetSize(noscalemult,noscalemult)
+			al_borderleft:SetColorTexture(unpack(color))	
+			al_borderleft:SetDrawLayer("BORDER", 1)
 				
-			root.al_borderright = parent:CreateTexture(nil, "BORDER")
-			root.al_borderright:SetSnapToPixelGrid(false)
-			root.al_borderright:SetTexelSnappingBias(0)
-			root.al_borderright:SetPoint("TOPRIGHT",point,"BOTTOMRIGHT",noscalemult+step,0)
-			root.al_borderright:SetPoint("TOPLEFT",point,"BOTTOMLEFT",-noscalemult-step,0)
-			root.al_borderright:SetSize(noscalemult,noscalemult)
-			root.al_borderright:SetColorTexture(unpack(color))
-			root.al_borderright:SetDrawLayer("BORDER", 1)	
+			local al_borderright = parent:CreateTexture(nil, "BORDER")
+			al_borderright:SetSnapToPixelGrid(false)
+			al_borderright:SetTexelSnappingBias(0)
+			al_borderright:SetPoint("TOPRIGHT",point,"BOTTOMRIGHT",noscalemult+step,0)
+			al_borderright:SetPoint("TOPLEFT",point,"BOTTOMLEFT",-noscalemult-step,0)
+			al_borderright:SetSize(noscalemult,noscalemult)
+			al_borderright:SetColorTexture(unpack(color))
+			al_borderright:SetDrawLayer("BORDER", 1)	
 			
 			root.SetUIBorderAlpha = SetUIBorderAlpha	
 			root.SetUIBackgroundColor = SetUIBackgroundColor		
@@ -3096,6 +3104,15 @@ do
 			root.SetUIBackgroundDrawLayer = SetUIBackgroundDrawLayer	
 			root.SetUIDisabledBackdrop = SetUIDisabledBackdrop
 			root.SetUIEnabledBackdop = SetUIEnabledBackdop		
+
+			storage[root] = {
+				al_backdrop = al_backdrop,
+				al_bordertop = al_bordertop,
+				al_borderbottom = al_borderbottom,
+				al_borderleft = al_borderleft,
+				al_borderright = al_borderright,
+			}
+
 		end
 		
 		return secures[point]

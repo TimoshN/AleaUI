@@ -450,7 +450,7 @@ local function UpdateHealPrediction_Horizontal(self)
 	local width, height = self.health:GetSize()
 	local unit = self.displayedUnit or self.unit
 
-	if ( maxHealth <= 0 or not unit ) then
+	if ( E.isClassic or maxHealth <= 0 or not unit ) then
 		self.health.totalHealPrediction:SetWidth(0.0001)
 		self.health.totalHealPrediction:Hide()
 		self.health.totalAbsorb:Hide()
@@ -549,7 +549,7 @@ local function UpdateHealPrediction_Vertical(self)
 	local width, height = self.health:GetSize()
 	local unit = self.displayedUnit or self.unit
 
-	if ( maxHealth <= 0 or not unit) then
+	if ( E.isClassic or maxHealth <= 0 or not unit) then
 		self.health.totalHealPrediction:SetHeight(0.0001)
 		self.health.totalHealPrediction:Hide()
 		self.health.totalAbsorb:Hide()
@@ -671,7 +671,7 @@ end
 local UpdateRole = function(self)
 	local size = self.role:GetHeight()
 	local raidID = UnitInRaid(self.displayedUnit)
-	if UnitInVehicle(self.displayedUnit) and UnitHasVehicleUI(self.displayedUnit) then
+	if UnitInVehicle and UnitInVehicle(self.displayedUnit) and UnitHasVehicleUI(self.displayedUnit) then
 		self.role:SetTexture("Interface\\Vehicles\\UI-Vehicles-Raid-Icon")
 		self.role:SetTexCoord(0, 1, 0, 1)
 		self.role:Show()
@@ -683,7 +683,7 @@ local UpdateRole = function(self)
 		self.role:Show()
 		self.role:SetSize(size, size)
 	else
-		local role = UnitGroupRolesAssigned(self.displayedUnit)
+		local role = UnitGroupRolesAssigned and UnitGroupRolesAssigned(self.displayedUnit)
 		if (role == "TANK" or role == "HEALER" or role == "DAMAGER") then
 			self.role:SetTexture("Interface\\LFGFrame\\UI-LFG-ICON-PORTRAITROLES")
 			self.role:SetTexCoord(GetTexCoordsForRoleSmallCircle(role))
@@ -702,7 +702,7 @@ local ThreatStatusColor = {
 	[3] = { 0.6, 0, 0 },
 }
 local UpdateAggro = function(self)
-	local status = UnitThreatSituation(self.displayedUnit)
+	local status = UnitThreatSituation and UnitThreatSituation(self.displayedUnit)
 	if (status and status > 0) then
 		self.aggro:SetVertexColor(ThreatStatusColor[status][1], ThreatStatusColor[status][2], ThreatStatusColor[status][3])
 		self.aggro:Show()
@@ -778,7 +778,7 @@ local UpdateCenterStatusIcon = function(frame)
 		frame.centerStatusIcon.texture:SetTexCoord(0, 1, 0, 1);
 		frame.centerStatusIcon.border:Hide();
 		frame.centerStatusIcon:Show();
-	elseif ( C_IncomingSummon.HasIncomingSummon(frame.unit) ) then
+	elseif (  C_IncomingSummon and C_IncomingSummon.HasIncomingSummon(frame.unit) ) then
 		local status = C_IncomingSummon.IncomingSummonStatus(frame.unit);
 		if(status == Enum.SummonStatus.Pending) then
 			frame.centerStatusIcon.texture:SetAtlas("Raid-Icon-SummonPending");
@@ -797,7 +797,7 @@ local UpdateCenterStatusIcon = function(frame)
 			frame.centerStatusIcon.tooltip = INCOMING_SUMMON_TOOLTIP_SUMMON_DECLINED;
 			frame.centerStatusIcon:Show();
 		end
-	elseif ( frame.inDistance and (not UnitInPhase(frame.unit) or UnitIsWarModePhased(frame.unit)) ) then
+	elseif ( frame.inDistance and (not UnitInPhase(frame.unit) or UnitIsWarModePhased and UnitIsWarModePhased(frame.unit)) ) then
 		frame.centerStatusIcon.texture:SetTexture("Interface\\TargetingFrame\\UI-PhasingIcon");
 		frame.centerStatusIcon.texture:SetTexCoord(0.15625, 0.84375, 0.15625, 0.84375);
 		frame.centerStatusIcon.border:Show();
@@ -1277,11 +1277,7 @@ local eventList = {
 	["UNIT_HEALTH_FREQUENT"] = true,
 	["UNIT_POWER_UPDATE"] = true,
 	["UNIT_MAXPOWER"] = true,
-	["UNIT_HEAL_PREDICTION"] = true,
-	["UNIT_HEAL_ABSORB_AMOUNT_CHANGED"] = true,
 
-	["UNIT_THREAT_SITUATION_UPDATE"] = true,
-	["UNIT_ABSORB_AMOUNT_CHANGED"] = true,
 	["UNIT_PHASE"] = true,
 	["UNIT_AURA"] = true,
 	['UNIT_FLAGS'] = true,
@@ -1293,10 +1289,7 @@ local eventList = {
 	["UNIT_DISPLAYPOWER"] = true,
 
 	["UNIT_NAME_UPDATE"] = true,
-
-	["UNIT_ENTERED_VEHICLE"] = true,
-	["UNIT_EXITED_VEHICLE"] = true,
-	["INCOMING_RESURRECT_CHANGED"] = true,
+	
 
 	["PLAYER_ROLES_ASSIGNED"] = false,
 	["PLAYER_LOGIN"] = false,
@@ -1313,11 +1306,21 @@ local eventList = {
 
 	["PLAYER_DEAD"] = false,
 	['PLAYER_ALIVE'] = false,
-	
-	--['GROUP_JOINED'] = true,
-	--['GROUP_LEFT'] = true, 
-	['INCOMING_SUMMON_CHANGED'] = true,
 }
+
+if not E.isClassic then 
+	eventList["UNIT_HEAL_PREDICTION"] = true
+	eventList["UNIT_HEAL_ABSORB_AMOUNT_CHANGED"] = true
+
+	eventList["UNIT_THREAT_SITUATION_UPDATE"] = true
+	eventList["UNIT_ABSORB_AMOUNT_CHANGED"] = true
+
+	eventList['INCOMING_SUMMON_CHANGED'] = true
+	eventList["INCOMING_RESURRECT_CHANGED"] = true
+
+	eventList["UNIT_ENTERED_VEHICLE"] = true
+	eventList["UNIT_EXITED_VEHICLE"] = true
+end 
 
 local function UnitFrameHandler(self, event, ...)
 	local unit = ...
@@ -4496,7 +4499,7 @@ function RF:CheckAutoActivation()
 		end
 	end
 
-	local spec = GetSpecialization();
+	local spec = GetSpecialization and GetSpecialization();
 	local lastActivationType, lastNumPlayers, lastSpec, lastEnemyType = RF:GetLastActivationType();
 
 	if ( activationType == "world" ) then
