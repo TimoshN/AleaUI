@@ -36,6 +36,7 @@ local function Skin_SpellBook()
 	
 	hooksecurefunc('SpellButton_OnEnter', function(self)
 		print('SpellButton_OnEnter', self:GetName())
+		print('    ', (debugstack(1, 1, 1)) )
 	end)
 	
 	SpellBookFrame.NineSlice:StripTextures()

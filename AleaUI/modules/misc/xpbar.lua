@@ -98,10 +98,6 @@ local function IsMaxLevel()
 	end
 end
 
-local function ArtifactMaxed()
-	return HasArtifactEquipped() and not C_ArtifactUI.IsEquippedArtifactMaxed() and not C_ArtifactUI.IsEquippedArtifactDisabled();
-end 
-
 -- Framework -------------
 --------------------------
 
@@ -326,7 +322,7 @@ local function updateStatus()
 		end
 	end
 	
-	if E.db.xpbar.enableArtifact and not E.isClassic and ArtifactMaxed() then
+	if E.db.xpbar.enableArtifact and not E.isClassic and not C_ArtifactUI.IsEquippedArtifactMaxed() then
 
 		local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem(); 
 		

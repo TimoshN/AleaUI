@@ -10,26 +10,19 @@ holder:SetSize(128, 50)
 holder:Show()
 
 local function ReparentAltPowerBar()
-
-	PlayerPowerBarAlt:ClearAllPoints()
-	PlayerPowerBarAlt:SetPoint('CENTER', holder, 'CENTER', 0, 0)
---	PlayerPowerBarAlt:SetParent(holder)
---	PlayerPowerBarAlt:SetIgnoreFramePositionManager(true)
+	PlayerPowerBarAlt:SetPoint('CENTER', holder, 'CENTER')
 end
 
 
 local function PositionAltPowerBar()
-	ReparentAltPowerBar()
-	
 	E:Mover(holder, "powerbarFrame")
+
+	PlayerPowerBarAlt:ClearAllPoints()
+	PlayerPowerBarAlt:SetPoint('CENTER', holder, 'CENTER')
+	PlayerPowerBarAlt:SetParent(holder)
 	PlayerPowerBarAlt.ignoreFramePositionManager = true
 	PlayerPowerBarAlt:SetScale(E.db.Frames["powerbarFrame"].scale or 1)
-	
-	hooksecurefunc(PlayerPowerBarAlt, 'SetPoint', function(self, a1, a2, a3, a4, a5)	
-		if a1 ~= 'CENTER' or a2 ~= holder or a3 ~= 'CENTER' or a4 ~= 0 or a5 ~= 0 then
-			ReparentAltPowerBar()
-		end
-	end)
+	hooksecurefunc(PlayerPowerBarAlt, 'ClearAllPoints', ReparentAltPowerBar)
 	
 	E.numActonBars = ( E.numActonBars or 0 ) + 1
 	

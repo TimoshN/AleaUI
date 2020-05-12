@@ -671,13 +671,20 @@ end
 local UpdateRole = function(self)
 	local size = self.role:GetHeight()
 	local raidID = UnitInRaid(self.displayedUnit)
+	
 	if UnitInVehicle and UnitInVehicle(self.displayedUnit) and UnitHasVehicleUI(self.displayedUnit) then
 		self.role:SetTexture("Interface\\Vehicles\\UI-Vehicles-Raid-Icon")
 		self.role:SetTexCoord(0, 1, 0, 1)
 		self.role:Show()
 		self.role:SetSize(size, size)
+	elseif (UnitInParty(self.displayedUnit) or UnitInRaid(self.displayedUnit)) and UnitIsGroupLeader(self.displayedUnit) then
+		self.role:SetTexture("Interface\\GroupFrame\\UI-Group-LeaderIcon")
+		self.role:SetTexCoord(0, 1, 0, 1)
+		self.role:Show()
+		self.role:SetSize(size, size)
 	elseif raidID and select(10, GetRaidRosterInfo(raidID)) then
 		local role = select(10, GetRaidRosterInfo(raidID))
+
 		self.role:SetTexture("Interface\\GroupFrame\\UI-Group-"..role.."Icon")
 		self.role:SetTexCoord(0, 1, 0, 1)
 		self.role:Show()

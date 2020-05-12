@@ -307,7 +307,7 @@ function Skins.SetTemplate(frame, template)
 end
 
 function Skins.GetFontSting(frame, text)
-local f = _G[frame] or frame
+	local f = _G[frame] or frame
 	if not f or type(f) == 'string' then 
 		error('Unknown '..tostring(frame or 'nil'))
 		return 

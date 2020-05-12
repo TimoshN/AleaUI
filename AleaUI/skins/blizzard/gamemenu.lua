@@ -11,15 +11,15 @@ local default_border_color_dark = Skins.default_border_color_dark
 
 Skins.ThemeBackdrop('GameMenuFrame')
 	
-GameMenuFrameHeader:Hide()
+GameMenuFrame.Header:StripTextures()
 
-AleaUI:CreateBackdrop(GameMenuFrame, GameMenuFrameHeader, default_border_color, default_background_color, 'ARTWORK', 1)
+AleaUI:CreateBackdrop(GameMenuFrame, GameMenuFrame.Header, default_border_color, default_background_color, 'ARTWORK', 1)
 
-Skins.GetFontSting('GameMenuFrame', MAINMENU_BUTTON):SetFont(default_font, Skins.default_font_size, 'NONE')
+Skins.GetFontSting(GameMenuFrame.Header, MAINMENU_BUTTON):SetFont(default_font, Skins.default_font_size, 'NONE')
 
-GameMenuFrameHeader:SetSize(110, 35)
-GameMenuFrameHeader:SetUIBackgroundDrawLayer('ARTWORK')
-GameMenuFrameHeader:SetUIBorderDrawLayer('ARTWORK')
+GameMenuFrame.Header:SetSize(110, 35)
+GameMenuFrame.Header:SetUIBackgroundDrawLayer('ARTWORK')
+GameMenuFrame.Header:SetUIBorderDrawLayer('ARTWORK')
 
 Skins.ThemeButton('GameMenuButtonHelp')
 

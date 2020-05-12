@@ -170,11 +170,8 @@ local function Load()
 	ScenarioChallengeModeBlock.TimeLeftOther2:SetShadowColor(0,0,0,1)
 	
 	hooksecurefunc('Scenario_ChallengeMode_ShowBlock', function(timerID, elapsedTime, timeLimit)
-		local gold = '|cffffd700'..GetTimeStringFromSeconds(timeLimit*0.4, false, true)..'|r'
-		local silver = '|cffc0c0c0'..GetTimeStringFromSeconds(timeLimit*0.2, false, true)..'|r'
-		
-		ScenarioChallengeModeBlock.TimeLeftOther1:SetText( silver )
-		ScenarioChallengeModeBlock.TimeLeftOther2:SetText( gold )
+		ScenarioChallengeModeBlock.TimeLeftOther1:SetText( '|cffc0c0c0'..SecondsToClock(timeLimit*0.2)..'|r' )
+		ScenarioChallengeModeBlock.TimeLeftOther2:SetText( '|cffffd700'..SecondsToClock(timeLimit*0.4)..'|r' )
 	end)
 	
 	--[==[

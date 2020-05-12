@@ -134,7 +134,9 @@ end
 
 do
 	local enableTimeStamps = true
-	local SELECTED_CHAT_FRAME_ALEA = ChatFrame1
+
+	_G.SELECTED_CHAT_FRAME_ALEA = ChatFrame1
+
 	local hooks = {}
 	
 	local filterType = nil
@@ -260,7 +262,7 @@ do
 	copyframe.Scroll:SetClipsChildren(true)
 	
 	copyframe.editBox:SetSize(copy_w, copy_h)
-	copyframe.editBox:SetFont(E.media.default_font2, 12)
+	--copyframe.editBox:SetFont(E.media.default_font2, 12)
 	--copyframe.editBox:SetIgnoreParentScale(true);
 	copyframe.editBox:SetFont(E.media.default_font2, 12);
 	
@@ -311,6 +313,8 @@ do
 	end
 				
 	local function GetChatframeText()
+
+		print('GetChatframeText', SELECTED_CHAT_FRAME_ALEA)
 		if SELECTED_CHAT_FRAME_ALEA then
 			local msg = ""
 			local start = 1
@@ -321,11 +325,15 @@ do
 				start = _cur - _max
 			end
 			
+			print('T', start, _cur)
+
 			for i=start, _cur do
 				copyframe:Show()
 				
 				local msg2 = SELECTED_CHAT_FRAME_ALEA:GetMessageInfo(i)
 				
+				print('T', i, msg2)
+
 				msg2 = msg2:gsub('|c%x%x%x%x%x%x%x%x', '')
 				msg2 = msg2:gsub('|r', '')
 				
@@ -380,6 +388,7 @@ do
 				msg = msg..msg2.."\n"				
 			end
 		
+			print('END MSG =', msg)
 			copyframe.editBox:SetText(msg)
 		end
 	end
@@ -572,6 +581,10 @@ do
 	end
 	
 	local function SelectChatFrame(f, button, arg)
+
+		print('SelectChatFrame', button, arg )
+		print('T', (debugstack(1, 1, 1)) )
+
 		if button == "LeftButton" and arg == false then			
 			local id = tonumber(string.match(f:GetName(), "ChatFrame(%d+)Tab"))
 			SELECTED_CHAT_FRAME_ALEA = _G[("ChatFrame%d"):format(id)]
@@ -689,17 +702,24 @@ do
 		
 		--print('tabTextUpdate', text)
 
+		-- if not self._origText then 
+		-- 	self._origText 
+		-- end 
+
 		if self.conversationIcon then
 			self.conversationIcon:ClearAllPoints()
 			self.conversationIcon:Kill()
 		end
 
 		if customTabName[text] then
-			self:GetFontString():SetText(customTabName[text]..text)
+
+			--print('SetText:1', customTabName[text]..text)
+			self.Text:SetText(customTabName[text]..text)
 		else
 			local name, server = strsplit("-", text or '')
-			if server then			
-				self:GetFontString():SetText(name)
+			if name and server then		
+				--print('SetText:2', name, text)	
+				self.Text:SetText(name)
 			end
 		end
 	end
@@ -732,8 +752,23 @@ do
 		FloatingChatFrame_OnEvent(...);
 	end
 
+	local function UpdateTabFontString(name)
+		return function() 
+			_G[name.."Tab"]:GetFontString():SetFont(E.media.default_font, E.media.default_font_size-1, "OUTLINE")
+		end
+	end 
+
+
+	local ChatTabFontObject = CreateFrame('Frame'):CreateFontString()
+	ChatTabFontObject:SetFont(E.media.default_font, E.media.default_font_size-1, "OUTLINE")
+
+
 	local function StyleChatFrame(name)
 		local frame = _G[name]		
+
+		
+		_G[name.."TabText"]:SetFont(E.media.default_font, E.media.default_font_size-1, "OUTLINE")
+
 		if not frame or frame.aleauihooked then return end	
 		frame.aleauihooked = true		
 		updateGameChatButtons(frame)
@@ -747,13 +782,18 @@ do
 			frame.ScrollToBottomButton:Kill()
 		end 
 
+		-- hooksecurefunc(_G[name.."Tab"]:GetFontString(), 'SetFont', function(...)
+		-- 	print(name.."Tab", ...)
+		-- end)
+
 		_G[name.."Tab"]:HookScript("OnClick", SelectChatFrame)
-		_G[name.."Tab"]:GetFontString():SetFont(E.media.default_font, E.media.default_font_size-1, "OUTLINE")
+	
+		-- local func = UpdateTabFontString(name)
 
-		C_Timer.After(2, function()
-			_G[name.."Tab"]:GetFontString():SetFont(E.media.default_font, E.media.default_font_size-1, "OUTLINE")
-		end)
-
+		-- C_Timer.After(2, func)
+		-- C_Timer.After(5, func)
+		-- C_Timer.After(7, func)
+		-- C_Timer.After(10, func)
 
 		--print('T', _G[name.."Tab"]:GetFontString() )
 
@@ -846,14 +886,15 @@ do
 			end
 		end
 
-		tabTextUpdate(_G[name.."Tab"], _G[name.."Tab"]:GetFontString():GetText())
-		
 		if resizeTabs then
 			hooksecurefunc(_G[name.."Tab"], "SetWidth", tabSizeUpdate)		
 			_G[name.."Tab"]:SetWidth(1)			
 		end
 		
+		
+		tabTextUpdate( _G[name.."Tab"], _G[name.."Tab"].Text:GetText() )
 		hooksecurefunc(_G[name.."Tab"], "SetText", tabTextUpdate)
+
 		hooksecurefunc(_G[name.."Tab"], "SetAlpha", function(t, alpha)			
 			if alpha ~= 1 and ( GeneralDockManager.selected:GetID() == t:GetID() ) then
 				t:SetAlpha(1)
@@ -861,6 +902,9 @@ do
 				t:SetAlpha(0.6)
 			end
 		end)
+
+
+
 		if not frame.scriptsSet then
 			frame:SetScript("OnMouseWheel", ChatFrame_OnMouseScroll)
 			hooksecurefunc(frame, "SetScript", function(f, script, func)
@@ -888,7 +932,8 @@ do
 	
 	local CHAT_FRAMES = CHAT_FRAMES
 	local function checkForNewWindows()
-	
+		--print('checkForNewWindow')
+		
 		for _, chatFrameName in pairs(CHAT_FRAMES) do
 		--	local frame = _G[chatFrameName];
 			StyleChatFrame(chatFrameName)
@@ -902,6 +947,12 @@ do
 	end
 
 	hooksecurefunc("FCF_OpenTemporaryWindow", checkForNewWindows)
+
+	local ___f = CreateFrame('Frame')
+
+	___f:RegisterEvent('UPDATE_CHAT_WINDOWS')
+	___f:RegisterEvent('UPDATE_FLOATING_CHAT_WINDOWS')
+	___f:SetScript('OnEvent', checkForNewWindows )
 
 	local chatCustomNameSenderReciever = {}
 	

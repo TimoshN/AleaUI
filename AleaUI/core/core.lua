@@ -638,7 +638,7 @@ do
 	local tinsert = table.insert
 
 	local function trueFunction(...)
-		print('[Error Trace]', ...)
+		geterrorhandler()(...)
 		return true;
 	end
 

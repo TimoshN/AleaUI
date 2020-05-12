@@ -254,6 +254,11 @@ local function CastBarOnUpdate(f, elapsed)
 		end
 	end
 
+	-- print('difTime=', difTime)
+	-- print('f.duration2=', f.duration2)
+	-- print('f.duration=', f.duration)
+	-- print('f.value=', f.value)
+
 	if not f.showTextLatency and f.unit == "player" then --f.opts.ping
 		if difTime > 0 then
 			f.rightText:SetFormattedText(CB.rightTextPatternMS_channel, f.ping*1000, E.FormatTime(5, curdur), E.FormatTime(5, f.duration), difTime)

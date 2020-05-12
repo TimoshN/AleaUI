@@ -208,8 +208,10 @@ function E:SetupCVars()
 
 	SetCVar("SpellQueueWindow", E.db.cVars.MaxSpellStartRecoveryOffset)	
 
---	E:LockCVar("cameraDistanceMaxFactor", 2.6)
---	MoveViewOutStart(50000)
+	if ( not E.isClassic ) then 
+		E:LockCVar("cameraDistanceMaxFactor", 2.6)
+		MoveViewOutStart(50000)
+	end
 
 	SetCVar("statusTextDisplay", "BOTH")
 	SetCVar("ShowClassColorInNameplate", 1)
@@ -221,14 +223,14 @@ function E:SetupCVars()
 	SetCVar("showTutorials", 0)
 	SetCVar("UberTooltips", 1)
 	if ( not E.isClassic ) then 
-	SetCVar("threatWarning", 3)
+		SetCVar("threatWarning", 3)
 	end
 	SetCVar('alwaysShowActionBars', 1)
 	SetCVar('lockActionBars', 1)
 	SetCVar('SpamFilter', 0)
 	SetCVar("whisperMode","inline")
 	if ( not E.isClassic ) then 
-	E:LockCVar('displaySpellActivationOverlays', E.chardb.cVars['displaySpellActivationOverlays'] and 1 or 0)
+		E:LockCVar('displaySpellActivationOverlays', E.chardb.cVars['displaySpellActivationOverlays'] and 1 or 0)
 	end
 	
 	core:UpdateQuestTrackingTooltips()
@@ -692,7 +694,7 @@ function core:OnProfileChange()
 		E:UpdateAllMovers()
 		E:UpdateMiniMapSize()
 		E:UpdateMinimapArtBorder()
-		E:Module("Cooldown"):UpdateSettings()
+		E:Module('Cooldown'):UpdateSettings()
 		E:Module('Alerts'):UpdateSettings()
 		E:UpdateVehicleSeatMover()	
 		E:Module("Skins"):UpdateAddonSkins()
