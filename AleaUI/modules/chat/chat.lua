@@ -1,7 +1,8 @@
-﻿local E = AleaUI
+local addOn, E = ...
 local L = E.L
-local bubbles = E:Module("ChatBubbles")
+
 local chatframe = E:Module("ChatFrames")
+
 local MY_CLOSE_BUTTON = "×"
 local strsplit = strsplit
 
@@ -208,84 +209,27 @@ do
 	
 		return false
 	end)
+    
+    local backdrop = {
+        bgFile = [[Interface\Buttons\WHITE8x8]], 
+        edgeFile = [[Interface\Buttons\WHITE8x8]], 
+        edgeSize = 1, 
+    }
 
-	
-	local copy_w, copy_h = 500, 300
-	
+    
+    local resizeTabs = true
+    local minTabWidth = 60
+
+
 	local PLAYER_REALM = gsub(E.myrealm,'[%s%-]','')
 	local PLAYER_NAME = E.myname.."-"..PLAYER_REALM
-	
-	local backdrop = {
-		bgFile = [[Interface\Buttons\WHITE8x8]], 
-		edgeFile = [[Interface\Buttons\WHITE8x8]], 
-		edgeSize = 1, 
-	}
 	
 	chatframe.chatFrameWidth = 384
 	chatframe.chatFrameHeight = 140
 	chatframe.chatFrameXOffset = 7
 	chatframe.chatFrameYOffset = 31
-	
-	local copyframe = CreateFrame("Frame", "AleaUIChatHistoryFrame", E.UIParent)
-	copyframe:SetPoint("CENTER")
-	copyframe:SetSize(copy_w, copy_h)
-	copyframe:SetFrameLevel(15)
-	
-	local f = CreateFrame("Frame", nil, copyframe)
-	f:SetPoint('CENTER', copyframe, 'CENTER', 0, 0)
-	f:SetSize(copy_w, copy_h)
-	f:SetFrameLevel(copyframe:GetFrameLevel() + 3)
-	
-	local resizeTabs = true
-	local minTabWidth = 60
-	
---	tinsert(UISpecialFrames, "AleaUIChatHistoryFrame")
-	
-	copyframe.Scroll = CreateFrame("ScrollFrame", "AleaUIChatScrollFrame", copyframe, "UIPanelScrollFrameTemplate")
-	copyframe.Scroll.ScrollBar:SetParent(f)
-	
-	copyframe.Scroll.ScrollBar:SetScript('OnValueChanged', function(self, value)
-		copyframe.Scroll:SetVerticalScroll(value);
-	end)
-	
-	copyframe.Scroll:SetFrameLevel(copyframe:GetFrameLevel() + 1)
-	copyframe.Scroll:SetSize(copy_w, copy_h)
-	copyframe.Scroll:SetPoint("TOPRIGHT", copyframe, "TOPRIGHT", 0, -2)
-	
-	copyframe.editBox = CreateFrame("EditBox", nil, E.UIParent)
-	copyframe.editBox:SetPoint('TOPLEFT', copyframe.Scroll, "TOPLEFT", 11, 1)
-	copyframe.editBox:SetFontObject(GameFontWhite)
-	copyframe.Scroll:SetScrollChild(copyframe.editBox)
-	copyframe.Scroll:SetHorizontalScroll(-5)
-	copyframe.Scroll:SetVerticalScroll(0)
-	copyframe.Scroll:EnableMouse(true)	
-	copyframe.Scroll:SetClipsChildren(true)
-	
-	copyframe.editBox:SetSize(copy_w, copy_h)
-	--copyframe.editBox:SetFont(E.media.default_font2, 12)
-	--copyframe.editBox:SetIgnoreParentScale(true);
-	copyframe.editBox:SetFont(E.media.default_font2, 12);
-	
-	copyframe.editBox:SetFrameLevel(copyframe.Scroll:GetFrameLevel() + 1)
-	copyframe.editBox:SetAutoFocus(false)
-	copyframe.editBox:SetMultiLine(true)
-	copyframe.editBox:SetCountInvisibleLetters(false)
-	copyframe.editBox:SetScript("OnEscapePressed", function(self)
-		self:ClearFocus()
-	end)
-	copyframe:Hide()
-	copyframe:SetBackdrop(backdrop)
-	copyframe:SetBackdropColor(0, 0, 0, 0.8) --цвет фона
-	copyframe:SetBackdropBorderColor(0 , 0 , 0 , 1) --цвет фона
-	
-	copyframe.close = CreateFrame("Button", nil, copyframe.editBox)
-	copyframe.close:SetNormalTexture("Interface\\Buttons\\UI-Panel-MinimizeButton-Up")
-	copyframe.close:SetPushedTexture("Interface\\Buttons\\UI-Panel-MinimizeButton-Down")
-	copyframe.close:SetHighlightTexture("Interface\\Buttons\\UI-Panel-MinimizeButton-Highlight", "ADD")
-	copyframe.close:SetSize(32, 32)
-	copyframe.close:SetPoint('TOPRIGHT', copyframe, 'TOPRIGHT', 0, 0)
-	copyframe.close:SetScript("OnClick", function(self) copyframe:Hide();copyframe.editBox:SetText(""); copyframe.editBox:ClearFocus()end)
-	
+
+
 	local toastButtonMover = CreateFrame('Frame', nil, E.UIParent)
 	toastButtonMover:SetSize(30, 32)
 		
@@ -297,100 +241,7 @@ do
 	end
 	
 	local function GetBattleTagNameF(id)
-	
 		return 'BNetF:'..id
-	end
-	
-	local function Sklonenie(a1, a2, a3, a4)
-	   --  print('a1:',a1, 'a2:', a2, 'a3:', a3, 'a4:', a4)
-	   if a1 == '1' then
-		  return a1..' '..a2
-	   elseif a1 == '2' or a1 == '3' or a1 == '4' then
-		  return a1..' '..a3
-	   else
-		  return a1..' '..a4
-	   end 
-	end
-				
-	local function GetChatframeText()
-
-		print('GetChatframeText', SELECTED_CHAT_FRAME_ALEA)
-		if SELECTED_CHAT_FRAME_ALEA then
-			local msg = ""
-			local start = 1
-			local _max = SELECTED_CHAT_FRAME_ALEA:GetMaxLines()
-			local _cur = SELECTED_CHAT_FRAME_ALEA:GetNumMessages()
-			
-			if _cur > _max then
-				start = _cur - _max
-			end
-			
-			print('T', start, _cur)
-
-			for i=start, _cur do
-				copyframe:Show()
-				
-				local msg2 = SELECTED_CHAT_FRAME_ALEA:GetMessageInfo(i)
-				
-				print('T', i, msg2)
-
-				msg2 = msg2:gsub('|c%x%x%x%x%x%x%x%x', '')
-				msg2 = msg2:gsub('|r', '')
-				
-				--[==[
-				msg2 = msg2:gsub("|Hplayer:.-|h([^:]+)|h", '%1')
-				msg2 = msg2:gsub("|Hachievement:.-|h([^:]+)|h", '%1')
-				msg2 = msg2:gsub("|Hshareachieve:.-|h.-|t|h", '')
-				msg2 = msg2:gsub("|Hitem:.-|h([^:]+)|h", '%1')
-				msg2 = msg2:gsub("|Hchannel:.-|h([^:]+)|h", '%1')
-				msg2 = msg2:gsub("|Hurl.-|h([^:]+)", '%1')
-				msg2 = msg2:gsub("|HBNplayer:.-|h([^:]+)", '%1')
-				msg2 = msg2:gsub("|Hcurrency:.-|h([^:]+)|h", '%1')			
-				msg2 = msg2:gsub("|Htrade:.-|h([^:]+)|h", '%1')		
-				msg2 = msg2:gsub("|Hquest:.-|h([^:]+)|h", '%1')
-				msg2 = msg2:gsub("|Hlevelup:.-|h([^:]+)|h", '%1')
-				msg2 = msg2:gsub("|Hachievement:.-|h([.+]+)|h", '%1')
-				msg2 = msg2:gsub("|HbattlePetAbil.-|h([.+]+)|h", '%1')
-				]==]
-				
-				msg2 = msg2:gsub("|Hshareachieve:.-|h.-|t|h", '')
-				msg2 = msg2:gsub("|H.-:.-|h([^:]+)|h", '%1')				
-				msg2 = msg2:gsub("|T.-|t", '')
-				msg2 = msg2:gsub(' |%d.-%d%((.-)%)', ' %1')
-				
-				msg2 = msg2:gsub('(%d) |4(.-):(.-):(.-);', Sklonenie)
-				
-			--	msg2 = msg2:gsub("|Kf.-|k", '')
-			--	msg2 = msg2:gsub("|k", '')
-				
-			--	msg2 = msg2:gsub("|Kb(.+)|k.-|k", GetBattleTagName)
-			--	msg2 = msg2:gsub("|Kf(.+)|k.-|k", GetBattleTagNameF)
-				
-				--19:50:00 [|Kf94|k00000|k] (Exila) входит в сеть.
-				
-			--	msg2 = msg2:gsub("|Hachievement:.-|h([^:]+)|h", '%1')
-			
-			--	15:10:39 Получено: 11 |4золотая:золотые:золотых;, 40 |4серебряная:серебряные:серебряных;.
-			--	15:10:39 Вы получаете 19180 |4очко:очка:очков; опыта.
-
-
-				--  [|Kb21|k0000000000|k] 
-				--  |Kb1994|k000000000000|k
-				-- |Kf38 BNGetFriendInfoByID(38)
-				
-			--	msg2 = msg2:gsub('|h', '')
-			--	msg2 = msg2:gsub("|", "||")
-			--	msg2 = msg2:gsub("|c", "")
-			--	msg2 = msg2:gsub("|r", "")
-			--	msg2 = msg2:gsub("|T", '')
-			--	msg2 = msg2:gsub("|t", '')
-		
-				msg = msg..msg2.."\n"				
-			end
-		
-			print('END MSG =', msg)
-			copyframe.editBox:SetText(msg)
-		end
 	end
 	
 	local function ChatFrame_OnMouseScroll(frame, delta)
@@ -413,22 +264,6 @@ do
 		end
 	end
 
-	local function addcopybutton(frame)	
-		local bttn = CreateFrame("Button",nil, E.UIParent)
-		bttn:SetWidth(18)
-		bttn:SetHeight(18)
-		bttn:SetScale(1)
-		bttn:SetAlpha(0.3)
-		bttn:SetPoint('TOPRIGHT', frame, 'TOPRIGHT', 0, 0)
-		bttn:SetNormalTexture("Interface\\GossipFrame\\PetitionGossipIcon.blp")
-		bttn:GetNormalTexture():SetTexCoord(unpack(E.media.texCoord))
-		bttn:SetScript("OnClick", function(self) GetChatframeText() end)
-		bttn:SetMovable(true)
-		bttn:SetUserPlaced(true)
-		bttn:EnableMouse(true)
-		bttn:RegisterForDrag("LeftButton","RightButton")
-		bttn:SetHighlightTexture("Interface\\Tooltips\\UI-Tooltip-Background")	
-	end
 	
 	local function HideForever(f)
 		f:SetScript("OnShow", f.Hide)
@@ -1001,7 +836,7 @@ do
 		end)
 	end
 	
-	addcopybutton(_G["ChatFrame1"])
+	chatframe.AddCopyButton(_G["ChatFrame1"])
 		
 	ChatFrame1:ClearAllPoints()
 	ChatFrame1:SetPoint("BOTTOMLEFT", E.UIParent, "BOTTOMLEFT", 7, 31)
@@ -1992,236 +1827,4 @@ do
 	
 	E.UpdateChatSettings = LoadChatSettings
 	E:OnInit2(LoadChatSettings)
-end
-
-do
-	--[[ Start popup creation ]]--
-	local frame = CreateFrame("Frame", nil, E.UIParent)
-
-	frame:SetBackdrop({
-			bgFile = [[Interface\Buttons\WHITE8x8]],
-			edgeFile = [[Interface\Buttons\WHITE8x8]],
-			edgeSize = 1,
-			insets = {left = 0, right = 0, top = 0, bottom =0}
-		})
-	frame:SetBackdropColor(0 , 0 , 0 , 0.7) --цвет фона
-	frame:SetBackdropBorderColor(0 , 0 , 0 , 1) --цвет фона
-	
-	frame:SetSize(650, 40)
-	frame:SetPoint("CENTER", E.UIParent, "CENTER")
-	frame:SetFrameStrata("DIALOG")
-	frame:Hide()
-
-	local editBox = CreateFrame("EditBox", nil, frame)
-	editBox:SetFontObject(ChatFontNormal)
-	editBox:SetSize(610, 40)
-	editBox:SetPoint("LEFT", frame, "LEFT", 10, 0)
-	local hide = function(f) f:GetParent():Hide() end
-	editBox:SetScript("OnEscapePressed", hide)
-
-	local close_ = CreateFrame("Button", nil, frame)
-	close_:SetNormalTexture("Interface\\Buttons\\UI-Panel-MinimizeButton-Up")
-	close_:SetPushedTexture("Interface\\Buttons\\UI-Panel-MinimizeButton-Down")
-	close_:SetHighlightTexture("Interface\\Buttons\\UI-Panel-MinimizeButton-Highlight", "ADD")
-	close_:SetSize(32, 32)
-	close_:SetPoint("RIGHT", frame, "RIGHT", -5, 0)
-	close_:SetScript("OnClick", hide)
-	--[[ End popup creation ]]--
-
-	-- Avoiding StaticPopup taints by making our own popup, rather that adding to the StaticPopup list
-	function chatframe:Popup(text)
-		editBox:SetText(text)
-		editBox:HighlightText(0)
-		editBox:GetParent():Show()
-	end
-end
-
-
-do
-	local f, db = chatframe
-
-	local keep = 20 -- number of messages to log (could do 10000 too, in theory...)
-
-	local events = {
-	--  "CHAT_MSG_BATTLEGROUND",
-	--  "CHAT_MSG_BATTLEGROUND_LEADER",
-	  "CHAT_MSG_BN_WHISPER", -- battle.net whispers will show wrong names
-	  "CHAT_MSG_BN_WHISPER_INFORM", -- battle.net whispers will show wrong names
-	--  "CHAT_MSG_CHANNEL", -- all channel related talk (general, trade, defense, custom channels, e.g.)
-	  "CHAT_MSG_EMOTE", -- only "/me text" messages, not /dance, /lol and such
-	  "CHAT_MSG_GUILD",
-	  "CHAT_MSG_GUILD_ACHIEVEMENT",
-	  "CHAT_MSG_OFFICER",
-	  "CHAT_MSG_PARTY",
-	  "CHAT_MSG_PARTY_LEADER",
-	  "CHAT_MSG_INSTANCE_CHAT_LEADER",
-	  "CHAT_MSG_INSTANCE_CHAT",
-	  "CHAT_MSG_RAID",
-	  "CHAT_MSG_RAID_LEADER",
-	  "CHAT_MSG_RAID_WARNING",
-	  "CHAT_MSG_SAY",
-	  "CHAT_MSG_WHISPER",
-	  "CHAT_MSG_WHISPER_INFORM",
-	  "CHAT_MSG_YELL",
-	  "PLAYER_LOGIN", -- not a part of the chat messages logging, must be kept to show log at login
-	}
-
-	local playerFlag = "CHATHISTORYOWNMSGFLAG" -- unique flag that means that this was our message (must not change in between sessions or you have to delete the savedvariables file)
-
-	_G["CHAT_FLAG_"..playerFlag] = "|TInterface\\GossipFrame\\GossipGossipIcon.blp:0:0:1:-2:0:0:0:0:0:0:0:0:0|t "
-
-	local _ChatEdit_SetLastTellTarget = ChatEdit_SetLastTellTarget
-	function ChatEdit_SetLastTellTarget(...)
-	  if chatframe.silent then
-		return
-	  end
-	  return _ChatEdit_SetLastTellTarget(...)
-	end
-
-	local function timestamp()
-	  local a_2 = select(2, ("."):split(GetTime() or "0."..random(1, 999), 2)) or 0
-	
-	  return time().."."..a_2
-	end
-	
-	local temp2 = {}
-	local function printsorted()	
-	  local temp, data = {}
-	  for id, _ in pairs(db) do
-		table.insert(temp, tonumber(id))
-	  end
-	  table.sort(temp, function(a, b)
-		return a < b
-	  end)
-	
-	  for i = 1, #temp do
-		data = db[tostring(temp[i])]
-		if type(data) == "table" then
-		  ChatFrame_MessageEventHandler(DEFAULT_CHAT_FRAME, data[20], unpack(data))
-		end
-	  end
-		DEFAULT_CHAT_FRAME:AddMessage("  ")
-		DEFAULT_CHAT_FRAME:AddMessage("------------------")
-		DEFAULT_CHAT_FRAME:AddMessage("  ")
-	end
-
-	local function cleanup()
-	  local c, k = 0
-	  for id, data in pairs(db) do
-		c = c + 1
-		if (not k) or k > data[21] then
-		  k = data[21]
-		end
-	  end
-	  if c > keep then
-		db[k] = nil
-	  end
-	end
-	
-	local function LoadChatHistory()
-		if not AleaUIDB then AleaUIDB = {} end		
-		if not AleaUIDB["ChatHistory"] then AleaUIDB["ChatHistory"] = {} end
-	
-		db = AleaUIDB["ChatHistory"]
-		
-		chatframe:ToggleChatHistory()
-	end
-
-	local function OvEventFunction(self, event, ...)
-		local temp = {...}
-		if #temp > 0 then
-		  temp[20] = event
-		  temp[21] = timestamp()
-		  if temp[2] == UnitName("player") then
-			temp[6] = playerFlag
-		  end
-		  db[temp[21]] = temp
-		  cleanup()
-		end	
-	end
-	
-	for _, event in pairs(events) do
-	  chatframe[event] = OvEventFunction
-	end
-	
-	function chatframe:ToggleChatHistory()
-		if E.db.chatPanel.history then
-			f.silent = 1
-			printsorted()
-			f.silent = nil	
-			
-			for _, event in pairs(events) do
-				chatframe:RegisterEvent(event)
-			end
-		else
-			for _, event in pairs(events) do
-				chatframe:UnregisterEvent(event)
-			end			
-			wipe(db)
-			wipe(AleaUIDB["ChatHistory"])
-		end
-	end
-	
-	E:OnInit2(LoadChatHistory)
-end
-
-do	
-	local step = 0.08
-	local select = select
-	local pairs = pairs
-	local find = string.find
-	local strlower = string.lower
-	
-	local C_ChatBubbles_GetAllChatBubbles = C_ChatBubbles.GetAllChatBubbles
-	
-	local skinBubbles = function(frame)
-		for i=1, frame:GetNumRegions() do
-			local region = select(i, frame:GetRegions())
-			
-			if region:GetObjectType() == "Texture" then
-				region:SetAlpha(0)
-			elseif region:GetObjectType() == "FontString" then
-				region:SetFont(STANDARD_TEXT_FONT, 12, 'OUTLINE')
-				
-				frame.text = region
-			end
-		end
-		
-		frame:SetBackdrop({
-		  bgFile = 'Interface\\Buttons\\WHITE8x8', 
-		  edgeFile ='Interface\\Buttons\\WHITE8x8', 
-		  tile = false, tileSize = 0, edgeSize = E.UIParent:GetScale(), 
-		  insets = { left = 0, right = 0, top = 0, bottom = 0}
-		})	
-		
-		frame:SetBackdropColor(0,0,0,0.8)
-		frame:SetBackdropBorderColor(frame.text:GetTextColor())
-		
-		frame:HookScript("OnShow", function(self)
-			self:SetBackdropBorderColor(self.text:GetTextColor())
-		end)
-		
-		frame.isSkinnedAleaUI = true
-		frame.isBubble = true
-		frame.isTransparentBubble = true
-	end
-
-	local function LoadChatBubbles()
-		bubbles.elapsed = -2
-		
-		bubbles:SetScript('OnUpdate', function(self, elapsed)
-			self.elapsed = self.elapsed + elapsed
-			if self.elapsed < 0.1 then return end
-			
-			local t = C_ChatBubbles.GetAllChatBubbles()
-			
-			for i=1, #t do
-				if not t[i].isSkinnedAleaUI then
-					skinBubbles(t[i])
-				end
-			end
-		end)
-	end
-	
-	E:OnInit2(LoadChatBubbles)
 end

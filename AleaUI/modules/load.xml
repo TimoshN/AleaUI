@@ -44,7 +44,6 @@
 	<Script file="template.lua"/>
 	<Script file="castbar.lua"/>
 	<Script file="auras.lua"/>
-	<Script file="chatframe.lua"/>
 	<Script file="buffframe.lua"/>
 	<Script file="containers.lua"/>
 	<Script file="raidframes.lua"/>

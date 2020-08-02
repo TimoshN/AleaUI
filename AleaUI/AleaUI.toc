@@ -1,4 +1,4 @@
-## Interface: 80200
+## Interface: 80300
 ## Title: AleaUI
 ## Version: 146
 ## Author: Alea
@@ -21,6 +21,7 @@ locale\load.xml
 core\load.xml
 load.xml
 modules\load.xml
+modules\chat\load.xml
 modules\classbars\load.xml
 modules\units\load.xml
 modules\actionbars\load.xml
