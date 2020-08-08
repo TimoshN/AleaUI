@@ -692,18 +692,21 @@ function NP.IsUnitQuestFlagged(unit)
 			--print('Assigned quest', left, 'with', npcID)
 			
 			local questText = _G[E.scantip:GetName().."TextLeft"..(i+1)]:GetText()
-			local a1, a2, a3, a4 = string.find(questText, '(%d+)/(%d+)')
 
-			local per1, per2, per3, per4 = string.find(questText, '(%d+)%%')
+			if ( questText ) then 
+				local a1, a2, a3, a4 = string.find(questText, '(%d+)/(%d+)')
 
-			--print(' Quest text:', questText, a3, a4, per3, per3 == '100' )
+				local per1, per2, per3, per4 = string.find(questText, '(%d+)%%')
 
-			questGUIDs[npcID] = true
+				--print(' Quest text:', questText, a3, a4, per3, per3 == '100' )
 
-			if ( ( a3 and a3 == a4 ) or per3 == '100' ) then
-				return false
-			else
-				return true
+				questGUIDs[npcID] = true
+
+				if ( ( a3 and a3 == a4 ) or per3 == '100' ) then
+					return false
+				else
+					return true
+				end
 			end
 		end
 	end
@@ -748,7 +751,7 @@ function NP:QUEST_LOG_UPDATE(event, ...)
 
 		for _, frame in pairs(GetNamePlates()) do
 			frame.AleaNP.isQuestFlagged = NP.IsUnitQuestFlagged(frame.AleaNP.unit)
-			frame.AleaNP:UpdateName()
+			frame.AleaNP:UpdateQuestIcon()
 		end
 	end
 end
@@ -1131,6 +1134,16 @@ function NP:UpdateFaction()
 	end
 end
 
+function NP:UpdateQuestIcon()
+	if not self.unit then return end
+
+	if ( self.isQuestFlagged ) then 
+		self.questIcon:Show()
+	else 
+		self.questIcon:Hide()
+	end
+end
+
 function NP:UpdateLevel()
 	if not self.unit then return end
 
@@ -1162,8 +1175,6 @@ function NP:UpdateName()
 
 	local name, server = UnitName(self.unit)
 
-	local pref = self.isQuestFlagged and "|TInterface\\GossipFrame\\AvailableQuestIcon:0|t" or ''
-
 	if E.db.nameplates.namelist[name] and E.db.nameplates.namelist[name].show then
 		name = E.db.nameplates.namelist[name].subname or name
 	end
@@ -1181,7 +1192,7 @@ function NP:UpdateName()
 			self.nameText:SetText( UnitIsUnit(self.unit, 'target') and name..'(*)' or '' )
 			self.nameText_Friendly:SetText(name..'(*)')
 		else
-			self.nameText:SetText( UnitIsUnit(self.unit, 'target') and pref..name or '' )
+			self.nameText:SetText( UnitIsUnit(self.unit, 'target') and name or '' )
 			self.nameText_Friendly:SetText(name)
 		end
 	else
@@ -1189,7 +1200,7 @@ function NP:UpdateName()
 			self.nameText:SetText(name..'(*)')
 			self.nameText_Friendly:SetText(name..'(*)')
 		else
-			self.nameText:SetText(pref..name)
+			self.nameText:SetText(name)
 			self.nameText_Friendly:SetText(name)
 		end
 	end
@@ -1896,6 +1907,7 @@ function NP:OnShowUpdate()
 	self:UpdateCastBarPosition()
 	self:UpdateDRs('Stun')
 	self:UpdateSize()
+	self:UpdateQuestIcon()
 
 	--E.ClearAnimationCutaway( self )
 end
@@ -2570,6 +2582,13 @@ function NP:CreateNamePlateFrame(frame)
 	plate.levelText:SetDrawLayer('ARTWORK', 2)
 	plate.levelText:Show()
 
+	plate.questIcon = plate:CreateTexture()
+	plate.questIcon:SetSize(16,16)
+	plate.questIcon:SetTexture('Interface\\GossipFrame\\AvailableQuestIcon')
+	plate.questIcon:SetPoint('BOTTOMRIGHT', plate, 'BOTTOMLEFT', 0, 0)
+	plate.questIcon:SetDrawLayer('ARTWORK', 3)
+	plate.questIcon:Show()
+
 	plate.nameText = plate:CreateFontString()
 	plate.nameText:SetFont(E.media.default_font2, 10, 'OUTLINE')
 	plate.nameText:SetText('NameText')
@@ -2845,6 +2864,7 @@ function NP:CreateNamePlateFrame(frame)
 	plate.UpdateLevel = NP.UpdateLevel
 	plate.UpdateFaction = NP.UpdateFaction
 	plate.UpdateName = NP.UpdateName
+	plate.UpdateQuestIcon = NP.UpdateQuestIcon
 	plate.OnShowUpdate = NP.OnShowUpdate
 	plate.UpdateTargetAlpha = NP.UpdateTargetAlpha
 	plate.UpdateFrameLevel = NP.UpdateFrameLevel
@@ -2934,7 +2954,14 @@ function NP.UpdateSettings(plate)
 	plate.nameText:ClearAllPoints()
 	plate.nameText:SetFont(font, fontSize, E.db.nameplates.fontOutline)
 
-	plate.nameText:SetPoint(E.db.nameplates.healthBar_name_attachTo, plate, E.db.nameplates.healthBar_name_attachTo, E.db.nameplates.healthBar_name_xOffset, E.db.nameplates.healthBar_name_yOffset)
+	plate.nameText:SetPoint(
+		E.db.nameplates.healthBar_name_attachTo, 
+		plate, 
+		E.db.nameplates.healthBar_name_attachTo, 
+		E.db.nameplates.healthBar_name_xOffset, 
+		E.db.nameplates.healthBar_name_yOffset
+	)
+	
 	plate:UpdateNameTextWidth()
 
 	plate.nameText_Friendly:SetFont(friendlyFont, E.db.nameplates.friendlyFontSize, E.db.nameplates.friendlyFontOutline)

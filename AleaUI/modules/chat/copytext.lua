@@ -36,8 +36,15 @@ copyframe.Scroll:SetSize(copy_w, copy_h)
 copyframe.Scroll:SetPoint("TOPRIGHT", copyframe, "TOPRIGHT", 0, -2)
 
 copyframe.editBox = CreateFrame("EditBox", nil, E.UIParent)
-copyframe.editBox:SetPoint('TOPLEFT', copyframe.Scroll, "TOPLEFT", 11, 1)
+copyframe.editBox:SetPoint('TOPLEFT', copyframe.Scroll, "TOPLEFT", 11, 0)
+copyframe.editBox:SetPoint('TOPRIGHT', copyframe.Scroll, "TOPRIGHT", 0, 0)
+copyframe.editBox:SetPoint("BOTTOM", copyframe, "BOTTOM", 0, 2)
 copyframe.editBox:SetFontObject(GameFontWhite)
+
+copyframe.editBox.bg = copyframe.editBox:CreateTexture()
+copyframe.editBox.bg:SetColorTexture(1, 0, 0, 0.5)
+copyframe.editBox.bg:SetAllPoints(copyframe.editBox)
+
 copyframe.Scroll:SetScrollChild(copyframe.editBox)
 copyframe.Scroll:SetHorizontalScroll(-5)
 copyframe.Scroll:SetVerticalScroll(0)
@@ -118,10 +125,10 @@ local function GetChatframeText()
         end
         
         if ( showMe ) then 
-            chatframe.CopyFrame:Show()      
+            copyframe:Show()      
             copyframe.Scroll:SetVerticalScroll(0)
             print('END MSG =', string.sub(msg, 1, 50))
-            chatframe.CopyFrame.editBox:SetText(msg)
+            copyframe.editBox:SetText('TEST '..msg)
         end 
     end
 end

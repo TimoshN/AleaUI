@@ -101,6 +101,7 @@ local function CreateCoreButton(parent)
 	f.editBox:SetPoint('TOPRIGHT', f.Scroll, "TOPRIGHT", 0, 0)
 	f.editBox:SetPoint("BOTTOM", f, "BOTTOM", 0, 2)
 	f.editBox:SetHyperlinksEnabled(true)
+	f.editBox:SetCountInvisibleLetters(false)
 	f.editBox:SetScript('OnHyperlinkClick', function(self, link, text, button)
 		SetItemRef(link, text, button, self);
 	end)
