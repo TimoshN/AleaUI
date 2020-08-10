@@ -36,17 +36,32 @@ copyframe.Scroll:SetSize(copy_w, copy_h)
 copyframe.Scroll:SetPoint("TOPRIGHT", copyframe, "TOPRIGHT", 0, -2)
 
 copyframe.editBox = CreateFrame("EditBox", nil, E.UIParent)
-copyframe.editBox:SetPoint('TOPLEFT', copyframe.Scroll, "TOPLEFT", 11, 0)
+copyframe.editBox:SetPoint('TOPLEFT', copyframe.Scroll, "TOPLEFT", 0, 0)
 copyframe.editBox:SetPoint('TOPRIGHT', copyframe.Scroll, "TOPRIGHT", 0, 0)
-copyframe.editBox:SetPoint("BOTTOM", copyframe, "BOTTOM", 0, 2)
+copyframe.editBox:SetPoint("BOTTOM", copyframe, "BOTTOM", 0, 5)
 copyframe.editBox:SetFontObject(GameFontWhite)
+-- copyframe.editBox.__SetText = copyframe.editBox.SetText
+-- copyframe.editBox.__Insert = copyframe.editBox.Insert
+
+-- copyframe.editBox.SetText = function(self, text)
+--     self:__SetText(string.sub(text, 1, 50) )
+
+--     print('SetText:1', string.sub(text, 1, 50) )
+--     print('SetText:2', self:GetText() )
+-- end
+-- copyframe.editBox.Insert = function(self, text)
+--     self:__Insert(string.sub(text, 1, 50) )
+
+--     print('Insert:1', string.sub(text, 1, 50) )
+--     print('Insert:2', self:GetText() )
+-- end
 
 copyframe.editBox.bg = copyframe.editBox:CreateTexture()
 copyframe.editBox.bg:SetColorTexture(1, 0, 0, 0.5)
 copyframe.editBox.bg:SetAllPoints(copyframe.editBox)
 
 copyframe.Scroll:SetScrollChild(copyframe.editBox)
-copyframe.Scroll:SetHorizontalScroll(-5)
+copyframe.Scroll:SetHorizontalScroll(0)
 copyframe.Scroll:SetVerticalScroll(0)
 copyframe.Scroll:EnableMouse(true)	
 copyframe.Scroll:SetClipsChildren(true)
@@ -74,7 +89,7 @@ copyframe.close:SetSize(32, 32)
 copyframe.close:SetPoint('TOPRIGHT', copyframe, 'TOPRIGHT', 0, 0)
 copyframe.close:SetScript("OnClick", function(self) 
     copyframe:Hide();
-    copyframe.editBox:SetText(""); 
+    copyframe.editBox:SetText(''); 
     copyframe.editBox:ClearFocus()
 end)
 
@@ -88,11 +103,15 @@ local function Sklonenie(a1, a2, a3, a4)
     else
        return a1..' '..a4
     end 
- end
-             
+end
+
+local function MessageIsProtected(message)
+	return string.match(message, '[^|]-|K[vq]%d-[^|]-|k')
+end
+
 local function GetChatframeText()
 
-    print('GetChatframeText', SELECTED_CHAT_FRAME_ALEA)
+    --print('GetChatframeText', SELECTED_CHAT_FRAME_ALEA)
     if SELECTED_CHAT_FRAME_ALEA then
         local msg = ""
         local start = 1
@@ -103,32 +122,38 @@ local function GetChatframeText()
             start = _cur - _max
         end
         
-        print('T', start, _cur)
+        --print('T', start, _cur)
 
         local showMe = false 
 
         for i=start, _cur do
-            showMe = true 
-            
             local msg2 = SELECTED_CHAT_FRAME_ALEA:GetMessageInfo(i)
+            
+            if ( not MessageIsProtected(msg2) ) then 
 
-            msg2 = msg2:gsub('|c%x%x%x%x%x%x%x%x', '')
-            msg2 = msg2:gsub('|r', '')
+                showMe = true 
 
-            msg2 = msg2:gsub("|Hshareachieve:.-|h.-|t|h", '')
-            msg2 = msg2:gsub("|H.-:.-|h([^:]+)|h", '%1')				
-            msg2 = msg2:gsub("|T.-|t", '')
-            msg2 = msg2:gsub(' |%d.-%d%((.-)%)', ' %1')
-            msg2 = msg2:gsub('(%d) |4(.-):(.-):(.-);', Sklonenie)
+                msg2 = msg2:gsub('|c%x%x%x%x%x%x%x%x', '')
+                msg2 = msg2:gsub('|r', '')
+                --msg2 = msg2:gsub("|H.-|h(%[^.-%])|h", '%1') 
+                msg2 = msg2:gsub("|H.-|h(%[.-%])|h", '%1')
 
-            msg = msg..msg2.."\n"				
+                -- msg2 = msg2:gsub("|Hshareachieve:.-|h.-|t|h", '')
+                -- msg2 = msg2:gsub("|H.-:.-|h([^:]+)|h", '%1')				
+                msg2 = msg2:gsub("|T.-|t", '')
+                msg2 = msg2:gsub(' |%d.-%d%((.-)%)', ' %1')
+                msg2 = msg2:gsub('(%d) |4(.-):(.-):(.-);', Sklonenie)
+
+                msg2 = msg2:gsub("|", '||')
+
+                msg = msg .. msg2.."\n"
+            end			
         end
         
         if ( showMe ) then 
             copyframe:Show()      
             copyframe.Scroll:SetVerticalScroll(0)
-            print('END MSG =', string.sub(msg, 1, 50))
-            copyframe.editBox:SetText('TEST '..msg)
+            copyframe.editBox:SetText(msg)
         end 
     end
 end
