@@ -56,9 +56,9 @@ copyframe.editBox:SetFontObject(GameFontWhite)
 --     print('Insert:2', self:GetText() )
 -- end
 
-copyframe.editBox.bg = copyframe.editBox:CreateTexture()
-copyframe.editBox.bg:SetColorTexture(1, 0, 0, 0.5)
-copyframe.editBox.bg:SetAllPoints(copyframe.editBox)
+-- copyframe.editBox.bg = copyframe.editBox:CreateTexture()
+-- copyframe.editBox.bg:SetColorTexture(1, 0, 0, 0.5)
+-- copyframe.editBox.bg:SetAllPoints(copyframe.editBox)
 
 copyframe.Scroll:SetScrollChild(copyframe.editBox)
 copyframe.Scroll:SetHorizontalScroll(0)

@@ -307,6 +307,16 @@ local function SetResize(object, width, height)
 	end
 end
 
+local function SetBackdrop(object) 
+
+end 
+local function SetBackdropColor(object) 
+
+end 
+local function SetBackdropBorderColor(object) 
+
+end 
+
 local function addapi(object)
 	local mt = getmetatable(object).__index
 	if not object.SetOutside then mt.SetOutside = SetOutside end
@@ -322,6 +332,12 @@ local function addapi(object)
 	if not object.DisableMinimapMoving then mt.DisableMinimapMoving = DisableMinimapMoving end
 	if not object.StyleButton then mt.StyleButton = StyleButton end
 	if not object.SetColorTexture and object.SetTexture then mt.SetColorTexture = SetColorTexture end
+
+	if not object.SetBackdrop then 
+		mt.SetBackdrop = SetBackdrop
+		mt.SetBackdropColor = SetBackdropColor
+		mt.SetBackdropBorderColor = SetBackdropBorderColor
+	end
 end
 
 local handled = {["Frame"] = true}

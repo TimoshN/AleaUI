@@ -8,4 +8,5 @@
     <Script file="history.lua"/>
     <Script file="linkpopup.lua"/>
 	<Script file="chat.lua"/>
+	<Script file="whisplogs.lua"/>
 </Ui>

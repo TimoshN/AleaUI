@@ -2585,7 +2585,7 @@ function NP:CreateNamePlateFrame(frame)
 	plate.questIcon = plate:CreateTexture()
 	plate.questIcon:SetSize(16,16)
 	plate.questIcon:SetTexture('Interface\\GossipFrame\\AvailableQuestIcon')
-	plate.questIcon:SetPoint('BOTTOMRIGHT', plate, 'BOTTOMLEFT', 0, 0)
+	plate.questIcon:SetPoint('RIGHT', plate, 'LEFT', 0, 0)
 	plate.questIcon:SetDrawLayer('ARTWORK', 3)
 	plate.questIcon:Show()
 

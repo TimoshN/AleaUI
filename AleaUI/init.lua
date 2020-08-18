@@ -15,7 +15,6 @@ E.resolution = ({GetScreenResolutions()})[GetCurrentResolution()] or GetCVar("gx
 E.screenwidth, E.screenheight = DecodeResolution(E.resolution)
 E.multi = 768/string.match(E.resolution, "%d+x(%d+)")/ ( math.max(0.64, math.min(1.15, 768/E.screenheight)))
 
-
 local versionStr, internalVersion, dateofpatch, uiVersion = GetBuildInfo(); internalVersion = tonumber(internalVersion)
 
 E.version = GetAddOnMetadata(addonName, "Version")

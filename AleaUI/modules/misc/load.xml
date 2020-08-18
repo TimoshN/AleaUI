@@ -9,7 +9,6 @@
 	<Script file="cooldowntext.lua"/>
 	<Script file="lootframe.lua"/>
 	<Script file="alertframes.lua"/>
-	<Script file="whisplogs.lua"/>
 	<Script file="xpbar.lua"/>
 	<Script file="auraWidgets.lua"/>
 	<Script file="specProfile.lua"/>
