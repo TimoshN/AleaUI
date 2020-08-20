@@ -677,7 +677,7 @@ do
 		hooksecurefunc(frame.editBox, "SetFocus", frame.editBox.Show)
 		hooksecurefunc(frame.editBox, "ClearFocus", frame.editBox.Hide)
 	
-		frame.editBox.border = CreateFrame("Frame", nil, frame.editBox)
+		frame.editBox.border = CreateFrame("Frame", nil, frame.editBox, BackdropTemplateMixin and 'BackdropTemplate')
 		frame.editBox.border:SetFrameLevel(frame.editBox:GetFrameLevel()-1)
 		frame.editBox.border:SetFrameStrata("LOW")
 		frame.editBox.border:SetBackdrop(backdrop)
@@ -919,7 +919,7 @@ do
 	chatFrameBackground:SetPoint("TOPLEFT", _G['ChatFrame1'], "TOPLEFT", -3, 5)
 	chatFrameBackground:SetPoint("BOTTOMRIGHT", _G['ChatFrame1'], "BOTTOMRIGHT", 3, -6)
 	
-	local artBorder = CreateFrame("Frame", nil, chatFrameBackground)
+	local artBorder = CreateFrame("Frame", nil, chatFrameBackground, BackdropTemplateMixin and 'BackdropTemplate')
 	artBorder:SetBackdrop({
 	  edgeFile = [[Interface\Buttons\WHITE8x8]],
 	  edgeSize = 1, 

@@ -44,6 +44,12 @@ local init_step = 50
 
 local GetTime = GetTime
 
+local UNIT_HEALTH_EVENT = 'UNIT_HEALTH_FREQUENT'
+
+if ( E.isShadowlands ) then 
+	UNIT_HEALTH_EVENT = 'UNIT_HEALTH'
+end
+
 local SPELL_AURA_APPLIED_BUFF = "SPELL_AURA_APPLIED_BUFF"
 local SPELL_AURA_APPLIED_DEBUFF = "SPELL_AURA_APPLIED_DEBUFF"
 local SPELL_AURA_APPLIED_DOSE_BUFF = "SPELL_AURA_APPLIED_DOSE_BUFF"
@@ -820,7 +826,7 @@ function core:UNIT_MAXHEALTH(event, unit)
 	myGUID = myGUID or UnitGUID(unit)	
 	amountPoint	= UnitHealthMax(unit)*0.2
 end
-core.UNIT_HEALTH_FREQUENT = core.UNIT_MAXHEALTH
+core[UNIT_HEALTH_EVENT] = core.UNIT_MAXHEALTH
 
 --UNIT_HEALTH_FREQUENT UNIT_MAXHEALTH UNIT_HEALTH
 
@@ -907,7 +913,7 @@ local function InitBT()
 	myGUID = UnitGUID("player")
 	
 	core:RegisterEvent("UNIT_MAXHEALTH")
-	core:RegisterEvent("UNIT_HEALTH_FREQUENT")
+	core:RegisterEvent(UNIT_HEALTH_EVENT)
 	core:UNIT_MAXHEALTH('UNIT_MAXHEALTH', 'player')
 
 	SetCVar('floatingCombatTextCombatLogPeriodicSpells', '1')

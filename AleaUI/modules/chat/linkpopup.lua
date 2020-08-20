@@ -5,7 +5,7 @@ local chatframe = E:Module("ChatFrames")
 
 
 --[[ Start popup creation ]]--
-local frame = CreateFrame("Frame", nil, E.UIParent)
+local frame = CreateFrame("Frame", nil, E.UIParent, BackdropTemplateMixin and 'BackdropTemplate')
 
 frame:SetBackdrop({
         bgFile = [[Interface\Buttons\WHITE8x8]],

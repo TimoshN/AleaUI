@@ -235,7 +235,7 @@ local testframe = false
 
 local function AddAggroBorder(f)
 
-	f.aggro = CreateFrame("Frame", nil, f)
+	f.aggro = CreateFrame("Frame", nil, f, BackdropTemplateMixin and 'BackdropTemplate')
 	f.aggro:SetFrameStrata("LOW")
 	f.aggro:SetBackdrop( {	
  		edgeFile = "Interface\\AddOns\\AleaUI\\media\\glow", edgeSize = 3,

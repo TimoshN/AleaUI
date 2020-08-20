@@ -59,7 +59,6 @@ local UnitIsPlayer = UnitIsPlayer
 local UnitHasVehicleUI = UnitHasVehicleUI
 local UNKNOWN = UNKNOWN
 local UnitRace = UnitRace
-local UnitInPhase = UnitInPhase
 local PVP = PVP
 local UnitIsVisible = UnitIsVisible
 local UnitIsConnected = UnitIsConnected
@@ -69,6 +68,17 @@ local IsSpellKnown = IsSpellKnown
 local NO = NO
 local RAID_CLASS_COLORS = RAID_CLASS_COLORS
 local CLASS_LOCALIZED = {}
+
+local UnitPhaseReason = UnitPhaseReason
+local UnitInPhase = UnitInPhase or function(...)
+	return UnitPhaseReason(...) == 0
+end 
+
+local UNIT_HEALTH_EVENT = 'UNIT_HEALTH_FREQUENT'
+
+if ( E.isShadowlands ) then 
+	UNIT_HEALTH_EVENT = 'UNIT_HEALTH'
+end
 
 for classID = 1, 20 do -- GetNumClasses not supported by wow classic
 	local classInfo = C_CreatureInfo.GetClassInfo(classID)
@@ -406,17 +416,17 @@ UF.tag_OnUpdate = tag_OnUpdate
 
 --            POST_UPDATE_FRAME        - event for OnShowing frames or when focus target changed
 
-tag_OnEvents["[health]"] = "UNIT_HEALTH_FREQUENT UNIT_MAXHEALTH"
+tag_OnEvents["[health]"] = UNIT_HEALTH_EVENT.." UNIT_MAXHEALTH"
 tag_function["[health]"] = function(unit)
 	return E:ShortValue(UnitHealth(unit))
 end
 	
-tag_OnEvents["[health:max]"] = "UNIT_HEALTH_FREQUENT UNIT_MAXHEALTH"
+tag_OnEvents["[health:max]"] = UNIT_HEALTH_EVENT.." UNIT_MAXHEALTH"
 tag_function["[health:max]"] = function(unit)
 	return E:ShortValue(UnitHealthMax(unit))
 end
 
-tag_OnEvents["[health:percent]"] = "UNIT_HEALTH_FREQUENT UNIT_MAXHEALTH"
+tag_OnEvents["[health:percent]"] = UNIT_HEALTH_EVENT.." UNIT_MAXHEALTH"
 tag_function["[health:percent]"] = function(unit)
 	local hp = UnitHealth(unit)
 	local hpmax = UnitHealthMax(unit) or 0		
@@ -1177,7 +1187,7 @@ function UF:StatusBar(frame, val, offsetx, offsety)
 	f.val = val
 	f:SetStatusBarTexture([[Interface\Buttons\WHITE8x8]])
 	
-	f.border = CreateFrame("Frame", f:GetName()..'Border', f)
+	f.border = CreateFrame("Frame", f:GetName()..'Border', f, BackdropTemplateMixin and 'BackdropTemplate')
 	f.border:SetBackdrop({
 	  edgeFile = [[Interface\Buttons\WHITE8x8]],
 	  edgeSize = 1, 
@@ -1333,7 +1343,7 @@ end
 local unitEvents = {
 	["player"] = {
 		"PLAYER_ALIVE", 'PLAYER_DEAD',
-		"UNIT_HEALTH_FREQUENT",
+		UNIT_HEALTH_EVENT,
 		"UNIT_POWER_FREQUENT",	
 		"UNIT_NAME_UPDATE",
 		"UNIT_MAXHEALTH",
@@ -1358,7 +1368,7 @@ local unitEvents = {
 		"UNIT_FLAGS",
 	},
 	["boss"] = {
-		"UNIT_HEALTH_FREQUENT",
+		UNIT_HEALTH_EVENT,
 		"UNIT_POWER_UPDATE",	
 		"UNIT_NAME_UPDATE",
 		"UNIT_MAXHEALTH",
@@ -1378,7 +1388,7 @@ local unitEvents = {
 		"UNIT_FLAGS",
 	},
 	["target"] = {
-		"UNIT_HEALTH_FREQUENT",
+		UNIT_HEALTH_EVENT,
 		"UNIT_POWER_UPDATE",	
 		"UNIT_NAME_UPDATE",
 		"UNIT_MAXHEALTH",
@@ -1398,7 +1408,7 @@ local unitEvents = {
 		"UNIT_FLAGS",
 	},
 	["arena"] = {
-		"UNIT_HEALTH_FREQUENT",
+		UNIT_HEALTH_EVENT,
 		"UNIT_POWER_UPDATE",	
 		"UNIT_NAME_UPDATE",
 		"UNIT_MAXHEALTH",
@@ -1419,7 +1429,7 @@ local unitEvents = {
 	},
 	
 	["focus"] = {
-		"UNIT_HEALTH_FREQUENT",
+		UNIT_HEALTH_EVENT,
 		"UNIT_POWER_UPDATE",	
 		"UNIT_NAME_UPDATE",
 		"UNIT_MAXHEALTH",
@@ -1442,7 +1452,7 @@ local unitEvents = {
 	["pet"] = {
 		"UNIT_NAME_UPDATE",
 		"UNIT_MAXHEALTH",
-		"UNIT_HEALTH_FREQUENT",
+		UNIT_HEALTH_EVENT,
 		"UNIT_POWER_UPDATE",
 		"UNIT_PORTRAIT_UPDATE",
 	--	"UNIT_MODEL_CHANGED",
@@ -1814,7 +1824,7 @@ do
 	}
 
 	local function AddAggroBorder(f)
-		local aggro = CreateFrame("Frame", nil, f)
+		local aggro = CreateFrame("Frame", nil, f, BackdropTemplateMixin and 'BackdropTemplate')
 		aggro:SetFrameLevel(max(f:GetFrameLevel()-1, 0))
 		aggro:SetFrameStrata("LOW")
 		aggro:SetBackdrop(aggroborders)		
@@ -1866,7 +1876,7 @@ local function UpdatePowerBarColors(self, unit, power, debugg)
 end
 ]==]
 local UnitFrameMethods = {}
-UnitFrameMethods['UNIT_HEALTH_FREQUENT'] = function (self, event, unit)
+UnitFrameMethods[UNIT_HEALTH_EVENT] = function (self, event, unit)
 	if unit ~= ( self.displayerUnit or self.unit ) then return end
 	
 	local max = UnitHealthMax(self.displayerUnit or self.unit)
@@ -1905,8 +1915,8 @@ UnitFrameMethods['UNIT_HEALTH_FREQUENT'] = function (self, event, unit)
 	self:UNIT_HEAL_PREDICTION(event, self.displayerUnit or self.unit)		
 	if event then self:EventTextUpdate(event, self.displayerUnit or self.unit) end
 end
-UnitFrameMethods['UNIT_HEALTH_FREQUENT'] = UnitFrameMethods.UNIT_HEALTH_FREQUENT
-UnitFrameMethods['UNIT_MAXHEALTH'] = UnitFrameMethods.UNIT_HEALTH_FREQUENT
+UnitFrameMethods[UNIT_HEALTH_EVENT] = UnitFrameMethods[UNIT_HEALTH_EVENT]
+UnitFrameMethods['UNIT_MAXHEALTH'] = UnitFrameMethods[UNIT_HEALTH_EVENT]
 UnitFrameMethods['UNIT_FACTION'] = function (self, event, unit)
 	if unit ~= ( self.displayerUnit or self.unit ) then return end
 	
@@ -2229,7 +2239,7 @@ UnitFrameMethods['OnUpdate_Update'] = function(self)
 	local unit = self.displayerUnit or self.unit
 	
 	self:UNIT_NAME_UPDATE("UNIT_NAME_UPDATE", unit)
-	self:UNIT_HEALTH_FREQUENT("UNIT_HEALTH_FREQUENT", unit)
+	self[UNIT_HEALTH_EVENT](self, UNIT_HEALTH_EVENT, unit)
 	self:UNIT_HEAL_PREDICTION("UNIT_HEAL_PREDICTION", unit)
 	self:UNIT_POWER_UPDATE("UNIT_POWER_UPDATE", unit)
 	self:UNIT_FACTION("UNIT_FACTION", unit)
@@ -2301,7 +2311,7 @@ function UF:UnitEvent(frame, unit, check_range)
 	frame.centerStatusIcon.border:SetAllPoints()
 	frame.centerStatusIcon.border:Hide()
 
-	local border = CreateFrame("Frame", nil, frame)
+	local border = CreateFrame("Frame", nil, frame, BackdropTemplateMixin and 'BackdropTemplate')
 	border:SetBackdrop({
 	  edgeFile = [[Interface\Buttons\WHITE8x8]],
 	  edgeSize = 1, 

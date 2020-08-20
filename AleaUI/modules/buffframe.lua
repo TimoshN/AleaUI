@@ -242,7 +242,7 @@ do
 		end
 		]==]
 		
-		ic.artBorder = CreateFrame("Frame", nil, ic)
+		ic.artBorder = CreateFrame("Frame", nil, ic, BackdropTemplateMixin and 'BackdropTemplate')
 		ic.artBorder:SetFrameLevel(ic:GetFrameLevel()+1)
 		ic.artBorder:SetBackdrop({
 		  edgeFile = E:GetBorder(n.border.texture),

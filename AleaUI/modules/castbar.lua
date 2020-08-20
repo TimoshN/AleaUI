@@ -787,7 +787,7 @@ function UF:CreateCastBar(frame, w, h, drawticks)
 	
 	f.castLatency = lat2
 	
-	f.artBorder = CreateFrame("Frame", nil, f)
+	f.artBorder = CreateFrame("Frame", nil, f, BackdropTemplateMixin and 'BackdropTemplate')
 	f.artBorder:SetFrameStrata("LOW")
 	f.artBorder:SetBackdrop({
 	  edgeFile = [[Interface\Buttons\WHITE8x8]],
@@ -885,7 +885,7 @@ function UF:CreateCastBar(frame, w, h, drawticks)
 	f.icon.bg = bg	
 	]==]
 	
-	f.icon.artBorder = CreateFrame("Frame", nil, f)
+	f.icon.artBorder = CreateFrame("Frame", nil, f, BackdropTemplateMixin and 'BackdropTemplate')
 	f.icon.artBorder:SetBackdrop({
 	  edgeFile = [[Interface\Buttons\WHITE8x8]],
 	  edgeSize = 1, 

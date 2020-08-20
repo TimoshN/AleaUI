@@ -592,7 +592,7 @@ function AB:PositionAndSizeBar(barName)
 	bar:SetHeight(spacing + ((size * (numColumns * heightMult)) + ((spacing * (numColumns - 1)) * heightMult) + (spacing * heightMult)));
 	
 	if not bar.artWork then
-		bar.artWork = CreateFrame("Frame", nil, bar)
+		bar.artWork = CreateFrame("Frame", nil, bar, BackdropTemplateMixin and 'BackdropTemplate')
 		bar.artWork:SetFrameLevel(bar:GetFrameLevel())
 		bar.artWork:SetBackdrop({
 		  edgeFile = [[Interface\Buttons\WHITE8x8]],
@@ -1338,7 +1338,7 @@ function AB:UpdateVehicleLeave()
 end
 
 function AB:CreateVehicleLeave()
-	local vehicle = CreateFrame("Button", 'LeaveVehicleButton', Minimap)
+	local vehicle = CreateFrame("Button", 'LeaveVehicleButton', Minimap, BackdropTemplateMixin and 'BackdropTemplate')
 	vehicle:SetSize(26,26)
 	vehicle:SetPoint("BOTTOMLEFT", Minimap, "BOTTOMLEFT", 2, 2)
 	vehicle:SetNormalTexture("Interface\\AddOns\\AleaUI\\media\\vehicleexit")
@@ -1539,7 +1539,7 @@ function AB:StyleButton(button, noBackdrop, adjustChecked)
 	button._point = button
 	
 	if not button.noBackdrop and not button.artBorder then
-		button.artBorder = CreateFrame("Frame", nil, button)
+		button.artBorder = CreateFrame("Frame", nil, button, BackdropTemplateMixin and 'BackdropTemplate')
 		button.artBorder:SetFrameLevel(button:GetFrameLevel()+1)
 		button.artBorder:SetBackdrop({
 		  edgeFile = [[Interface\Buttons\WHITE8x8]],
@@ -3335,7 +3335,7 @@ do
 	
 	local function UpdateItemButtonColor(button)
 		if not button.itemcolor then
-			local f = CreateFrame("Frame", nil, button)
+			local f = CreateFrame("Frame", nil, button, BackdropTemplateMixin and 'BackdropTemplate')
 			f:SetInside()
 			f:SetFrameLevel(button:GetFrameLevel()+1)
 			Skins.SetTemplate(f, 'BORDERED')

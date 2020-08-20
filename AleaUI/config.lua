@@ -204,7 +204,7 @@ do
 	
 	local width, height = 500, 300
 	
-	local profileData = CreateFrame("Frame", nil, UIParent)
+	local profileData = CreateFrame("Frame", nil, UIParent, BackdropTemplateMixin and 'BackdropTemplate')
 	profileData:SetPoint("CENTER")
 	profileData:SetFrameStrata('HIGH')
 	profileData:SetFrameLevel(50)
@@ -247,7 +247,7 @@ do
 	profileData:SetBackdropColor(0 , 0 , 0 , 0.7) --цвет фона
 	profileData:SetBackdropBorderColor(1 , 1 , 1 , 1) --цвет фона
 	
-	profileData.button = CreateFrame("Button",nil,profileData)
+	profileData.button = CreateFrame("Button",nil,profileData, BackdropTemplateMixin and 'BackdropTemplate')
 	profileData.button:SetPoint('TOP', profileData, 'BOTTOM', 130, -10)
 	profileData.button:SetWidth(100)
 	profileData.button:SetHeight(20)
@@ -266,7 +266,7 @@ do
 	profileData.button:Show()
 	
 	
-	profileData.button2 = CreateFrame("Button",nil,profileData)
+	profileData.button2 = CreateFrame("Button",nil,profileData, BackdropTemplateMixin and 'BackdropTemplate')
 	profileData.button2:SetPoint('TOP', profileData, 'BOTTOM', -130, -10)
 	profileData.button2:SetWidth(100)
 	profileData.button2:SetHeight(20)
@@ -284,7 +284,7 @@ do
 	profileData.button2:SetHighlightTexture("Interface\\Tooltips\\UI-Tooltip-Background")
 	profileData.button2:Show()
 	
-	profileData.button3 = CreateFrame("Button",nil,profileData)
+	profileData.button3 = CreateFrame("Button",nil,profileData, BackdropTemplateMixin and 'BackdropTemplate')
 	profileData.button3:SetPoint('TOP', profileData, 'BOTTOM', 0, -10)
 	profileData.button3:SetWidth(100)
 	profileData.button3:SetHeight(20)

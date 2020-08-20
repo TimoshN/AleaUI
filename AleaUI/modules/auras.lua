@@ -572,7 +572,7 @@ local function CreateAuraFrame(frame)
 	
 	f.background = background
 	
-	local border = CreateFrame("Frame", nil, f)
+	local border = CreateFrame("Frame", nil, f, BackdropTemplateMixin and 'BackdropTemplate')
 	border:SetFrameLevel(f:GetFrameLevel())
 	border:SetInside()
 	border:SetBackdrop({
@@ -582,7 +582,7 @@ local function CreateAuraFrame(frame)
 	border:SetBackdropBorderColor(0, 0, 0, 1)
 	f.border = border
 	
-	local auraType = CreateFrame("Frame", nil, f)
+	local auraType = CreateFrame("Frame", nil, f, BackdropTemplateMixin and 'BackdropTemplate')
 	auraType:SetFrameLevel(f:GetFrameLevel()+1)
 	auraType:SetInside()
 	auraType:SetBackdrop({

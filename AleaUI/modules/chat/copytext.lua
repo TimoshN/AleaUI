@@ -12,7 +12,7 @@ local backdrop = {
     edgeSize = 1, 
 }
 
-local copyframe = CreateFrame("Frame", "AleaUIChatHistoryFrame", E.UIParent)
+local copyframe = CreateFrame("Frame", "AleaUIChatHistoryFrame", E.UIParent, BackdropTemplateMixin and 'BackdropTemplate')
 copyframe:SetPoint("CENTER")
 copyframe:SetSize(copy_w, copy_h)
 copyframe:SetFrameLevel(15)

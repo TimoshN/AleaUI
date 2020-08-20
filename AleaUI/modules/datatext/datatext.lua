@@ -322,7 +322,7 @@ function datatext:CreateDataTextPanel(w,h, num, settings)
 				
 	local opts = E.db.datatexts[settings]
 	
-	f.artBorder = CreateFrame("Frame", nil, f)
+	f.artBorder = CreateFrame("Frame", nil, f, BackdropTemplateMixin and 'BackdropTemplate')
 	f.artBorder:SetFrameLevel(f:GetFrameLevel())
 	f.artBorder:SetBackdrop({
 	  edgeFile = E:GetBorder(opts.border.texture),
@@ -598,7 +598,7 @@ end
 
 function datatext:SetupTooltip(self)
 	if not datatext.tooltip then
-		datatext.tooltip = CreateFrame("GameTooltip", "AleaUIDataTextGameToolTip", E.UIParent, "GameTooltipTemplate"); -- Tooltip name cannot be nil	
+		datatext.tooltip = CreateFrame("GameTooltip", "AleaUIDataTextGameToolTip", E.UIParent, "GameTooltipTemplate"..( BackdropTemplateMixin and ', BackdropTemplate' or '')); -- Tooltip name cannot be nil	
 		datatext.tooltip:SetBackdrop({ bgFile = nil, edgeFile = nil})
 	--	datatext.tooltip:SetScale(1)
 		datatext.tooltip:SetBackdropColor(1,1,1,0)

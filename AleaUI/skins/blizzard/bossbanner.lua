@@ -95,7 +95,7 @@ AleaUI:OnInit(function()
 	bossKillFrame.bg:SetAllPoints()
 	bossKillFrame.bg:SetColorTexture(0.6, 0.6, 0.6, 0.6)
 	]==]
-	bossKillFrame.artWork = CreateFrame('Frame', nil, bossKillFrame)
+	bossKillFrame.artWork = CreateFrame('Frame', nil, bossKillFrame, BackdropTemplateMixin and 'BackdropTemplate')
 	bossKillFrame.artWork:SetPoint('TOP', bossKillFrame, 'TOP', 0, 0)
 	bossKillFrame.artWork:SetSize(270, 300)
 	bossKillFrame.artWork:SetBackdrop({

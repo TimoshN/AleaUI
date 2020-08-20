@@ -12,7 +12,7 @@ local copy_w, copy_h = 500, 300
 
 local timeOut = 60 * 60 * 24 *30
 
-local mover = CreateFrame("Frame", "AleaUIChatHistoryWhisperMover", E.UIParent)
+local mover = CreateFrame("Frame", "AleaUIChatHistoryWhisperMover", E.UIParent, BackdropTemplateMixin and 'BackdropTemplate')
 mover:SetSize(copy_w, 20)
 mover:SetPoint("CENTER", 0, 20)
 mover:EnableMouse(true)
@@ -29,7 +29,7 @@ mover.Owner = mover:CreateFontString()
 mover.Owner:SetPoint('LEFT', mover, 'LEFT')
 mover.Owner:SetFont(E.media.default_font2, E.media.default_font_size2, 'OUTLINE')
 
-local copyframe = CreateFrame("Frame", "AleaUIChatHistoryWhisperFrame", E.UIParent)
+local copyframe = CreateFrame("Frame", "AleaUIChatHistoryWhisperFrame", E.UIParent, BackdropTemplateMixin and 'BackdropTemplate')
 copyframe:SetPoint("TOPRIGHT", mover, "BOTTOMRIGHT", 0, -3)
 copyframe:SetSize(copy_w, copy_h)
 copyframe:SetFrameLevel(10)
@@ -238,7 +238,7 @@ local function UpdateHistoryButtons(self)
 	end
 end
 
-whisperList = CreateFrame("Frame", nil, copyframe)
+whisperList = CreateFrame("Frame", nil, copyframe, BackdropTemplateMixin and 'BackdropTemplate')
 whisperList:SetFrameLevel(copyframe:GetFrameLevel() + 5)
 whisperList:SetSize(20, copy_h)
 whisperList:SetPoint("TOPRIGHT", copyframe, "TOPLEFT", -5, 0)
@@ -267,7 +267,7 @@ whisperList.info:Hide()
 whisperList.info:SetTextColor(0.5, 0.5, 0.5)
 whisperList.info:SetJustifyH('LEFT')
 
-whisperList.next = CreateFrame("Button", nil, whisperList)
+whisperList.next = CreateFrame("Button", nil, whisperList, BackdropTemplateMixin and 'BackdropTemplate')
 whisperList.next:SetSize(16, 16)
 whisperList.next:EnableMouse(true)
 whisperList.next:SetPoint("BOTTOMRIGHT", copyframe, "BOTTOMRIGHT", -45, 40)
@@ -291,7 +291,7 @@ whisperList.next.stat:SetFont(E.media.default_font, E.media.default_font_size+4,
 whisperList.next.stat:SetText('>')
 whisperList.next:Hide()
 
-whisperList.prev = CreateFrame("Button", nil, whisperList)
+whisperList.prev = CreateFrame("Button", nil, whisperList, BackdropTemplateMixin and 'BackdropTemplate')
 whisperList.prev:SetSize(16, 16)
 whisperList.prev:EnableMouse(true)
 whisperList.prev:SetPoint("BOTTOMRIGHT", copyframe, "BOTTOMRIGHT", -95, 40)
@@ -437,7 +437,7 @@ for i=1, perRow*numRows do
 		curRow = curRow + 1
 	end
 	
-	list[i] = CreateFrame("BUTTON", nil, whisperList)
+	list[i] = CreateFrame("BUTTON", nil, whisperList, BackdropTemplateMixin and 'BackdropTemplate')
 	list[i]:SetSize(buttonW, buttonH)
 	list[i]:SetBackdrop(backdrop)
 	list[i]:SetBackdropColor(0.2 , 0.2 , 0.2 , 0.8) --цвет фона

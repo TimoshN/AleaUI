@@ -50,7 +50,7 @@ MinimapCluster:ClearAllPoints()
 MinimapCluster:SetPoint('TOPRIGHT', UIParent, -20, -20)
 MinimapCluster:EnableMouse(false)
 
-local artBorder = CreateFrame("Frame", nil, Minimap)
+local artBorder = CreateFrame("Frame", nil, Minimap, BackdropTemplateMixin and 'BackdropTemplate')
 artBorder:SetFrameLevel(Minimap:GetFrameLevel())
 artBorder:SetBackdrop({
   edgeFile = [[Interface\Buttons\WHITE8x8]],

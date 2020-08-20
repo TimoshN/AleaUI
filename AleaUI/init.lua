@@ -11,9 +11,15 @@ E.myname = UnitName("player")
 E.myrealm = GetRealmName()
 E.myclass = select(2, UnitClass("player"))
 
-E.resolution = ({GetScreenResolutions()})[GetCurrentResolution()] or GetCVar("gxWindowedResolution")
-E.screenwidth, E.screenheight = DecodeResolution(E.resolution)
+if ( GetPhysicalScreenSize ) then
+	E.screenwidth, E.screenheight = GetPhysicalScreenSize()
+	E.resolution = format('%dx%d', E.screenwidth, E.screenheight)
+else 
+	E.resolution = ({GetScreenResolutions()})[GetCurrentResolution()] or GetCVar("gxWindowedResolution")
+	E.screenwidth, E.screenheight = DecodeResolution(E.resolution)
+end 
 E.multi = 768/string.match(E.resolution, "%d+x(%d+)")/ ( math.max(0.64, math.min(1.15, 768/E.screenheight)))
+
 
 local versionStr, internalVersion, dateofpatch, uiVersion = GetBuildInfo(); internalVersion = tonumber(internalVersion)
 
@@ -28,6 +34,7 @@ end
 
 
 E.isClassic = E.uibuild < 20000
+E.isShadowlands = E.uibuild > 90000
 
 E.media = {}
 E.media.default_font_name = "Gothic-Bold"

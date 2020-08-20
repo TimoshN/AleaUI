@@ -179,7 +179,7 @@ do
 	local function createbutton(parent, name)
 		if not parent.buttons then parent.buttons = {} end
 		
-		local f = CreateFrame("Button", nil , parent)
+		local f = CreateFrame("Button", nil , parent, BackdropTemplateMixin and 'BackdropTemplate')
 		f:SetFrameLevel(parent:GetFrameLevel() + 1)
 		f.parent = parent
 		f:SetText(name)
@@ -233,7 +233,7 @@ do
 	
 	local function createeditboxe(parent)
 		if not parent.editboxes then parent.editboxes = {} end
-		local textbox = CreateFrame("EditBox", nil, parent)
+		local textbox = CreateFrame("EditBox", nil, parent, BackdropTemplateMixin and 'BackdropTemplate')
 		textbox:SetFont("Fonts\\ARIALN.TTF", 12, "OUTLINE")
 		textbox:SetFrameLevel(parent:GetFrameLevel() + 1)
 		textbox:SetAutoFocus(false)
@@ -493,7 +493,7 @@ do
 
 		local _width, _height = frame:GetSize()
 		
-		local mover = CreateFrame("Frame", nil, E.UIParent)
+		local mover = CreateFrame("Frame", nil, E.UIParent, BackdropTemplateMixin and 'BackdropTemplate')
 		mover.opt = opt
 		mover.parent = frame
 		mover.handler = handler

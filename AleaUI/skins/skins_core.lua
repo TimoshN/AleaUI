@@ -128,10 +128,11 @@ function Skins.ThemeBackdrop(frame)
 	
 	if not f.themedbackdrop then
 		f.themedbackdrop = true
-		f:SetBackdrop({})
-		f:SetBackdropColor(0,0,0,0)
-		f:SetBackdropBorderColor(0,0,0,0)
-		
+		if ( f.SetBackdrop ) then
+			f:SetBackdrop({})
+			f:SetBackdropColor(0,0,0,0)
+			f:SetBackdropBorderColor(0,0,0,0)
+		end
 		
 		E:CreateBackdrop(f, f, default_border_color, default_background_color)
 		
@@ -243,6 +244,13 @@ function Skins.ChangeButtonBorder(frame, color)
 	end
 	if not f.modborder then return end
 	
+	if ( not f.modborder.SetBackdrop) then 
+		print('Error on find SetBackdrop in ChangeButtonBorder')
+		print(debugstack(1,1,1))
+		print('   ')
+		return
+	end 
+
 	if color == 'DARK' then
 		f.modborder.r = 0
 		f.modborder.g = 0
@@ -266,7 +274,7 @@ function Skins.NewBackdrop(frame, point, color)
 	end
 	
 	
-	local temp = CreateFrame('Frame', nil, f)
+	local temp = CreateFrame('Frame', nil, f, BackdropTemplateMixin and 'BackdropTemplate')
 	temp:EnableMouse(false)
 	temp:SetFrameLevel(max((f:GetFrameLevel()-1), 0))
 	temp:SetBackdrop(default_backdrop)
@@ -285,8 +293,15 @@ function Skins.SetTemplate(frame, template)
 		return 
 	end
 	
-	f:SetBackdrop(default_backdrop)
+	if ( not f.SetBackdrop) then 
+		print('Error on find SetBackdrop in SetTemplate')
+		print(debugstack(1,1,1))
+		print('     ')
+		return
+	end 
 
+	f:SetBackdrop(default_backdrop)
+	
 	if template == 'DARK' or not template then
 		f:SetBackdropColor(default_background_color[1], default_background_color[2], default_background_color[3], default_background_color[4])
 		f:SetBackdropBorderColor(default_border_color[1], default_border_color[2], default_border_color[3],default_border_color[4])
@@ -396,7 +411,7 @@ function Skins.ThemeEditBox(frame, realSize, width, height)
 	local bg = f:CreateTexture(nil, 'BACKGROUND')
 	bg:SetColorTexture(0.05,0.05,0.05,0.9)
 	
-	local temp = CreateFrame('Frame', nil, f)
+	local temp = CreateFrame('Frame', nil, f, BackdropTemplateMixin and 'BackdropTemplate')
 	temp:SetFrameLevel(f:GetFrameLevel()+1)
 	temp:EnableMouse(false)
 	temp:SetBackdrop(default_backdrop)
@@ -505,7 +520,7 @@ function Skins.ThemeStatusBar(frame)
 		_G[name..'Rank']:SetPoint('BOTTOM', f, 'BOTTOM', 0, 1)
 	end
 	
-	local temp = CreateFrame('Frame', nil, f)
+	local temp = CreateFrame('Frame', nil, f, BackdropTemplateMixin and 'BackdropTemplate')
 	temp:SetFrameLevel(f:GetFrameLevel()-1)
 	temp:EnableMouse(false)
 	temp:SetBackdrop(default_backdrop)
@@ -540,7 +555,7 @@ function Skins.ThemeTab(frame, lowerTop)
 	text:SetShadowOffset(1, -1)
 	text:SetShadowColor(0, 0, 0, 1)
 	
-	local temp = CreateFrame('Frame', nil, f)
+	local temp = CreateFrame('Frame', nil, f, BackdropTemplateMixin and 'BackdropTemplate')
 	temp:SetFrameLevel(f:GetFrameLevel()-1)
 	temp:EnableMouse(false)
 	temp:SetBackdrop(default_backdrop)

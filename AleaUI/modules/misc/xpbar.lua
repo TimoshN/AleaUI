@@ -105,7 +105,7 @@ end
 local aName = "AleaUI_XPBar"
 
 --Create Background and Border
-local backdrop = CreateFrame("Frame", aName.."Backdrop", UIParent)
+local backdrop = CreateFrame("Frame", aName.."Backdrop", UIParent, BackdropTemplateMixin and 'BackdropTemplate')
 backdrop:SetHeight(barHeight)
 backdrop:SetWidth(barWidth)
 backdrop:SetPoint("CENTER", UIParent, "CENTER", 0, 0)

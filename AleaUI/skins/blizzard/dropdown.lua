@@ -7,7 +7,7 @@ DropDownList1MenuBackdrop:SetBackdrop({
 	bgFile = [[Interface\Buttons\WHITE8x8]], 
 	edgeFile =	[[Interface\Buttons\WHITE8x8]],
 	edgeSize = 1,
-	})
+})
 DropDownList1MenuBackdrop:SetBackdropColor(0.08,0.08,0.08,0.8)
 DropDownList1MenuBackdrop:SetBackdropBorderColor(0,0,0,1)
 
@@ -15,7 +15,7 @@ DropDownList2MenuBackdrop:SetBackdrop({
 	bgFile = [[Interface\Buttons\WHITE8x8]], 
 	edgeFile =	[[Interface\Buttons\WHITE8x8]],
 	edgeSize = 1,
-	})
+})
 DropDownList2MenuBackdrop:SetBackdropColor(0.08,0.08,0.08,0.8)
 DropDownList2MenuBackdrop:SetBackdropBorderColor(0,0,0,1)
 
@@ -23,7 +23,7 @@ DropDownList1Backdrop:SetBackdrop({
 	bgFile = [[Interface\Buttons\WHITE8x8]], 
 	edgeFile =	[[Interface\Buttons\WHITE8x8]],
 	edgeSize = 1,
-	})
+})
 DropDownList1Backdrop:SetBackdropColor(0.08,0.08,0.08,0.9)
 DropDownList1Backdrop:SetBackdropBorderColor(0,0,0,1)
 

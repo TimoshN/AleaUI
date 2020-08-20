@@ -35,7 +35,7 @@ local function InsanityBar()
 	o:SetStatusBarColor(color[1]*0.8,color[2]*0.8,color[3]*0.8, 1)
 	o:SetMinMaxValues(0, 100)
 	
-	o.art = CreateFrame("Frame", nil, o)
+	o.art = CreateFrame("Frame", nil, o, BackdropTemplateMixin and 'BackdropTemplate')
 	o.art:SetFrameLevel(o:GetFrameLevel()-1)
 	o.art:SetBackdrop({
 	  bgFile = [[Interface\Buttons\WHITE8x8]], 

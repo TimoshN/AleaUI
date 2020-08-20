@@ -333,11 +333,11 @@ local function addapi(object)
 	if not object.StyleButton then mt.StyleButton = StyleButton end
 	if not object.SetColorTexture and object.SetTexture then mt.SetColorTexture = SetColorTexture end
 
-	if not object.SetBackdrop then 
-		mt.SetBackdrop = SetBackdrop
-		mt.SetBackdropColor = SetBackdropColor
-		mt.SetBackdropBorderColor = SetBackdropBorderColor
-	end
+	-- if not object.SetBackdrop then 
+	-- 	mt.SetBackdrop = SetBackdrop
+	-- 	mt.SetBackdropColor = SetBackdropColor
+	-- 	mt.SetBackdropBorderColor = SetBackdropBorderColor
+	-- end
 end
 
 local handled = {["Frame"] = true}

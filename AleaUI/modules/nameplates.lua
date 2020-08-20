@@ -60,6 +60,15 @@ local UnitIsFriend = UnitIsFriend
 local UnitThreatSituation = UnitThreatSituation
 local UnitShouldDisplayName = UnitShouldDisplayName
 
+local GetNumQuestLogEntries = C_QuestLog and C_QuestLog.GetNumQuestLogEntries or GetNumQuestLogEntries
+local GetQuestLogTitle = C_QuestLog and C_QuestLog.GetTitleForLogIndex or GetQuestLogTitle
+
+local UNIT_HEALTH_EVENT = 'UNIT_HEALTH_FREQUENT'
+
+if ( E.isShadowlands ) then 
+	UNIT_HEALTH_EVENT = 'UNIT_HEALTH'
+end
+
 local selectedspell
 local selectedname
 local selectedspellbl
@@ -916,7 +925,7 @@ function NP.EventHandler(self, event, unit)
 	elseif unit and unit == self.unit then
 		if event == 'UNIT_AURA' then
 			self:UpdateAuras()
-		elseif event == 'UNIT_HEALTH' or event == 'UNIT_MAXHEALTH' or event == 'UNIT_HEALTH_FREQUENT' or
+		elseif event == 'UNIT_HEALTH' or event == 'UNIT_MAXHEALTH' or event == UNIT_HEALTH_EVENT or
 			event == 'UNIT_ABSORB_AMOUNT_CHANGED' or event == 'UNIT_HEAL_PREDICTION' or event == 'UNIT_HEAL_ABSORB_AMOUNT_CHANGED' then
 
 			self:UpdateHealth()
@@ -1866,7 +1875,7 @@ function NP:RegisterEvents()
 		end
 	--	self:RegisterEvent("UNIT_SPELLCAST_FAILED")
 
-		self:RegisterUnitEvent('UNIT_HEALTH_FREQUENT', self.unit)
+		self:RegisterUnitEvent(UNIT_HEALTH_EVENT, self.unit)
 		self:RegisterUnitEvent('UNIT_MAXHEALTH', self.unit)
 		if ( not E.isClassic ) then
 		self:RegisterUnitEvent('UNIT_ABSORB_AMOUNT_CHANGED', self.unit)
@@ -2548,13 +2557,13 @@ function NP:CreateNamePlateFrame(frame)
 	plate.sizer:Hide()
 	plate.sizer:SetScript('OnUpdate',  NP.OnSizerUpdate)
 
-	plate.border = CreateFrame('Frame', nil, plate)
+	plate.border = CreateFrame('Frame', nil, plate, BackdropTemplateMixin and 'BackdropTemplate')
 	plate.border:SetFrameLevel(plate:GetFrameLevel()-1)
 
 	plate.border.bg = plate.border:CreateTexture()
 	plate.border.bg:SetDrawLayer("BORDER", 0)
 
-	plate.glowIndicator = CreateFrame("Frame", nil, plate)
+	plate.glowIndicator = CreateFrame("Frame", nil, plate, BackdropTemplateMixin and 'BackdropTemplate')
 	plate.glowIndicator:SetFrameLevel(plate:GetFrameLevel()-2)
 
 	plate.glowIndicator:SetBackdrop({
@@ -2735,7 +2744,7 @@ function NP:CreateNamePlateFrame(frame)
 	plate.castBar.FadeOut = NP.CastBarFadeOut
 	plate.castBar.SkipFade = NP.CastBarSkipFade
 
-	plate.castBar.border = CreateFrame('Frame', nil, plate.castBar)
+	plate.castBar.border = CreateFrame('Frame', nil, plate.castBar, BackdropTemplateMixin and 'BackdropTemplate')
 	plate.castBar.border:SetFrameLevel(plate.castBar:GetFrameLevel()-1)
 
 	plate.castBar.border.bg = plate.castBar.border:CreateTexture()
@@ -2757,7 +2766,7 @@ function NP:CreateNamePlateFrame(frame)
 	plate.castBar.icon:SetDrawLayer("OVERLAY")
 	plate.castBar.icon:SetPoint("TOPLEFT", plate, "TOPRIGHT", 5, 0)
 
-	plate.castBar.icon.border = CreateFrame('Frame', nil, plate.castBar)
+	plate.castBar.icon.border = CreateFrame('Frame', nil, plate.castBar, BackdropTemplateMixin and 'BackdropTemplate')
 	plate.castBar.icon.border:SetFrameLevel(plate.castBar:GetFrameLevel()-1)
 
 	plate.castBar.icon.border.bg = plate.castBar.icon.border:CreateTexture()

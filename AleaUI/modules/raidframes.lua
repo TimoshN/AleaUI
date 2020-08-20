@@ -57,11 +57,15 @@ local UnitHasVehicleUI = UnitHasVehicleUI
 local GetInstanceInfo = GetInstanceInfo
 local GetSpecializationInfo = GetSpecializationInfo
 local GetRaidTargetIndex = GetRaidTargetIndex
-local UnitInPhase = UnitInPhase
 local UnitInOtherParty = UnitInOtherParty
 local GetSpellInfo = GetSpellInfo
 local CooldownFrame_Set = CooldownFrame_Set
 local CooldownFrame_Clear = CooldownFrame_Clear
+
+local UnitPhaseReason = UnitPhaseReason
+local UnitInPhase = UnitInPhase or function(...)
+	return UnitPhaseReason(...) == 0
+end 
 
 -------------------------------------
 -- GLOBAL VARIABLES
@@ -74,6 +78,12 @@ local RAID_CLASS_COLORS = RAID_CLASS_COLORS
 local DISTANCE_THRESHOLD_SQUARED = DISTANCE_THRESHOLD_SQUARED or 250*250
 local MAX_INCOMING_HEAL_OVERFLOW = 1 -- 1.05
 local BUFF_STACKS_OVERFLOW = BUFF_STACKS_OVERFLOW or 10
+
+local UNIT_HEALTH_EVENT = 'UNIT_HEALTH_FREQUENT'
+
+if ( E.isShadowlands ) then 
+	UNIT_HEALTH_EVENT = 'UNIT_HEALTH'
+end
 
 -------------------------------------
 -- MODULE VARIABLES
@@ -1281,7 +1291,7 @@ end
 
 local eventList = {
 	["UNIT_MAXHEALTH"] = true,
-	["UNIT_HEALTH_FREQUENT"] = true,
+	[UNIT_HEALTH_EVENT] = true,
 	["UNIT_POWER_UPDATE"] = true,
 	["UNIT_MAXPOWER"] = true,
 
@@ -2192,7 +2202,7 @@ function CreateUnitFrameArtwork(self)
 	self.bottomRightIndicator.cooldown:SetBlingTexture("")
 
 	for i=1, 3 do
-		self.buffFrames[i] = self.buffFrames[i] or CreateFrame('Frame', nil, self.health)
+		self.buffFrames[i] = self.buffFrames[i] or CreateFrame('Frame', nil, self.health, BackdropTemplateMixin and 'BackdropTemplate')
 		self.buffFrames[i]:SetSize(options.buffSize,options.buffSize)
 		self.buffFrames[i]:SetBackdrop(AuraBackdrop)
 		self.buffFrames[i]:SetBackdropColor(0, 0, 0, 0)
@@ -2225,7 +2235,7 @@ function CreateUnitFrameArtwork(self)
 		E:RegisterCooldown(self.buffFrames[i].cooldown)
 		self.buffFrames[i].baseSize = options.buffSize
 
-		self.debuffFrames[i] = self.debuffFrames[i] or CreateFrame('Frame', nil, self.health)
+		self.debuffFrames[i] = self.debuffFrames[i] or CreateFrame('Frame', nil, self.health, BackdropTemplateMixin and 'BackdropTemplate')
 		self.debuffFrames[i]:SetSize(options.debuffSize,options.debuffSize)
 		self.debuffFrames[i]:SetBackdrop(AuraBackdrop)
 		self.debuffFrames[i]:SetBackdropColor(0, 0, 0, 0)
@@ -2291,7 +2301,7 @@ function CreateUnitFrameArtwork(self)
 	self:SetScript('OnHide',  RF.OnUnitFrameHiden)
 end
 
-RF.raidFrameBackGround = CreateFrame("Frame", nil, E.UIParent)
+RF.raidFrameBackGround = CreateFrame("Frame", nil, E.UIParent, BackdropTemplateMixin and 'BackdropTemplate')
 RF.raidFrameBackGround:SetFrameStrata('LOW')
 RF.raidFrameBackGround:SetFrameLevel(2)
 RF.raidFrameBackGround:SetBackdrop({
@@ -2544,7 +2554,7 @@ tinsert(TEX_WORLD_RAID_MARKERS, "|TInterface\\TargetingFrame\\UI-RaidTargetingIc
 tinsert(TEX_WORLD_RAID_MARKERS, "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_8:14:14|t")
 
 local function CreateBasicButton(parent, name, text, tooltipText)
-	local button = CreateFrame("Button", name, parent, "SecureActionButtonTemplate")
+	local button = CreateFrame("Button", name, parent, "SecureActionButtonTemplate"..(BackdropTemplateMixin and ', BackdropTemplate' or ''))
 	button.text = button:CreateFontString()
 	button.text:SetFont(STANDARD_TEXT_FONT, 12, "")
 	button.text:SetText(text)
@@ -3267,7 +3277,7 @@ end
 
  do
 
-	local button = CreateFrame("Button", nil, manager)
+	local button = CreateFrame("Button", nil, manager, BackdropTemplateMixin and 'BackdropTemplate')
 	button.text = button:CreateFontString()
 	button.text:SetFont(STANDARD_TEXT_FONT, 12, "")
 	button.text:SetText("|TInterface\\Buttons\\UI-OptionsButton:14:14:0:0|t")
