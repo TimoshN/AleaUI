@@ -6,7 +6,7 @@ if ( AleaUI.isClassic ) then
 end 
 
 local function GetCurrencyIcon(...)
-	if ( C_CurrencyInfo ) then 
+	if ( AleaUI.isShadowlands ) then 
 		return C_CurrencyInfo.GetCurrencyInfo(...).iconFileID
 	end 
 	return select(3, GetCurrencyInfo(...))
