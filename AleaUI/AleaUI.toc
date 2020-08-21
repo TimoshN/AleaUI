@@ -1,6 +1,6 @@
 ## Interface: 80300
 ## Title: AleaUI
-## Version: 146
+## Version: 150
 ## Author: Alea
 ## SavedVariables: AleaUIDB, AleaUIDB_2, AleaUI_AuraWidgets, AleaUIDB_Sync
 ## SavedVariablesPerCharacter: AleaUIDB_PC
