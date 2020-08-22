@@ -1,4 +1,5 @@
-local Skins = AleaUI:Module("Skins")
+local addonName, E = ...
+local Skins = E:Module("Skins")
 local _G = _G
 
 local default_background_color = Skins.default_background_color
@@ -11,11 +12,11 @@ local default_button_border 	= Skins.default_button_border
 local default_border_color_dark = Skins.default_border_color_dark
 
 local varName = 'friendsframe'
-AleaUI.default_settings.skins[varName] = true
+E.default_settings.skins[varName] = true
 
 local function Skin_FriendsFrame()
-	if not AleaUI.db.skins.enableAll then return end
-	if not AleaUI.db.skins[varName] then return end
+	if not E.db.skins.enableAll then return end
+	if not E.db.skins[varName] then return end
 
 	_G['FriendsFrame']:StripTextures()
 	_G['FriendsFrameInset']:StripTextures()
@@ -101,7 +102,7 @@ local function Skin_FriendsFrame()
 	Skins.ThemeBackdrop('RaidInfoFrame')
 	Skins.ThemeScrollBar('RaidInfoScrollFrameScrollBar')
 	RaidInfoFrame.Header:StripTextures()
-	AleaUI:CreateBackdrop(RaidInfoFrame, RaidInfoFrame.Header, default_border_color, default_background_color, 'ARTWORK', 1)
+	E:CreateBackdrop(RaidInfoFrame, RaidInfoFrame.Header, default_border_color, default_background_color, 'ARTWORK', 1)
 	RaidInfoFrame.Header.Text:SetFont(default_font, Skins.default_font_size, 'NONE')
 	RaidInfoFrame.Header:SetSize(110, 35)
 	RaidInfoFrame.Header:SetUIBackgroundDrawLayer('ARTWORK')
@@ -182,13 +183,13 @@ local function Skin_FriendsFrame()
 		
 		texture:SetAllPoints(framePointer)
 		
-		AleaUI:CreateBackdrop(pendingButton, framePointer, default_border_color, default_background_color)
+		E:CreateBackdrop(pendingButton, framePointer, default_border_color, default_background_color)
 	end
 	
 	ClearCustomButton(pendingButton)
 	
 		
---	AleaUI:CreateBackdrop(FriendsFrameInset, nil, {0,0,0,1}, {0.2,0.2,0.2,0.4})
+--	E:CreateBackdrop(FriendsFrameInset, nil, {0,0,0,1}, {0.2,0.2,0.2,0.4})
 					
 					
 	local lastNumMaxChilds = -1
@@ -213,7 +214,7 @@ local function Skin_FriendsFrame()
 	FriendsListFrame:HookScript('OnShow', ThemePendingButtons)
 	
 	
-	AleaUI:CreateBackdrop(FriendsFrameBattlenetFrame, nil, {0,0,0,1}, {0.2,0.2,1, 0}, 'OVERLAY', 1)
+	E:CreateBackdrop(FriendsFrameBattlenetFrame, nil, {0,0,0,1}, {0.2,0.2,1, 0}, 'OVERLAY', 1)
 	
 	local battlenettexture = Skins.GetTextureObject(FriendsFrameBattlenetFrame, [[Interface\FriendsFrame\battlenet-friends-main]])
 --	battlenettexture:SetAlpha(0)
@@ -406,4 +407,4 @@ local function Skin_FriendsFrame()
 	end)
 end
 
-AleaUI:OnInit2(Skin_FriendsFrame)
+E:OnInit2(Skin_FriendsFrame)

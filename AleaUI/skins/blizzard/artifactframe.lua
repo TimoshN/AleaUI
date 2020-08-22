@@ -12,11 +12,11 @@ local default_button_border 	= Skins.default_button_border
 local default_border_color_dark = Skins.default_border_color_dark
 
 local varName = 'artifactFrame'
-AleaUI.default_settings.skins[varName] = true
+E.default_settings.skins[varName] = true
 
-AleaUI:OnAddonLoad('Blizzard_ArtifactUI', function()
-	if not AleaUI.db.skins.enableAll then return end
-	if not AleaUI.db.skins[varName] then return end
+E:OnAddonLoad('Blizzard_ArtifactUI', function()
+	if not E.db.skins.enableAll then return end
+	if not E.db.skins[varName] then return end
 
 	ArtifactFrame.BorderFrame:StripTextures()
 	

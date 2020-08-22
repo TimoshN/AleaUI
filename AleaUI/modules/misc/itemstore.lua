@@ -1,11 +1,11 @@
-local E = AleaUI
+local addonName, E = ...
 local L = E.L
 
 if ( E.isClassic ) then 
 	return 
 end
 
-local IS = AleaUI:Module("ItemStore")
+local IS = E:Module("ItemStore")
 
 local bank_db, bags_db, reagent_db
 
@@ -275,4 +275,4 @@ local function IS_Init()
 end
 
 
-AleaUI:OnInit2(IS_Init)
+E:OnInit2(IS_Init)

@@ -1,4 +1,4 @@
-﻿local E = AleaUI
+﻿local addonName, E = ...
 local UF = E:Module("UnitFrames")
 local CBF = E:Module("ClassBars")
 local CB = E:Module("CastBar")
@@ -89,33 +89,33 @@ local defaults = {
 	power = {
 		width = 190,
 		height = 8,	
-		texture = AleaUI.media.default_bar_texture_name3,		
+		texture = E.media.default_bar_texture_name3,		
 		text = {
 			left = {
 				point = 'LEFT',
 				pos = { 0, 0 },
-				font = AleaUI.media.default_font_name,
-				fontSize = AleaUI.media.default_font_size,
+				font = E.media.default_font_name,
+				fontSize = E.media.default_font_size,
 				fontOutline = 'OUTLINE',
 			},
 			right = {
 				point = 'RIGHT',
 				pos = { 0, 0 },
-				font = AleaUI.media.default_font_name,
-				fontSize = AleaUI.media.default_font_size,
+				font = E.media.default_font_name,
+				fontSize = E.media.default_font_size,
 				fontOutline = 'OUTLINE',
 			},
 			center = {
 				point = 'CENTER',
 				pos = { 0, 0 },
-				font = AleaUI.media.default_font_name,
-				fontSize = AleaUI.media.default_font_size,
+				font = E.media.default_font_name,
+				fontSize = E.media.default_font_size,
 				fontOutline = 'OUTLINE',
 			},
 		},
 		border = {
-			texture = AleaUI.media.default_bar_texture_name3,
-			background_texture = AleaUI.media.default_bar_texture_name3,
+			texture = E.media.default_bar_texture_name3,
+			background_texture = E.media.default_bar_texture_name3,
 			color = { 0, 0, 0, 1 },
 			background_color = { 0, 0, 0, 0 },
 			size = 1,
@@ -130,33 +130,33 @@ local defaults = {
 	altpower = {
 		width = 190,
 		height = 8,		
-		texture = AleaUI.media.default_bar_texture_name3,
+		texture = E.media.default_bar_texture_name3,
 		text = {
 			left = {
 				point = 'LEFT',
 				pos = { 0, 0 },
-				font = AleaUI.media.default_font_name,
-				fontSize = AleaUI.media.default_font_size,
+				font = E.media.default_font_name,
+				fontSize = E.media.default_font_size,
 				fontOutline = 'OUTLINE',
 			},
 			right = {
 				point = 'RIGHT',
 				pos = { 0, 0 },
-				font = AleaUI.media.default_font_name,
-				fontSize = AleaUI.media.default_font_size,
+				font = E.media.default_font_name,
+				fontSize = E.media.default_font_size,
 				fontOutline = 'OUTLINE',
 			},
 			center = {
 				point = 'CENTER',
 				pos = { 0, 0 },
-				font = AleaUI.media.default_font_name,
-				fontSize = AleaUI.media.default_font_size,
+				font = E.media.default_font_name,
+				fontSize = E.media.default_font_size,
 				fontOutline = 'OUTLINE',
 			},
 		},
 		border = {
-			texture = AleaUI.media.default_bar_texture_name3,
-			background_texture = AleaUI.media.default_bar_texture_name3,
+			texture = E.media.default_bar_texture_name3,
+			background_texture = E.media.default_bar_texture_name3,
 			color = { 0, 0, 0, 1 },
 			background_color = { 0, 0, 0, 1 },
 			size = 1,
@@ -175,16 +175,16 @@ local defaults = {
 		width = 190, 
 		height = 18,
 		colors = CB.colors,
-		texture = AleaUI.media.default_bar_texture_name1,
-		font = AleaUI.media.default_font_name,
-		fontSize = AleaUI.media.default_font_size,
+		texture = E.media.default_bar_texture_name1,
+		font = E.media.default_font_name,
+		fontSize = E.media.default_font_size,
 		fontOutline = 'OUTLINE',
 		point = 'CENTER',
 		pos = { 0, -28 },
 		level = 1,
 		border = {
-			texture = AleaUI.media.default_bar_texture_name3,
-			background_texture = AleaUI.media.default_bar_texture_name3,
+			texture = E.media.default_bar_texture_name3,
+			background_texture = E.media.default_bar_texture_name3,
 			color = { 0, 0, 0, 1 },
 			background_color = { 0, 0, 0, 0 },
 			size = 1,
@@ -229,7 +229,7 @@ local defaults = {
 	},
 }
 
-AleaUI.default_settings.unitframes.unitopts.bosses = defaults
+E.default_settings.unitframes.unitopts.bosses = defaults
 
 local testframe = false
 

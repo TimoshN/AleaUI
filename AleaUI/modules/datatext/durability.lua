@@ -1,5 +1,6 @@
-﻿local DT = AleaUI:Module('DataText')
-local L = AleaUI.L
+﻿local addonName, E = ...
+local DT = E:Module('DataText')
+local L = E.L
 
 local join = string.join
 local displayString = DURABILITY..": |cFFFFFFFF%d%%|r"
@@ -48,7 +49,7 @@ local function OnEnter(self)
 	DT:SetupTooltip(self)
 	
 	for slot, durability in pairs(invDurability) do
-		DT.tooltip:AddDoubleLine(slot, format(tooltipString, durability), 1, 1, 1, AleaUI:ColorGradient(durability * 0.01, 1 , 1, 0, 0, 1, 1, 0, 0, 1, 0))
+		DT.tooltip:AddDoubleLine(slot, format(tooltipString, durability), 1, 1, 1, E:ColorGradient(durability * 0.01, 1 , 1, 0, 0, 1, 1, 0, 0, 1, 0))
 	end
 		
 	DT.tooltip:Show()

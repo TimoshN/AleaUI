@@ -1,4 +1,5 @@
-local Skins = AleaUI:Module("Skins")
+local addonName, E = ...
+local Skins = E:Module("Skins")
 local _G = _G
 
 local default_background_color = Skins.default_background_color
@@ -11,11 +12,11 @@ local default_button_border 	= Skins.default_button_border
 local default_border_color_dark = Skins.default_border_color_dark
 
 local varName = 'guild'
-AleaUI.default_settings.skins[varName] = true
+E.default_settings.skins[varName] = true
 
-AleaUI:OnAddonLoad('Blizzard_GuildUI', function()
-	if not AleaUI.db.skins.enableAll then return end
-	if not AleaUI.db.skins[varName] then return end
+E:OnAddonLoad('Blizzard_GuildUI', function()
+	if not E.db.skins.enableAll then return end
+	if not E.db.skins[varName] then return end
 
 	for i=1, 3 do	
 		Skins.ThemeUpperTabs(_G['GuildInfoFrameTab'..i])
@@ -123,7 +124,7 @@ AleaUI:OnAddonLoad('Blizzard_GuildUI', function()
 		button:DisableDrawLayer("BACKGROUND")
 		button:DisableDrawLayer("BORDER")
 
-		button.icon:SetTexCoord(unpack(AleaUI.media.texCoord))
+		button.icon:SetTexCoord(unpack(E.media.texCoord))
 		
 		local backdrop = Skins.NewBackdrop(button)
 		Skins.SetTemplate(backdrop, 'ALPHADARK')
@@ -142,7 +143,7 @@ AleaUI:OnAddonLoad('Blizzard_GuildUI', function()
 		button:StripTextures()
 
 		if button.icon then
-			button.icon:SetTexCoord(unpack(AleaUI.media.texCoord))
+			button.icon:SetTexCoord(unpack(E.media.texCoord))
 			button.icon:ClearAllPoints()
 			button.icon:SetPoint("TOPLEFT", 2, -2)
 			button.icon:SetDrawLayer('ARTWORK', 1)
@@ -166,7 +167,7 @@ AleaUI:OnAddonLoad('Blizzard_GuildUI', function()
 	bg:SetPoint('TOP', GuildFactionBar.progress, "TOP", 0, 0)
 	bg:SetPoint('BOTTOM', GuildFactionBar.progress, "BOTTOM", 0, 0)
 	
-	AleaUI:CreateBackdrop(GuildFactionBar, bg, default_border_color, {0,0,0,0})
+	E:CreateBackdrop(GuildFactionBar, bg, default_border_color, {0,0,0,0})
 	
 	Skins.ThemeCheckBox(GuildRosterShowOfflineButton)
 	

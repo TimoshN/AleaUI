@@ -1,4 +1,4 @@
-﻿local E = AleaUI
+﻿local addonName, E = ...
 local UF = E:Module("UnitFrames")
 local CBF = E:Module("ClassBars")
 local CB = E:Module("CastBar")
@@ -33,7 +33,7 @@ local defaults = {
 	tags_list = tags_list,
 	
 	["border"] = {
-		["background_texture"] = AleaUI.media.default_bar_texture_name3,
+		["background_texture"] = E.media.default_bar_texture_name3,
 		["size"] = 1,
 		["inset"] = 0,
 		["color"] = {
@@ -49,14 +49,14 @@ local defaults = {
 			0,  
 			0,  
 		},
-		["texture"] = AleaUI.media.default_bar_texture_name3,
+		["texture"] = E.media.default_bar_texture_name3,
 		backgroundRotate = 1,
 	},
 	["health"] = {
 		["point"] = "CENTER",
 		["text"] = {
 			["right"] = {
-				["font"] = AleaUI.media.default_font_name,
+				["font"] = E.media.default_font_name,
 				["point"] = "RIGHT",
 				["fontOutline"] = "OUTLINE",
 				["fontSize"] = 10,
@@ -66,7 +66,7 @@ local defaults = {
 				},
 			},
 			["left"] = {
-				["font"] = AleaUI.media.default_font_name,
+				["font"] = E.media.default_font_name,
 				["point"] = "LEFT",
 				["fontOutline"] = "OUTLINE",
 				["fontSize"] = 10,
@@ -76,7 +76,7 @@ local defaults = {
 				},
 			},
 			["center"] = {
-				["font"] = AleaUI.media.default_font_name,
+				["font"] = E.media.default_font_name,
 				["point"] = "CENTER",
 				["fontOutline"] = "OUTLINE",
 				["fontSize"] = 10,
@@ -87,7 +87,7 @@ local defaults = {
 			},
 		},
 		["border"] = {
-			["background_texture"] = AleaUI.media.default_bar_texture_name3,
+			["background_texture"] = E.media.default_bar_texture_name3,
 			["size"] = 1,
 			["inset"] = 0,
 			["color"] = {
@@ -103,7 +103,7 @@ local defaults = {
 				0,  
 				0,  
 			},
-			["texture"] = AleaUI.media.default_bar_texture_name3,
+			["texture"] = E.media.default_bar_texture_name3,
 		},
 		["width"] = 260,
 		["pos"] = {
@@ -113,13 +113,13 @@ local defaults = {
 		["height"] = 20,
 		["level"] = 1,
 		["alpha"] = 1,
-		["texture"] = AleaUI.media.default_bar_texture_name3,
+		["texture"] = E.media.default_bar_texture_name3,
 	},
 	["power"] = {
 		["point"] = "CENTER",
 		["text"] = {
 			["right"] = {
-				["font"] = AleaUI.media.default_font_name,
+				["font"] = E.media.default_font_name,
 				["point"] = "RIGHT",
 				["fontOutline"] = "OUTLINE",
 				["fontSize"] = 10,
@@ -129,7 +129,7 @@ local defaults = {
 				},
 			},
 			["left"] = {
-				["font"] = AleaUI.media.default_font_name,
+				["font"] = E.media.default_font_name,
 				["point"] = "LEFT",
 				["fontOutline"] = "OUTLINE",
 				["fontSize"] = 10,
@@ -139,7 +139,7 @@ local defaults = {
 				},
 			},
 			["center"] = {
-				["font"] = AleaUI.media.default_font_name,
+				["font"] = E.media.default_font_name,
 				["point"] = "CENTER",
 				["fontOutline"] = "OUTLINE",
 				["fontSize"] = 10,
@@ -150,7 +150,7 @@ local defaults = {
 			},
 		},
 		["border"] = {
-			["background_texture"] = AleaUI.media.default_bar_texture_name3,
+			["background_texture"] = E.media.default_bar_texture_name3,
 			["size"] = 1,
 			["inset"] = 0,
 			["color"] = {
@@ -166,7 +166,7 @@ local defaults = {
 				1,  
 				0,  
 			},
-			["texture"] = AleaUI.media.default_bar_texture_name3,
+			["texture"] = E.media.default_bar_texture_name3,
 		},
 		["width"] = 260,
 		["pos"] = {
@@ -176,13 +176,13 @@ local defaults = {
 		["height"] = 20,
 		["level"] = 1,
 		["alpha"] = 1,
-		["texture"] = AleaUI.media.default_bar_texture_name3,
+		["texture"] = E.media.default_bar_texture_name3,
 	},
 	["altpower"] = {
 		["point"] = "CENTER",
 		["text"] = {
 			["right"] = {
-				["font"] = AleaUI.media.default_font_name,
+				["font"] = E.media.default_font_name,
 				["point"] = "RIGHT",
 				["fontOutline"] = "OUTLINE",
 				["fontSize"] = 10,
@@ -192,7 +192,7 @@ local defaults = {
 				},
 			},
 			["left"] = {
-				["font"] = AleaUI.media.default_font_name,
+				["font"] = E.media.default_font_name,
 				["point"] = "LEFT",
 				["fontOutline"] = "OUTLINE",
 				["fontSize"] = 10,
@@ -202,7 +202,7 @@ local defaults = {
 				},
 			},
 			["center"] = {
-				["font"] = AleaUI.media.default_font_name,
+				["font"] = E.media.default_font_name,
 				["point"] = "CENTER",
 				["fontOutline"] = "OUTLINE",
 				["fontSize"] = 10,
@@ -213,7 +213,7 @@ local defaults = {
 			},
 		},
 		["border"] = {
-			["background_texture"] = AleaUI.media.default_bar_texture_name3,
+			["background_texture"] = E.media.default_bar_texture_name3,
 			["size"] = 1,
 			["inset"] = 0,
 			["color"] = {
@@ -229,7 +229,7 @@ local defaults = {
 				0,  
 				1,  
 			},
-			["texture"] = AleaUI.media.default_bar_texture_name3,
+			["texture"] = E.media.default_bar_texture_name3,
 		},
 		["width"] = 260,
 		["pos"] = {
@@ -239,13 +239,13 @@ local defaults = {
 		["height"] = 7,
 		["level"] = 1,
 		["alpha"] = 1,
-		["texture"] = AleaUI.media.default_bar_texture_name3,
+		["texture"] = E.media.default_bar_texture_name3,
 	},
 	["altmanabar"] = {
 		["point"] = "CENTER",
 		["text"] = {
 			["right"] = {
-				["font"] = AleaUI.media.default_font_name,
+				["font"] = E.media.default_font_name,
 				["point"] = "RIGHT",
 				["fontOutline"] = "OUTLINE",
 				["fontSize"] = 10,
@@ -255,7 +255,7 @@ local defaults = {
 				},
 			},
 			["left"] = {
-				["font"] = AleaUI.media.default_font_name,
+				["font"] = E.media.default_font_name,
 				["point"] = "LEFT",
 				["fontOutline"] = "OUTLINE",
 				["fontSize"] = 10,
@@ -265,7 +265,7 @@ local defaults = {
 				},
 			},
 			["center"] = {
-				["font"] = AleaUI.media.default_font_name,
+				["font"] = E.media.default_font_name,
 				["point"] = "CENTER",
 				["fontOutline"] = "OUTLINE",
 				["fontSize"] = 10,
@@ -276,7 +276,7 @@ local defaults = {
 			},
 		},
 		["border"] = {
-			["background_texture"] = AleaUI.media.default_bar_texture_name3,
+			["background_texture"] = E.media.default_bar_texture_name3,
 			["size"] = 1,
 			["inset"] = 0,
 			["color"] = {
@@ -292,7 +292,7 @@ local defaults = {
 				0,  
 				1,  
 			},
-			["texture"] = AleaUI.media.default_bar_texture_name3,
+			["texture"] = E.media.default_bar_texture_name3,
 		},
 		["width"] = 260,
 		["pos"] = {
@@ -302,7 +302,7 @@ local defaults = {
 		["height"] = 7,
 		["level"] = 1,
 		["alpha"] = 1,
-		["texture"] = AleaUI.media.default_bar_texture_name3,
+		["texture"] = E.media.default_bar_texture_name3,
 	},
 	castBar = {
 		enable = true,
@@ -312,13 +312,13 @@ local defaults = {
 		height = 18,
 		gcdoffset = 1,
 		colors = CB.colors,
-		texture = AleaUI.media.default_bar_texture_name1,
-		font = AleaUI.media.default_font_name,
-		fontSize = AleaUI.media.default_font_size,
+		texture = E.media.default_bar_texture_name1,
+		font = E.media.default_font_name,
+		fontSize = E.media.default_font_size,
 		fontOutline = 'OUTLINE',
 		border = {
-			texture = AleaUI.media.default_bar_texture_name3,
-			background_texture = AleaUI.media.default_bar_texture_name3,
+			texture = E.media.default_bar_texture_name3,
+			background_texture = E.media.default_bar_texture_name3,
 			color = { 0, 0, 0, 1 },
 			background_color = { 0, 0, 0, 0 },
 			size = 1,
@@ -371,7 +371,7 @@ local defaults = {
 	},
 }
 
-AleaUI.default_settings.unitframes.unitopts.player = defaults
+E.default_settings.unitframes.unitopts.player = defaults
 
 
 local w = 260

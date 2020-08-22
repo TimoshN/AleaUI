@@ -1,19 +1,20 @@
-﻿local Skins = AleaUI:Module("Skins")
+﻿local addonName, E = ...
+local Skins = E:Module("Skins")
 local _G = _G
-local L = AleaUI.L
+local L = E.L
 
 local varName = 'bossbanner'
-AleaUI.default_settings.skins[varName] = true
+E.default_settings.skins[varName] = true
 
-AleaUI:OnInit(function()	
-	if not AleaUI.db.skins.enableAll then return end
-	if not AleaUI.db.skins[varName] then return end
+E:OnInit(function()	
+	if not E.db.skins.enableAll then return end
+	if not E.db.skins[varName] then return end
 
 	BossBanner:UnregisterAllEvents()
 	
 	UIParent:UnregisterEvent("CHALLENGE_MODE_COMPLETED");
 	
-	AleaUI:OnAddonLoad('Blizzard_ChallengesUI', function()	
+	E:OnAddonLoad('Blizzard_ChallengesUI', function()	
 		ChallengeModeCompleteBanner:UnregisterEvent("CHALLENGE_MODE_COMPLETED");		
 	end)
 	
@@ -23,7 +24,7 @@ AleaUI:OnInit(function()
 	--	local old_LevelUpDisplay_PlayScenario = LevelUpDisplay_PlayScenario
 	--	LevelUpDisplay_PlayScenario = function(...)	end
 	
-		LevelUpDisplay:SetParent(AleaUI.hidenframe)
+		LevelUpDisplay:SetParent(E.hidenframe)
 		--[==[
 	else
 		hooksecurefunc('LevelUpDisplay_OnLoad', function(self)
@@ -86,7 +87,7 @@ AleaUI:OnInit(function()
 		end
 	end
 	
-	local bossKillFrame = CreateFrame('Frame', nil, AleaUI.UIParent)
+	local bossKillFrame = CreateFrame('Frame', nil, E.UIParent)
 	bossKillFrame:SetSize(100, 20)
 	bossKillFrame:SetPoint('CENTER', 0, 300)
 	bossKillFrame:Hide()
@@ -300,10 +301,10 @@ AleaUI:OnInit(function()
 			item.RelicBorder:SetTexture([[Interface\Artifacts\RelicIconFrame]]);
 			item.RelicBorder:SetVertexColor(0.7, 0.7, 0.7, 1)
 			
-			item:SetScript("OnLeave", AleaUI.HideTip2)
-			item:SetScript('OnEnter', AleaUI.SetItemTip)
-			item:SetScript('OnEvent', AleaUI.SetItemTip)
-			item:SetScript("OnClick", AleaUI.LootClick)	
+			item:SetScript("OnLeave", E.HideTip2)
+			item:SetScript('OnEnter', E.SetItemTip)
+			item:SetScript('OnEvent', E.SetItemTip)
+			item:SetScript("OnClick", E.LootClick)	
 	
 			item.AnimIfNotShown = AnimIfNotShown
 			
@@ -587,7 +588,7 @@ AleaUI:OnInit(function()
 							if ( ( classID == 4  or classID == 2 ) and ( subclassID == 2 or subclassID == 1 or subclassID == 3 or subclassID == 4 or subclassID == 0 or subclassID == 10 or subclassID == 19 or subclassID == 7 or subclassID == 6 ) ) or IsArtifactRelicItem(link) then
 							--	bossKillFrame.slots[index].items[a].ilvl:SetText(itemLevel)
 								
-								AleaUI.QueueForRun('bossKillFrame.slots['..index..'].items['..a..']-HandleText', QueueBossBannerItemItemLevel, bossKillFrame.slots[index].items[a], link)	
+								E.QueueForRun('bossKillFrame.slots['..index..'].items['..a..']-HandleText', QueueBossBannerItemItemLevel, bossKillFrame.slots[index].items[a], link)	
 								
 								bossKillFrame.slots[index].items[a].ilvl:SetTextColor(color.r, color.g, color.b)
 							else

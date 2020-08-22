@@ -1,4 +1,5 @@
-local Skins = AleaUI:Module("Skins")
+local addonName, E = ...
+local Skins = E:Module("Skins")
 
 local default_background_color = Skins.default_background_color
 local default_border_color = Skins.default_border_color
@@ -10,11 +11,11 @@ local default_button_border 	= Skins.default_button_border
 local default_border_color_dark = Skins.default_border_color_dark
 
 local varName = 'deathrecap'
-AleaUI.default_settings.skins[varName] = true
+E.default_settings.skins[varName] = true
 
-AleaUI:OnAddonLoad('Blizzard_DeathRecap', function()
-	if not AleaUI.db.skins.enableAll then return end
-	if not AleaUI.db.skins[varName] then return end
+E:OnAddonLoad('Blizzard_DeathRecap', function()
+	if not E.db.skins.enableAll then return end
+	if not E.db.skins[varName] then return end
 
 	DeathRecapFrame:StripTextures()
 	
@@ -24,7 +25,7 @@ AleaUI:OnAddonLoad('Blizzard_DeathRecap', function()
 	for i=1, 5 do
 	
 		
-		DeathRecapFrame['Recap'..i].SpellInfo.Icon:SetTexCoord(unpack(AleaUI.media.texCoord))
+		DeathRecapFrame['Recap'..i].SpellInfo.Icon:SetTexCoord(unpack(E.media.texCoord))
 		DeathRecapFrame['Recap'..i].SpellInfo.IconBorder:Kill()
 		
 		

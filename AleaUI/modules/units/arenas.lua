@@ -1,14 +1,14 @@
-﻿local E = AleaUI
+﻿local addonName, E = ...
 local UF = E:Module("UnitFrames")
 local CBF = E:Module("ClassBars")
 local CB = E:Module("CastBar")
 
 E.ArenaFrames = {}
 
-local arenaFrameMover = CreateFrame('Frame', 'AleaUI_ArenaFrameParent', AleaUI.UIParent)
+local arenaFrameMover = CreateFrame('Frame', 'AleaUI_ArenaFrameParent', E.UIParent)
 arenaFrameMover:SetSize(100, 100)
 arenaFrameMover:EnableMouse(false)
-arenaFrameMover:SetPoint('CENTER', AleaUI.UIParent, 'CENTER', 0, 0)
+arenaFrameMover:SetPoint('CENTER', E.UIParent, 'CENTER', 0, 0)
 
 local tags_list = {
 	["health"] = {
@@ -36,8 +36,8 @@ local defaults = {
 	growup = false,
 	spacing = 40,
 	border = {
-		texture = AleaUI.media.default_bar_texture_name3,
-		background_texture = AleaUI.media.default_bar_texture_name3,
+		texture = E.media.default_bar_texture_name3,
+		background_texture = E.media.default_bar_texture_name3,
 		color = { 0, 0, 0, 0 },
 		background_color = { 0, 0, 0, 0  },
 		size = 1,
@@ -48,33 +48,33 @@ local defaults = {
 	health = {
 		width = 190,
 		height = 23,		
-		texture = AleaUI.media.default_bar_texture_name3,
+		texture = E.media.default_bar_texture_name3,
 		text = {
 			left = {
 				point = 'LEFT',
 				pos = { 0, 0 },
-				font = AleaUI.media.default_font_name,
-				fontSize = AleaUI.media.default_font_size,
+				font = E.media.default_font_name,
+				fontSize = E.media.default_font_size,
 				fontOutline = 'OUTLINE',
 			},
 			right = {
 				point = 'RIGHT',
 				pos = { 0, 0 },
-				font = AleaUI.media.default_font_name,
-				fontSize = AleaUI.media.default_font_size,
+				font = E.media.default_font_name,
+				fontSize = E.media.default_font_size,
 				fontOutline = 'OUTLINE',
 			},
 			center = {
 				point = 'CENTER',
 				pos = { 0, 0 },
-				font = AleaUI.media.default_font_name,
-				fontSize = AleaUI.media.default_font_size,
+				font = E.media.default_font_name,
+				fontSize = E.media.default_font_size,
 				fontOutline = 'OUTLINE',
 			},
 		},
 		border = {
-			texture = AleaUI.media.default_bar_texture_name3,
-			background_texture = AleaUI.media.default_bar_texture_name3,
+			texture = E.media.default_bar_texture_name3,
+			background_texture = E.media.default_bar_texture_name3,
 			color = { 0, 0, 0, 1 },
 			background_color = { 0, 0, 0, 0 },
 			size = 1,
@@ -88,33 +88,33 @@ local defaults = {
 	power = {
 		width = 190,
 		height = 9,	
-		texture = AleaUI.media.default_bar_texture_name3,		
+		texture = E.media.default_bar_texture_name3,		
 		text = {
 			left = {
 				point = 'LEFT',
 				pos = { 0, 0 },
-				font = AleaUI.media.default_font_name,
-				fontSize = AleaUI.media.default_font_size,
+				font = E.media.default_font_name,
+				fontSize = E.media.default_font_size,
 				fontOutline = 'OUTLINE',
 			},
 			right = {
 				point = 'RIGHT',
 				pos = { 0, 0 },
-				font = AleaUI.media.default_font_name,
-				fontSize = AleaUI.media.default_font_size,
+				font = E.media.default_font_name,
+				fontSize = E.media.default_font_size,
 				fontOutline = 'OUTLINE',
 			},
 			center = {
 				point = 'CENTER',
 				pos = { 0, 0 },
-				font = AleaUI.media.default_font_name,
-				fontSize = AleaUI.media.default_font_size,
+				font = E.media.default_font_name,
+				fontSize = E.media.default_font_size,
 				fontOutline = 'OUTLINE',
 			},
 		},
 		border = {
-			texture = AleaUI.media.default_bar_texture_name3,
-			background_texture = AleaUI.media.default_bar_texture_name3,
+			texture = E.media.default_bar_texture_name3,
+			background_texture = E.media.default_bar_texture_name3,
 			color = { 0, 0, 0, 1 },
 			background_color = { 0, 0, 0, 0 },
 			size = 1,
@@ -129,33 +129,33 @@ local defaults = {
 	altpower = {
 		width = 190,
 		height = 1,		
-		texture = AleaUI.media.default_bar_texture_name3,
+		texture = E.media.default_bar_texture_name3,
 		text = {
 			left = {
 				point = 'LEFT',
 				pos = { 0, 0 },
-				font = AleaUI.media.default_font_name,
-				fontSize = AleaUI.media.default_font_size,
+				font = E.media.default_font_name,
+				fontSize = E.media.default_font_size,
 				fontOutline = 'OUTLINE',
 			},
 			right = {
 				point = 'RIGHT',
 				pos = { 0, 0 },
-				font = AleaUI.media.default_font_name,
-				fontSize = AleaUI.media.default_font_size,
+				font = E.media.default_font_name,
+				fontSize = E.media.default_font_size,
 				fontOutline = 'OUTLINE',
 			},
 			center = {
 				point = 'CENTER',
 				pos = { 0, 0 },
-				font = AleaUI.media.default_font_name,
-				fontSize = AleaUI.media.default_font_size,
+				font = E.media.default_font_name,
+				fontSize = E.media.default_font_size,
 				fontOutline = 'OUTLINE',
 			},
 		},
 		border = {
-			texture = AleaUI.media.default_bar_texture_name3,
-			background_texture = AleaUI.media.default_bar_texture_name3,
+			texture = E.media.default_bar_texture_name3,
+			background_texture = E.media.default_bar_texture_name3,
 			color = { 0, 0, 0, 1 },
 			background_color = { 0, 0, 0, 1 },
 			size = 1,
@@ -174,17 +174,17 @@ local defaults = {
 		width = 190, 
 		height = 18,
 		colors = CB.colors,
-		texture = AleaUI.media.default_bar_texture_name1,
-		font = AleaUI.media.default_font_name,
-		fontSize = AleaUI.media.default_font_size,
+		texture = E.media.default_bar_texture_name1,
+		font = E.media.default_font_name,
+		fontSize = E.media.default_font_size,
 		fontOutline = 'OUTLINE',
 		point = 'CENTER',
 		pos = { 0, -25 },
 		level = 1,
 		alpha = 1,
 		border = {
-			texture = AleaUI.media.default_bar_texture_name3,
-			background_texture = AleaUI.media.default_bar_texture_name3,
+			texture = E.media.default_bar_texture_name3,
+			background_texture = E.media.default_bar_texture_name3,
 			color = { 0, 0, 0, 1 },
 			background_color = { 0, 0, 0, 0 },
 			size = 1,
@@ -229,7 +229,7 @@ local defaults = {
 	},
 }
 
-AleaUI.default_settings.unitframes.unitopts.arenas = defaults
+E.default_settings.unitframes.unitopts.arenas = defaults
 
 local testframe = false
 
@@ -377,7 +377,7 @@ local function ArenaFrame()
 		f.prepFrames.pvpIcon = f.prepFrames:CreateTexture(nil, "ARTWORK", nil, 1)
 		f.prepFrames.pvpIcon:SetSize(h-2,h-2)
 		f.prepFrames.pvpIcon:SetPoint("LEFT", f.prepFrames, "RIGHT", 2, 0)
-		f.prepFrames.pvpIcon:SetTexCoord(unpack(AleaUI.media.texCoord))
+		f.prepFrames.pvpIcon:SetTexCoord(unpack(E.media.texCoord))
 		f.prepFrames.pvpIcon:SetTexture("INTERFACE\\ICONS\\INV_MISC_QUESTIONMARK")
 
 		f.prepFrames.pvpIcon.bg = f.prepFrames:CreateTexture(nil, "ARTWORK", nil, 0)
@@ -386,7 +386,7 @@ local function ArenaFrame()
 		f.prepFrames.pvpIcon.bg:SetColorTexture(0, 0, 0, 1)
 		
 		f.prepFrames.name = f.prepFrames:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-		f.prepFrames.name:SetFont(AleaUI.media.default_font, 14, "OUTLINE")
+		f.prepFrames.name:SetFont(E.media.default_font, 14, "OUTLINE")
 		f.prepFrames.name:SetPoint("LEFT", f.prepFrames, "LEFT", 3, 0)
 		f.prepFrames.name:SetText("TEST")
 		f.prepFrames.name:SetTextColor(1, 1, 1, 1)
@@ -399,7 +399,7 @@ local function ArenaFrame()
 		local pvpIcon = f:CreateTexture(nil, "ARTWORK", nil, 1)
 		pvpIcon:SetSize(h-2,h-2)
 		pvpIcon:SetPoint("LEFT", f.health, "RIGHT", 2, 0)
-		pvpIcon:SetTexCoord(unpack(AleaUI.media.texCoord))
+		pvpIcon:SetTexCoord(unpack(E.media.texCoord))
 		pvpIcon:SetTexture("INTERFACE\\ICONS\\INV_MISC_QUESTIONMARK")
 
 		pvpIcon.bg = f:CreateTexture(nil, "ARTWORK", nil, 0)

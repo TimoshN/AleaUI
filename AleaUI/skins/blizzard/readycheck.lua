@@ -1,12 +1,13 @@
-local Skins = AleaUI:Module("Skins")
+local addonName, E = ...
+local Skins = E:Module("Skins")
 local _G = _G
 
 local varName = 'readycheck'
-AleaUI.default_settings.skins[varName] = true
+E.default_settings.skins[varName] = true
 
 local function Skin_ReadyCheck()
-	if not AleaUI.db.skins.enableAll then return end
-	if not AleaUI.db.skins[varName] then return end
+	if not E.db.skins.enableAll then return end
+	if not E.db.skins[varName] then return end
 
 	_G['ReadyCheckFrame']:StripTextures()
 	_G['ReadyCheckListenerFrame']:StripTextures()
@@ -30,4 +31,4 @@ local function Skin_ReadyCheck()
 
 end
 
-AleaUI:OnInit2(Skin_ReadyCheck)
+E:OnInit2(Skin_ReadyCheck)

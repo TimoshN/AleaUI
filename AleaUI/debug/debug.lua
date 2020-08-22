@@ -69,7 +69,7 @@ do
 			print(tab.."}")
 		end
 		
-	AleaUI.Showtable = debugparse
+	E.Showtable = debugparse
 end
 
 do

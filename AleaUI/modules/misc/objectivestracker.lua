@@ -1,4 +1,4 @@
-local E = AleaUI
+local addonName, E = ...
 local OT = E:Module("ObjectivesTracker")
 local Skins = E:Module("Skins")
 

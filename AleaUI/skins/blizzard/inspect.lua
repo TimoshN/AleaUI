@@ -1,5 +1,5 @@
-﻿local E = AleaUI
-local Skins = AleaUI:Module("Skins")
+﻿local addonName, E = ...
+local Skins = E:Module("Skins")
 
 local _G = _G
 
@@ -16,11 +16,11 @@ local ITEM_LEVEL_PATTERN = ITEM_LEVEL:gsub('%%d', '(%%d+)')
 local ITEM_UPGRADE_TOOLTIP_FORMAT_PATTERN = ITEM_UPGRADE_TOOLTIP_FORMAT:gsub('%%d', '(%%d+)')
 
 local varName = 'inspect'
-AleaUI.default_settings.skins[varName] = true
+E.default_settings.skins[varName] = true
 
 local function InitInspect()
-	if not AleaUI.db.skins.enableAll then return end
-	if not AleaUI.db.skins[varName] then return end
+	if not E.db.skins.enableAll then return end
+	if not E.db.skins[varName] then return end
 
 	local Updater
 
@@ -515,10 +515,10 @@ local function InitInspect()
 	Skins.ThemeButton(InspectPaperDollFrame.ViewButton)
 end
 
-AleaUI:OnInit2(function()
+E:OnInit2(function()
 	if InspectFrame_Show then
 		C_Timer.After(2, InitInspect)
 	else
-		AleaUI:OnAddonLoad('Blizzard_InspectUI', InitInspect)
+		E:OnAddonLoad('Blizzard_InspectUI', InitInspect)
 	end
 end)

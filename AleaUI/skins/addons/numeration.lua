@@ -1,6 +1,7 @@
-local Skins = AleaUI:Module("Skins")
+local addonName, E = ...
+local Skins = E:Module("Skins")
 
-if ( AleaUI.isClassic ) then 
+if ( E.isClassic ) then 
 	return 
 end
 
@@ -14,7 +15,7 @@ local defaults = {
 	monoLineColor = true,
 	pos = { 'BOTTOMRIGHT', 'BOTTOMRIGHT', -3, 24 },
 	["border"] = {
-		["background_texture"] = AleaUI.media.default_bar_texture_name3,
+		["background_texture"] = E.media.default_bar_texture_name3,
 		["size"] = 1,
 		["inset"] = 0,
 		["color"] = {
@@ -30,7 +31,7 @@ local defaults = {
 			0,  
 			0,  
 		},
-		["texture"] = AleaUI.media.default_bar_texture_name3,
+		["texture"] = E.media.default_bar_texture_name3,
 	},
 }
 
@@ -81,12 +82,12 @@ local function SkinNumeration()
 	
 	addon.windows.width = opts.width
 
-	addon.windows.titlefont = AleaUI:GetFont(opts.fonts)
+	addon.windows.titlefont = E:GetFont(opts.fonts)
 	addon.windows.titlefontsize = opts.textSize
 	
 	addon.windows.linefont = addon.windows.titlefont
 	addon.windows.linefontsize = opts.textSize
-	addon.windows.linetexture = AleaUI:GetTexture(opts.texture)
+	addon.windows.linetexture = E:GetTexture(opts.texture)
 	addon.windows.lineshowSpecIcon = opts.showSpecIcon
 	
 	NumerationFrame:SetWidth( addon.windows.width )
@@ -121,7 +122,7 @@ local function SkinNumeration()
 	NumerationFrame.artWork = CreateFrame("Frame", nil, NumerationFrame)
 	NumerationFrame.artWork:SetFrameLevel(NumerationFrame:GetFrameLevel())
 	NumerationFrame.artWork:SetBackdrop({
-	  edgeFile = AleaUI:GetBorder(opts.border.texture),
+	  edgeFile = E:GetBorder(opts.border.texture),
 	  edgeSize = opts.border.size, 
 	})
 	NumerationFrame.artWork:SetBackdropBorderColor(opts.border.color[1],opts.border.color[2],opts.border.color[3],opts.border.color[4])
@@ -130,7 +131,7 @@ local function SkinNumeration()
 
 	NumerationFrame.artWork.back = NumerationFrame:CreateTexture()
 	NumerationFrame.artWork.back:SetDrawLayer('BACKGROUND', -2)
-	NumerationFrame.artWork.back:SetTexture(AleaUI:GetTexture(opts.border.background_texture))
+	NumerationFrame.artWork.back:SetTexture(E:GetTexture(opts.border.background_texture))
 	NumerationFrame.artWork.back:SetVertexColor(opts.border.background_color[1],opts.border.background_color[2],opts.border.background_color[3],opts.border.background_color[4])
 	NumerationFrame.artWork.back:SetPoint("TOPLEFT", NumerationFrame, "TOPLEFT", opts.border.background_inset, -opts.border.background_inset)
 	NumerationFrame.artWork.back:SetPoint("BOTTOMRIGHT", NumerationFrame, "BOTTOMRIGHT", -opts.border.background_inset, opts.border.background_inset)
@@ -147,12 +148,12 @@ local function UpdateSettings()
 	
 	addon.windows.width = opts.width
 	
-	addon.windows.titlefont = AleaUI:GetFont(opts.fonts)
+	addon.windows.titlefont = E:GetFont(opts.fonts)
 	addon.windows.titlefontsize = opts.textSize
 	
 	addon.windows.linefont = addon.windows.titlefont
 	addon.windows.linefontsize = opts.textSize
-	addon.windows.linetexture = AleaUI:GetTexture(opts.texture)
+	addon.windows.linetexture = E:GetTexture(opts.texture)
 	addon.windows.lineshowSpecIcon = opts.showSpecIcon
 	
 	NumerationFrame:SetWidth( addon.windows.width )
@@ -164,14 +165,14 @@ local function UpdateSettings()
 	NumerationFrame:SetPoint(opts.pos[1], UIParent, opts.pos[2], opts.pos[3], opts.pos[4])
 
 	NumerationFrame.artWork:SetBackdrop({
-	  edgeFile = AleaUI:GetBorder(opts.border.texture),
+	  edgeFile = E:GetBorder(opts.border.texture),
 	  edgeSize = opts.border.size, 
 	})
 	NumerationFrame.artWork:SetBackdropBorderColor(opts.border.color[1],opts.border.color[2],opts.border.color[3],opts.border.color[4])
 	NumerationFrame.artWork:SetPoint("TOPLEFT", NumerationFrame, "TOPLEFT", opts.border.inset, -opts.border.inset)
 	NumerationFrame.artWork:SetPoint("BOTTOMRIGHT", NumerationFrame, "BOTTOMRIGHT", -opts.border.inset, opts.border.inset)
 
-	NumerationFrame.artWork.back:SetTexture(AleaUI:GetTexture(opts.border.background_texture))
+	NumerationFrame.artWork.back:SetTexture(E:GetTexture(opts.border.background_texture))
 	NumerationFrame.artWork.back:SetVertexColor(opts.border.background_color[1],opts.border.background_color[2],opts.border.background_color[3],opts.border.background_color[4])
 	NumerationFrame.artWork.back:SetPoint("TOPLEFT", NumerationFrame, "TOPLEFT", opts.border.background_inset, -opts.border.background_inset)
 	NumerationFrame.artWork.back:SetPoint("BOTTOMRIGHT", NumerationFrame, "BOTTOMRIGHT", -opts.border.background_inset, opts.border.background_inset)
@@ -246,7 +247,7 @@ gui.args.StatusBar = {
 	name = 'Текстура полос',
 	order = 2,
 	type = 'statusbar',
-	values = AleaUI.GetTextureList,
+	values = E.GetTextureList,
 	set = function(info, value)
 		Skins:GetAddOnOpts('Numeration').texture = value
 		UpdateSettings()
@@ -260,7 +261,7 @@ gui.args.Font = {
 	name = 'Текст полос',
 	order = 3,
 	type = 'font',
-	values = AleaUI.GetFontList,
+	values = E.GetFontList,
 	set = function(info, value)
 		Skins:GetAddOnOpts('Numeration').fonts = value
 		UpdateSettings()
@@ -342,7 +343,7 @@ gui.args.BorderOpts.args.BorderTexture = {
 	order = 1,
 	type = 'border',
 	name = "Текстура границы",
-	values = AleaUI:GetBorderList(),
+	values = E:GetBorderList(),
 	set = function(info,value) 
 		Skins:GetAddOnOpts('Numeration').border.texture = value;
 		UpdateSettings()
@@ -404,7 +405,7 @@ gui.args.BorderOpts.args.BackgroundTexture = {
 	order = 5,
 	type = 'statusbar',
 	name = "Текстура фона",
-	values = AleaUI.GetTextureList,
+	values = E.GetTextureList,
 	set = function(info,value) 
 		Skins:GetAddOnOpts('Numeration').border.background_texture = value;
 		UpdateSettings()
@@ -449,4 +450,4 @@ gui.args.BorderOpts.args.backgroundInset = {
 
 Skins:RegisterCategory('Numeration', nil, defaults, gui, UpdateSettings)
 
-AleaUI:OnAddonLoad('Numeration', SkinNumeration)
+E:OnAddonLoad('Numeration', SkinNumeration)

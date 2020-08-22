@@ -76,7 +76,7 @@ local config ={
     stackFontSize = 11,
 	
 	["border"] = {
-		["background_texture"] = AleaUI.media.default_bar_texture_name3,
+		["background_texture"] = E.media.default_bar_texture_name3,
 		["size"] = 1,
 		["inset"] = 0,
 		["color"] = {
@@ -92,7 +92,7 @@ local config ={
 			0,  
 			0.6,  
 		},
-		["texture"] = AleaUI.media.default_bar_texture_name3,
+		["texture"] = E.media.default_bar_texture_name3,
 	}
 }
 

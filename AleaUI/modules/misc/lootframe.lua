@@ -1,4 +1,4 @@
-﻿local E = AleaUI
+﻿local addonName, E = ...
 local LR = E:Module("LootRoll")
 
 if ( E.isClassic ) then 
@@ -12,8 +12,8 @@ LR.RollBars = {}
 
 local tinsert = table.insert
 
-local mover = CreateFrame("Frame", nil, AleaUI.UIParent)
-mover:SetPoint("CENTER", AleaUI.UIParent, "CENTER", 0,0)
+local mover = CreateFrame("Frame", nil, E.UIParent)
+mover:SetPoint("CENTER", E.UIParent, "CENTER", 0,0)
 mover:SetSize(FRAME_WIDTH+FRAME_HEIGHT, FRAME_HEIGHT)
 
 local function ClickRoll(frame)
@@ -119,7 +119,7 @@ local function UpdateLootAnchors()
 end
 
 function LR:CreateRollFrame()
-	local frame = CreateFrame("Frame", nil, AleaUI.UIParent)
+	local frame = CreateFrame("Frame", nil, E.UIParent)
 	frame:SetSize(FRAME_WIDTH, FRAME_HEIGHT)
 	frame:SetFrameStrata('HIGH')
 	frame:SetScript("OnEvent", OnEvent)
@@ -145,7 +145,7 @@ function LR:CreateRollFrame()
 	
 	button.icon = button:CreateTexture(nil, 'OVERLAY')
 	button.icon:SetAllPoints()
-	button.icon:SetTexCoord(unpack(AleaUI.media.texCoord))
+	button.icon:SetTexCoord(unpack(E.media.texCoord))
 	
 	local tfade = frame:CreateTexture(nil, "BORDER")
 	tfade:SetPoint("TOPLEFT", frame, "TOPLEFT", 4, 0)
@@ -190,11 +190,11 @@ function LR:CreateRollFrame()
 
 	local bind = frame:CreateFontString()
 	bind:SetPoint("LEFT", pass, "RIGHT", 3, 1)
-	bind:SetFont(AleaUI.media.default_font, 12, "OUTLINE")
+	bind:SetFont(E.media.default_font, 12, "OUTLINE")
 	frame.fsbind = bind
 
 	local loot = frame:CreateFontString(nil, "ARTWORK")
-	loot:SetFont(AleaUI.media.default_font, 12, "OUTLINE")
+	loot:SetFont(E.media.default_font, 12, "OUTLINE")
 	loot:SetPoint("LEFT", bind, "RIGHT", 0, 0)
 	loot:SetPoint("RIGHT", frame, "RIGHT", -5, 0)
 	loot:SetSize(200, 10)
@@ -232,7 +232,7 @@ if ( BonusRollFrame ) then
 
 	BonusRollFrame.RollingFrame.myText = BonusRollFrame.RollingFrame:CreateFontString(nil, 'OVERLAY', nil, 4)
 	BonusRollFrame.RollingFrame.myText:SetPoint("LEFT", BonusRollFrame.PromptFrame.PassButton, 'RIGHT')
-	BonusRollFrame.RollingFrame.myText:SetFont(AleaUI.media.default_font, 12, "OUTLINE")
+	BonusRollFrame.RollingFrame.myText:SetFont(E.media.default_font, 12, "OUTLINE")
 	BonusRollFrame.RollingFrame.myText:SetText(E.L['Rolling'])
 	BonusRollFrame.RollingFrame.myText:SetTextColor(1, 1, 1, 1)
 
@@ -281,7 +281,7 @@ if ( BonusRollFrame ) then
 
 	BonusRollFrame.PromptFrame.myText = BonusRollFrame.PromptFrame.Timer:CreateFontString(nil, 'OVERLAY', nil, 4)
 	BonusRollFrame.PromptFrame.myText:SetPoint("LEFT", BonusRollFrame.PromptFrame.PassButton, 'RIGHT')
-	BonusRollFrame.PromptFrame.myText:SetFont(AleaUI.media.default_font, 12, "OUTLINE")
+	BonusRollFrame.PromptFrame.myText:SetFont(E.media.default_font, 12, "OUTLINE")
 	BonusRollFrame.PromptFrame.myText:SetText(E.L['Bonus loot'])
 	BonusRollFrame.PromptFrame.myText:SetTextColor(1, 1, 1, 1)
 
@@ -420,4 +420,4 @@ local function LoadLootRoll()
 	UIParent:UnregisterEvent("CANCEL_LOOT_ROLL")
 end
 
-AleaUI:OnInit2(LoadLootRoll)
+E:OnInit2(LoadLootRoll)

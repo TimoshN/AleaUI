@@ -1,4 +1,5 @@
-local Skins = AleaUI:Module("Skins")
+local addonName, E = ...
+local Skins = E:Module("Skins")
 local _G = _G
 
 local default_background_color = Skins.default_background_color
@@ -11,18 +12,18 @@ local default_button_border 	= Skins.default_button_border
 local default_border_color_dark = Skins.default_border_color_dark
 
 local varName = 'pveframe'
-AleaUI.default_settings.skins[varName] = true
+E.default_settings.skins[varName] = true
 
 local function Skin_PVEFrame()
 	
-	if not AleaUI.db.skins.enableAll then return end
-	if not AleaUI.db.skins[varName] then return end
+	if not E.db.skins.enableAll then return end
+	if not E.db.skins[varName] then return end
 
 	LFGListFrame.ApplicationViewer:StripTextures()
 	LFGListFrame.ApplicationViewer.Inset:StripTextures()
 	LFGListFrame.ApplicationViewer.Inset.NineSlice:StripTextures()
 
-	LFGListFrame.ApplicationViewer.InfoBackground:SetTexCoord(unpack(AleaUI.media.texCoord))
+	LFGListFrame.ApplicationViewer.InfoBackground:SetTexCoord(unpack(E.media.texCoord))
 
 	LFGListFrame.ApplicationViewer.NameColumnHeader:StripTextures()
 	LFGListFrame.ApplicationViewer.RoleColumnHeader:StripTextures()
@@ -129,17 +130,17 @@ local function Skin_PVEFrame()
 
 	Skins.ThemeFrameRing('PVEFrame')
 
---	AleaUI:CreateBackdrop(LFDParentFrameInset, LFDParentFrameInset, default_border_color, default_background_color)
+--	E:CreateBackdrop(LFDParentFrameInset, LFDParentFrameInset, default_border_color, default_background_color)
 
---	AleaUI:CreateBackdrop(PVEFrame, PVEFrameBlueBg, default_border_color, default_background_color)
+--	E:CreateBackdrop(PVEFrame, PVEFrameBlueBg, default_border_color, default_background_color)
 	
---	AleaUI:CreateBackdrop(RaidFinderFrameBottomInset, RaidFinderFrameBottomInset, default_border_color, default_background_color)
+--	E:CreateBackdrop(RaidFinderFrameBottomInset, RaidFinderFrameBottomInset, default_border_color, default_background_color)
 	
 	-- local blueTextureArtwork = CreateFrame('Frame', nil, PVEFrame)
 	-- blueTextureArtwork:SetSize(1,1)
 	-- blueTextureArtwork:SetAllPoints(PVEFrameBlueBg)
 	
-	-- AleaUI:CreateBackdrop(blueTextureArtwork, nil, default_border_color, default_background_color)
+	-- E:CreateBackdrop(blueTextureArtwork, nil, default_border_color, default_background_color)
 	
 	-- blueTextureArtwork:SetUIBorderDrawLayer('BORDER', -1)
 	-- blueTextureArtwork:SetUIBackgroundDrawLayer('BACKGROUND', -1)
@@ -149,7 +150,7 @@ local function Skin_PVEFrame()
 		LFDQueueFrameBorder:SetSize(326, 253)
 		LFDQueueFrameBorder:SetFrameLevel(LFDQueueFrame:GetFrameLevel()+10)
 	--	SpecializationBorder:SetFrameStrata('HIGH')
-		AleaUI:CreateBackdrop(LFDQueueFrameBorder, nil, { 0, 0, 0, 1 }, {0,0,0,0})
+		E:CreateBackdrop(LFDQueueFrameBorder, nil, { 0, 0, 0, 1 }, {0,0,0,0})
 		LFDQueueFrameBorder:SetUIBorderDrawLayer('OVERLAY', 1)	
 		LFDQueueFrameRandomScrollFrameScrollBar:SetFrameLevel(LFDQueueFrame:GetFrameLevel()+11)
 		
@@ -158,7 +159,7 @@ local function Skin_PVEFrame()
 		RaidFinderFrameBorder:SetSize(326, 253)
 		RaidFinderFrameBorder:SetFrameLevel(RaidFinderFrame:GetFrameLevel()+10)
 	--	SpecializationBorder:SetFrameStrata('HIGH')
-		AleaUI:CreateBackdrop(RaidFinderFrameBorder, nil, { 0, 0, 0, 1 }, {0,0,0,0})
+		E:CreateBackdrop(RaidFinderFrameBorder, nil, { 0, 0, 0, 1 }, {0,0,0,0})
 		RaidFinderFrameBorder:SetUIBorderDrawLayer('OVERLAY', 1)
 	
 	RaidFinderQueueFrameBackground:ClearAllPoints()
@@ -195,7 +196,7 @@ local function Skin_PVEFrame()
 	Skins.ThemeButton('RaidFinderFrameFindRaidButton')
 	--RaidFinderFrameFindRaidButton:SetHeight(16)
 
-	AleaUI:OnAddonLoad('Blizzard_ChallengesUI', function()
+	E:OnAddonLoad('Blizzard_ChallengesUI', function()
 		ChallengesFrameInset:StripTextures()
 		
 		-- ChallengesFrame:HookScript('OnShow', function()
@@ -211,7 +212,7 @@ local function Skin_PVEFrame()
 		-- 	blueTextureArtwork:Show()
 		-- end
 		
-		-- AleaUI:CreateBackdrop(ChallengesFrame, ChallengesFrameInset, default_border_color, default_background_color)
+		-- E:CreateBackdrop(ChallengesFrame, ChallengesFrameInset, default_border_color, default_background_color)
 		
 	--	local texture = Skins.GetTextureObject('ChallengesFrameDetails', [[Interface\Common\bluemenu-vert]], 0.00781250, 0.00781250, 0, 1)
 	--	texture:SetAlpha(0)
@@ -222,4 +223,4 @@ local function Skin_PVEFrame()
 	end
 end
 
-AleaUI:OnInit2(Skin_PVEFrame)
+E:OnInit2(Skin_PVEFrame)

@@ -1,5 +1,6 @@
-local DT = AleaUI:Module('DataText')
-local L = AleaUI.L
+local addonName, E = ...
+local DT = E:Module('DataText')
+local L = E.L
 
 local abs = math.abs
 local floor = math.floor
@@ -36,10 +37,10 @@ local function OnEvent(self, event, ...)
 	local NewMoney = GetMoney();
 	AleaUIDB = AleaUIDB or { };
 	AleaUIDB['gold'] = AleaUIDB['gold'] or {};
-	AleaUIDB['gold'][AleaUI.myrealm] = AleaUIDB['gold'][AleaUI.myrealm] or {};
-	AleaUIDB['gold'][AleaUI.myrealm][AleaUI.myname] = AleaUIDB['gold'][AleaUI.myrealm][AleaUI.myname] or NewMoney;
+	AleaUIDB['gold'][E.myrealm] = AleaUIDB['gold'][E.myrealm] or {};
+	AleaUIDB['gold'][E.myrealm][E.myname] = AleaUIDB['gold'][E.myrealm][E.myname] or NewMoney;
 
-	local OldMoney = AleaUIDB['gold'][AleaUI.myrealm][AleaUI.myname] or NewMoney
+	local OldMoney = AleaUIDB['gold'][E.myrealm][E.myname] or NewMoney
 
 	local Change = NewMoney-OldMoney -- Positive if we gain money
 	if OldMoney>NewMoney then		-- Lost Money
@@ -50,7 +51,7 @@ local function OnEvent(self, event, ...)
 
 	self.text:SetText(FormatMoney(NewMoney))
 
-	AleaUIDB['gold'][AleaUI.myrealm][AleaUI.myname] = NewMoney
+	AleaUIDB['gold'][E.myrealm][E.myname] = NewMoney
 end
 
 local function Click(self, btn)
@@ -79,10 +80,10 @@ local function OnEnter(self)
 	local totalGold = 0
 	DT.tooltip:AddLine(L["Character: "])
 
-	for k,_ in pairs(AleaUIDB['gold'][AleaUI.myrealm]) do
-		if AleaUIDB['gold'][AleaUI.myrealm][k] then
-			DT.tooltip:AddDoubleLine(k, FormatTooltipMoney(AleaUIDB['gold'][AleaUI.myrealm][k]), 1, 1, 1, 1, 1, 1)
-			totalGold=totalGold+AleaUIDB['gold'][AleaUI.myrealm][k]
+	for k,_ in pairs(AleaUIDB['gold'][E.myrealm]) do
+		if AleaUIDB['gold'][E.myrealm][k] then
+			DT.tooltip:AddDoubleLine(k, FormatTooltipMoney(AleaUIDB['gold'][E.myrealm][k]), 1, 1, 1, 1, 1, 1)
+			totalGold=totalGold+AleaUIDB['gold'][E.myrealm][k]
 		end
 	end
 

@@ -1,8 +1,9 @@
-local Skins = AleaUI:Module("Skins")
+local addonName, E = ...
+local Skins = E:Module("Skins")
 local _G = _G
 
 local varName = 'mailframe'
-AleaUI.default_settings.skins[varName] = true
+E.default_settings.skins[varName] = true
 
 local default_background_color = Skins.default_background_color
 local default_border_color = Skins.default_border_color
@@ -14,8 +15,8 @@ local default_button_border 	= Skins.default_button_border
 local default_border_color_dark = Skins.default_border_color_dark
 
 local function Skin_MailFrame()
-	if not AleaUI.db.skins.enableAll then return end
-	if not AleaUI.db.skins[varName] then return end
+	if not E.db.skins.enableAll then return end
+	if not E.db.skins[varName] then return end
 
 	MailFrame:StripTextures(true)
 	MailFrameInset:StripTextures(true)
@@ -36,7 +37,7 @@ local function Skin_MailFrame()
 	Skins.ThemeButton('OpenMailCancelButton')
 
 	OpenMailLetterButton:StripTextures()
-	OpenMailLetterButtonIconTexture:SetTexCoord(unpack(AleaUI.media.texCoord))
+	OpenMailLetterButtonIconTexture:SetTexCoord(unpack(E.media.texCoord))
 	local backdrop = Skins.NewBackdrop(OpenMailLetterButton)
 	backdrop:SetOutside(OpenMailLetterButtonIconTexture)
 	Skins.SetTemplate(backdrop, 'BORDERED')
@@ -59,7 +60,7 @@ local function Skin_MailFrame()
 		local subject = _G["MailItem"..i..'Subject']
 		subject:SetFont(default_font, Skins.default_font_size, 'NONE')
 		
-		AleaUI:CreateBackdrop(bg, bg, { 0, 0, 0, 0.3 }, { 0, 0, 0, 0.1})
+		E:CreateBackdrop(bg, bg, { 0, 0, 0, 0.3 }, { 0, 0, 0, 0.1})
 		
 		local b = _G["MailItem"..i.."Button"]
 		b:StripTextures()
@@ -67,7 +68,7 @@ local function Skin_MailFrame()
 		Skins.ChangeButtonBorder(b, 'DARK')
 		
 		local t = _G["MailItem"..i.."ButtonIcon"]
-		t:SetTexCoord(unpack(AleaUI.media.texCoord))
+		t:SetTexCoord(unpack(E.media.texCoord))
 		t:SetInside(nil, 2, 2)
 		
 	--	local backdrop = Skins.NewBackdrop(b)
@@ -98,7 +99,7 @@ local function Skin_MailFrame()
 					b._iconborder:Show()
 				end
 				
-				t:SetTexCoord(AleaUI.media.texCoord[1], AleaUI.media.texCoord[2], AleaUI.media.texCoord[3], AleaUI.media.texCoord[4])
+				t:SetTexCoord(E.media.texCoord[1], E.media.texCoord[2], E.media.texCoord[3], E.media.texCoord[4])
 				t:SetInside(b)
 			else
 				if b._iconborder then
@@ -132,7 +133,7 @@ local function Skin_MailFrame()
 	Skins.ThemeFrameRing(ItemTextFrame)
 	Skins.ThemeScrollBar('ItemTextScrollFrameScrollBar')
 
-	ItemTextPageText:SetFont(AleaUI.media.default_font, AleaUI.media.default_font_size)
+	ItemTextPageText:SetFont(E.media.default_font, E.media.default_font_size)
 	ItemTextPageText:SetTextColor(1, 1, 1)
 	ItemTextPageText:SetShadowColor(0,0,0,1)
 	ItemTextPageText:SetShadowOffset(1,-1)
@@ -146,4 +147,4 @@ local function Skin_MailFrame()
 	
 end
 
-AleaUI:OnInit2(Skin_MailFrame)
+E:OnInit2(Skin_MailFrame)

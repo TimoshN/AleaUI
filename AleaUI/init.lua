@@ -25,8 +25,8 @@ local versionStr, internalVersion, dateofpatch, uiVersion = GetBuildInfo(); inte
 
 E.version = GetAddOnMetadata(addonName, "Version")
 E.wowbuild = internalVersion
-E.uibuild	= tonumber(uiVersion)
-E.IsLegion	= true
+E.uibuild = tonumber(uiVersion)
+E.IsLegion = true
 
 if E.uibuild >= 70200 then
 	E.removeLagTolerance = true

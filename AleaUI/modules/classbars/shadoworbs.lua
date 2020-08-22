@@ -1,4 +1,4 @@
-﻿local E = AleaUI
+﻿local addonName, E = ...
 local CBF = E:Module("ClassBars")
 
 local class1, class = UnitClass("player")
@@ -10,13 +10,13 @@ local defaults = {
 	height = 10,
 	color = { 1, 1, 1, 1},
 	border = {
-		["background_texture"] = AleaUI.media.default_bar_texture_name3,
+		["background_texture"] = E.media.default_bar_texture_name3,
 		["size"] = 1,
 		["inset"] = 0,
 		["color"] = { 0, 0,  0,  0, },
 		["background_inset"] = 0,
 		["background_color"] = { 0,  0,  0,  0, },
-		["texture"] = AleaUI.media.default_bar_texture_name3,
+		["texture"] = E.media.default_bar_texture_name3,
 	},
 	
 	enable_as = true,
@@ -69,7 +69,7 @@ local function CreateShadowOrbBar()
 	E:Mover(f, "shadoworbFrame", w, h)
 
 	f._AS_String = f:CreateFontString()
-	f._AS_String:SetFont(AleaUI.media.default_font, 12, 'OUTLINE')
+	f._AS_String:SetFont(E.media.default_font, 12, 'OUTLINE')
 	f._AS_String:SetPoint('LEFT', f, 'RIGHT', 2, 0)
 	f._AS_String:SetJustifyH('CENTER')
 	f._AS_String:SetWidth(15)

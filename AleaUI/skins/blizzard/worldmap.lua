@@ -1,4 +1,5 @@
-local Skins = AleaUI:Module("Skins")
+local addonName, E = ...
+local Skins = E:Module("Skins")
 local _G = _G
 
 local default_background_color = Skins.default_background_color
@@ -11,11 +12,11 @@ local default_button_border 	= Skins.default_button_border
 local default_border_color_dark = Skins.default_border_color_dark
 
 local varName = 'worldmap'
-AleaUI.default_settings.skins[varName] = true
+E.default_settings.skins[varName] = true
 
 local function Skin_WorldMap()
-	if not AleaUI.db.skins.enableAll then return end
-	if not AleaUI.db.skins[varName] then return end
+	if not E.db.skins.enableAll then return end
+	if not E.db.skins[varName] then return end
 
 	WorldMapFrame:StripTextures()
 	WorldMapFrame.BorderFrame:StripTextures()
@@ -71,9 +72,9 @@ local function Skin_WorldMap()
 			hookedFrames[frame] = true
 			
 			frame.NameFrame:SetAlpha(0)
-			frame.Icon:SetTexCoord(unpack(AleaUI.media.texCoord))
+			frame.Icon:SetTexCoord(unpack(E.media.texCoord))
 			
-			AleaUI:CreateBackdrop(frame, frame.Icon, default_border_color, { 0, 0, 0, 0 })
+			E:CreateBackdrop(frame, frame.Icon, default_border_color, { 0, 0, 0, 0 })
 
 			local temp = CreateFrame('Frame', nil, frame)
 			temp:EnableMouse(false)
@@ -83,7 +84,7 @@ local function Skin_WorldMap()
 
 			frame.Name:SetFont(default_font, Skins.default_font_size)
 			
-			AleaUI:CreateBackdrop(frame, temp, default_border_color, { 0, 0, 0, 0.3 })
+			E:CreateBackdrop(frame, temp, default_border_color, { 0, 0, 0, 0.3 })
 
 		end
 		if frame.Count then
@@ -173,4 +174,4 @@ local function Skin_WorldMap()
 	--Skins.ThemeDropdown('WorldMapLevelDropDown')
 end
 
-AleaUI:OnInit2(Skin_WorldMap)
+E:OnInit2(Skin_WorldMap)

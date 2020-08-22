@@ -14,7 +14,7 @@ local default_border_color_dark = Skins.default_border_color_dark
 
 local garrisonAddon = "Blizzard_GarrisonUI"
 
-if ( AleaUI.isClassic ) then 
+if ( E.isClassic ) then 
 	return 
 end 
 

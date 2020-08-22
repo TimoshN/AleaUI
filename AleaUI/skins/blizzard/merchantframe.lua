@@ -1,8 +1,9 @@
-local Skins = AleaUI:Module("Skins")
+local addonName, E = ...
+local Skins = E:Module("Skins")
 local _G = _G
 
 local varName = 'merchantframe'
-AleaUI.default_settings.skins[varName] = true
+E.default_settings.skins[varName] = true
 
 local default_background_color = Skins.default_background_color
 local default_border_color = Skins.default_border_color
@@ -14,8 +15,8 @@ local default_button_border 	= Skins.default_button_border
 local default_border_color_dark = Skins.default_border_color_dark
 
 local function Skin_MerchantFrame()
-	if not AleaUI.db.skins.enableAll then return end
-	if not AleaUI.db.skins[varName] then return end
+	if not E.db.skins.enableAll then return end
+	if not E.db.skins[varName] then return end
 
 	MerchantFrame:StripTextures()
 	MerchantMoneyFrame:StripTextures()
@@ -49,4 +50,4 @@ local function Skin_MerchantFrame()
 	Skins.ThemeIconButton(MerchantNextPageButton, true)
 end
 
-AleaUI:OnInit2(Skin_MerchantFrame)
+E:OnInit2(Skin_MerchantFrame)

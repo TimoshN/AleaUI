@@ -1,4 +1,5 @@
-local Skins = AleaUI:Module("Skins")
+local addonName, E = ...
+local Skins = E:Module("Skins")
 local _G = _G
 
 local default_background_color = Skins.default_background_color
@@ -11,11 +12,11 @@ local default_button_border 	= Skins.default_button_border
 local default_border_color_dark = Skins.default_border_color_dark
 
 local varName = 'tradeskillframe'
-AleaUI.default_settings.skins[varName] = true
+E.default_settings.skins[varName] = true
 
 local function TradeSkillFrameStyle_Legion()
-	if not AleaUI.db.skins.enableAll then return end
-	if not AleaUI.db.skins[varName] then return end
+	if not E.db.skins.enableAll then return end
+	if not E.db.skins[varName] then return end
 
 	TradeSkillFrame:StripTextures(true)
 	TradeSkillFrame.RecipeInset:StripTextures()
@@ -36,7 +37,7 @@ local function TradeSkillFrameStyle_Legion()
 	TradeSkillFrame.RankFrame.Bar:SetVertexColor(0.5, 0.5, 1, 1)
 	TradeSkillFrame.RankFrame.Bar:SetDrawLayer('ARTWORK', 1)
 	Skins.SetAllFontString(TradeSkillFrame.RankFrame, default_font, Skins.default_font_size, 'OUTLINE')	
-	AleaUI:CreateBackdrop(TradeSkillFrame.RankFrame, nil, default_border_color, {0.2,0.2,0.7,0.4})
+	E:CreateBackdrop(TradeSkillFrame.RankFrame, nil, default_border_color, {0.2,0.2,0.7,0.4})
 	
 	TradeSkillFrame.RecipeList.scrollBar:StripTextures()
 	TradeSkillFrame.DetailsFrame.ScrollBar:StripTextures()
@@ -92,4 +93,4 @@ local function TradeSkillFrameStyle_Legion()
 	]==]
 end
 
-AleaUI:OnAddonLoad('Blizzard_TradeSkillUI', TradeSkillFrameStyle_Legion)
+E:OnAddonLoad('Blizzard_TradeSkillUI', TradeSkillFrameStyle_Legion)

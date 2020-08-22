@@ -1,4 +1,5 @@
-local Skins = AleaUI:Module("Skins")
+local addonName, E = ...
+local Skins = E:Module("Skins")
 local _G = _G
 
 local default_background_color = Skins.default_background_color
@@ -11,11 +12,11 @@ local default_button_border 	= Skins.default_button_border
 local default_border_color_dark = Skins.default_border_color_dark
 
 local varName = 'collectionjournal'
-AleaUI.default_settings.skins[varName] = true
+E.default_settings.skins[varName] = true
 
 local function SkinCollectionUI()
-	if not AleaUI.db.skins.enableAll then return end
-	if not AleaUI.db.skins[varName] then return end
+	if not E.db.skins.enableAll then return end
+	if not E.db.skins[varName] then return end
 	
 	--if true then return end
 	
@@ -47,7 +48,7 @@ local function SkinCollectionUI()
 	Skins.MassKillTexture("ToyBox")	
 	Skins.MassKillTexture("HeirloomsJournal")	
 	
-	MountJournalIcon:SetTexCoord(unpack(AleaUI.media.texCoord))
+	MountJournalIcon:SetTexCoord(unpack(E.media.texCoord))
 	
 	--MountJournalSummonRandomFavoriteButton:SetTexCoord(0.07, 0.93, 0.07, 0.93)
 	
@@ -57,7 +58,7 @@ local function SkinCollectionUI()
 	for i=1, 12 do
 		local button = _G['PetJournalListScrollFrameButton'..i]
 	
-		button.icon:SetTexCoord(unpack(AleaUI.media.texCoord))
+		button.icon:SetTexCoord(unpack(E.media.texCoord))
 	--	_G['PetJournalListScrollFrameButton'..i..'PetTypeIcon']:SetTexCoord(0.02, 0.98, 0.07, 0.93)
 		button.selectedTexture:SetTexCoord(0.02, 0.98, 0.07, 0.93)
 	end
@@ -66,8 +67,8 @@ local function SkinCollectionUI()
 		local button = _G['MountJournalListScrollFrameButton'..i]
 		
 		if ( button ) then
-			button.icon:SetTexCoord(unpack(AleaUI.media.texCoord))
-			button.background:SetTexCoord(unpack(AleaUI.media.texCoord))
+			button.icon:SetTexCoord(unpack(E.media.texCoord))
+			button.background:SetTexCoord(unpack(E.media.texCoord))
 			button.selectedTexture:SetTexCoord(0.02, 0.98, 0.07, 0.93)
 		end
 	end
@@ -106,12 +107,12 @@ local function SkinCollectionUI()
 	
 	ToyBox.progressBar.border:Kill()
 	ToyBox.progressBar:SetStatusBarTexture(default_texture)
-	AleaUI:CreateBackdrop(ToyBox.progressBar, nil, default_border_color, {0,0,0,1})
+	E:CreateBackdrop(ToyBox.progressBar, nil, default_border_color, {0,0,0,1})
 	Skins.SetAllFontString(ToyBox.progressBar, default_font, Skins.default_font_size, 'OUTLINE')
 	
 	HeirloomsJournal.progressBar.border:Kill()
 	HeirloomsJournal.progressBar:SetStatusBarTexture(default_texture)
-	AleaUI:CreateBackdrop(HeirloomsJournal.progressBar, nil, default_border_color, {0,0,0,1})
+	E:CreateBackdrop(HeirloomsJournal.progressBar, nil, default_border_color, {0,0,0,1})
 	Skins.SetAllFontString(HeirloomsJournal.progressBar, default_font, Skins.default_font_size, 'OUTLINE')
 	
 	
@@ -138,7 +139,7 @@ local function SkinCollectionUI()
 	WardrobeCollectionFrame.progressBar.border:Kill()
 	
 	WardrobeCollectionFrame.progressBar:SetStatusBarTexture(default_texture)
-	AleaUI:CreateBackdrop(WardrobeCollectionFrame.progressBar, nil, default_border_color, {0,0,0,1})
+	E:CreateBackdrop(WardrobeCollectionFrame.progressBar, nil, default_border_color, {0,0,0,1})
 	Skins.SetAllFontString(WardrobeCollectionFrame.progressBar, default_font, Skins.default_font_size, 'OUTLINE')
 	
 	Skins.ThemeIconButton(WardrobeCollectionFrame.ItemsCollectionFrame.PagingFrame.PrevPageButton, true)
@@ -198,4 +199,4 @@ local function SkinCollectionUI()
 	end
 end
 
-AleaUI:OnAddonLoad('Blizzard_Collections', SkinCollectionUI)
+E:OnAddonLoad('Blizzard_Collections', SkinCollectionUI)

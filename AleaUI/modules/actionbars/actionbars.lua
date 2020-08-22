@@ -1,4 +1,4 @@
-﻿local E = AleaUI
+﻿local addonName, E = ...
 local Skins = E:Module("Skins")
 local AB = E:Module('ActionBars')
 local BF = E:Module('ButtonForge')
@@ -65,7 +65,7 @@ local options = {
 		},
 		['visibility'] = "[petbattle] hide; show",
 		["border"] = {
-			["background_texture"] = AleaUI.media.default_bar_texture_name3,
+			["background_texture"] = E.media.default_bar_texture_name3,
 			["size"] = 1,
 			["inset"] = 0,
 			["color"] = {
@@ -81,13 +81,13 @@ local options = {
 				0,  
 				0.6,  
 			},
-			["texture"] = AleaUI.media.default_bar_texture_name3,
+			["texture"] = E.media.default_bar_texture_name3,
 		},
 		["artwork"] = {
 			['enable'] = false,
 			['width'] = 1,
 			['height'] = 1,
-			["background_texture"] = AleaUI.media.default_bar_texture_name3,
+			["background_texture"] = E.media.default_bar_texture_name3,
 			["size"] = 1,
 			["inset"] = 0,
 			["color"] = {
@@ -103,7 +103,7 @@ local options = {
 				0,  
 				0.6,  
 			},
-			["texture"] = AleaUI.media.default_bar_texture_name3,
+			["texture"] = E.media.default_bar_texture_name3,
 		},
 	},
 	['bar2'] = {
@@ -121,7 +121,7 @@ local options = {
 		['paging'] = {},
 		['visibility'] = "[vehicleui] hide; [overridebar] hide; [petbattle] hide; show",
 		["border"] = {
-			["background_texture"] = AleaUI.media.default_bar_texture_name3,
+			["background_texture"] = E.media.default_bar_texture_name3,
 			["size"] = 1,
 			["inset"] = 0,
 			["color"] = {
@@ -137,13 +137,13 @@ local options = {
 				0,  
 				0.6,  
 			},
-			["texture"] = AleaUI.media.default_bar_texture_name3,
+			["texture"] = E.media.default_bar_texture_name3,
 		},
 		["artwork"] = {
 			['enable'] = false,
 			['width'] = 1,
 			['height'] = 1,
-			["background_texture"] = AleaUI.media.default_bar_texture_name3,
+			["background_texture"] = E.media.default_bar_texture_name3,
 			["size"] = 1,
 			["inset"] = 0,
 			["color"] = {
@@ -159,7 +159,7 @@ local options = {
 				0,  
 				0.6,  
 			},
-			["texture"] = AleaUI.media.default_bar_texture_name3,
+			["texture"] = E.media.default_bar_texture_name3,
 		},
 	},
 	['bar3'] = {
@@ -177,7 +177,7 @@ local options = {
 		['paging'] = {},
 		['visibility'] = "[vehicleui] hide; [overridebar] hide; [petbattle] hide; show",
 		["border"] = {
-			["background_texture"] = AleaUI.media.default_bar_texture_name3,
+			["background_texture"] = E.media.default_bar_texture_name3,
 			["size"] = 1,
 			["inset"] = 0,
 			["color"] = {
@@ -193,13 +193,13 @@ local options = {
 				0,  
 				0.6,  
 			},
-			["texture"] = AleaUI.media.default_bar_texture_name3,
+			["texture"] = E.media.default_bar_texture_name3,
 		},
 		["artwork"] = {
 			['enable'] = false,
 			['width'] = 1,
 			['height'] = 1,
-			["background_texture"] = AleaUI.media.default_bar_texture_name3,
+			["background_texture"] = E.media.default_bar_texture_name3,
 			["size"] = 1,
 			["inset"] = 0,
 			["color"] = {
@@ -215,7 +215,7 @@ local options = {
 				0,  
 				0.6,  
 			},
-			["texture"] = AleaUI.media.default_bar_texture_name3,
+			["texture"] = E.media.default_bar_texture_name3,
 		},
 	},
 	['bar4'] = {
@@ -233,7 +233,7 @@ local options = {
 		['paging'] = {},
 		['visibility'] = "[vehicleui] hide; [overridebar] hide; [petbattle] hide; show",
 		["border"] = {
-			["background_texture"] = AleaUI.media.default_bar_texture_name3,
+			["background_texture"] = E.media.default_bar_texture_name3,
 			["size"] = 1,
 			["inset"] = 0,
 			["color"] = {
@@ -249,13 +249,13 @@ local options = {
 				0,  
 				0.6,  
 			},
-			["texture"] = AleaUI.media.default_bar_texture_name3,
+			["texture"] = E.media.default_bar_texture_name3,
 		},
 		["artwork"] = {
 			['enable'] = false,
 			['width'] = 1,
 			['height'] = 1,
-			["background_texture"] = AleaUI.media.default_bar_texture_name3,
+			["background_texture"] = E.media.default_bar_texture_name3,
 			["size"] = 1,
 			["inset"] = 0,
 			["color"] = {
@@ -271,7 +271,7 @@ local options = {
 				0,  
 				0.6,  
 			},
-			["texture"] = AleaUI.media.default_bar_texture_name3,
+			["texture"] = E.media.default_bar_texture_name3,
 		},
 	},
 	['bar5'] = {
@@ -289,7 +289,7 @@ local options = {
 		['paging'] = {},
 		['visibility'] = "[vehicleui] hide; [overridebar] hide; [petbattle] hide; show",
 		["border"] = {
-			["background_texture"] = AleaUI.media.default_bar_texture_name3,
+			["background_texture"] = E.media.default_bar_texture_name3,
 			["size"] = 1,
 			["inset"] = 0,
 			["color"] = {
@@ -305,13 +305,13 @@ local options = {
 				0,  
 				0.6,  
 			},
-			["texture"] = AleaUI.media.default_bar_texture_name3,
+			["texture"] = E.media.default_bar_texture_name3,
 		},
 		["artwork"] = {
 			['enable'] = false,
 			['width'] = 1,
 			['height'] = 1,
-			["background_texture"] = AleaUI.media.default_bar_texture_name3,
+			["background_texture"] = E.media.default_bar_texture_name3,
 			["size"] = 1,
 			["inset"] = 0,
 			["color"] = {
@@ -327,7 +327,7 @@ local options = {
 				0,  
 				0.6,  
 			},
-			["texture"] = AleaUI.media.default_bar_texture_name3,
+			["texture"] = E.media.default_bar_texture_name3,
 		},
 	},
 	['bar6'] = {
@@ -345,7 +345,7 @@ local options = {
 		['paging'] = {},
 		['visibility'] = "[vehicleui] hide; [overridebar] hide; [petbattle] hide; show",
 		["border"] = {
-			["background_texture"] = AleaUI.media.default_bar_texture_name3,
+			["background_texture"] = E.media.default_bar_texture_name3,
 			["size"] = 1,
 			["inset"] = 0,
 			["color"] = {
@@ -361,13 +361,13 @@ local options = {
 				0,  
 				0.6,  
 			},
-			["texture"] = AleaUI.media.default_bar_texture_name3,
+			["texture"] = E.media.default_bar_texture_name3,
 		},
 		["artwork"] = {
 			['enable'] = false,
 			['width'] = 1,
 			['height'] = 1,
-			["background_texture"] = AleaUI.media.default_bar_texture_name3,
+			["background_texture"] = E.media.default_bar_texture_name3,
 			["size"] = 1,
 			["inset"] = 0,
 			["color"] = {
@@ -383,7 +383,7 @@ local options = {
 				0,  
 				0.6,  
 			},
-			["texture"] = AleaUI.media.default_bar_texture_name3,
+			["texture"] = E.media.default_bar_texture_name3,
 		},
 	},
 	['barPet'] = {
@@ -400,7 +400,7 @@ local options = {
 		['alpha'] = 1,
 		['visibility'] = "[petbattle] hide;[pet,novehicleui,nooverridebar,nopossessbar] show;hide",
 		["border"] = {
-			["background_texture"] = AleaUI.media.default_bar_texture_name3,
+			["background_texture"] = E.media.default_bar_texture_name3,
 			["size"] = 1,
 			["inset"] = 0,
 			["color"] = {
@@ -416,13 +416,13 @@ local options = {
 				0,  
 				0.6,  
 			},
-			["texture"] = AleaUI.media.default_bar_texture_name3,
+			["texture"] = E.media.default_bar_texture_name3,
 		},
 		["artwork"] = {
 			['enable'] = false,
 			['width'] = 1,
 			['height'] = 1,
-			["background_texture"] = AleaUI.media.default_bar_texture_name3,
+			["background_texture"] = E.media.default_bar_texture_name3,
 			["size"] = 1,
 			["inset"] = 0,
 			["color"] = {
@@ -438,7 +438,7 @@ local options = {
 				0,  
 				0.6,  
 			},
-			["texture"] = AleaUI.media.default_bar_texture_name3,
+			["texture"] = E.media.default_bar_texture_name3,
 		},
 	},
 	['stanceBar'] = {
@@ -455,7 +455,7 @@ local options = {
 		["buttonspacing"] = 2,
 		['alpha'] = 1,
 		["border"] = {
-			["background_texture"] = AleaUI.media.default_bar_texture_name3,
+			["background_texture"] = E.media.default_bar_texture_name3,
 			["size"] = 1,
 			["inset"] = 0,
 			["color"] = {
@@ -471,13 +471,13 @@ local options = {
 				0,  
 				0.6,  
 			},
-			["texture"] = AleaUI.media.default_bar_texture_name3,
+			["texture"] = E.media.default_bar_texture_name3,
 		},
 		["artwork"] = {
 			['enable'] = false,
 			['width'] = 1,
 			['height'] = 1,
-			["background_texture"] = AleaUI.media.default_bar_texture_name3,
+			["background_texture"] = E.media.default_bar_texture_name3,
 			["size"] = 1,
 			["inset"] = 0,
 			["color"] = {
@@ -493,7 +493,7 @@ local options = {
 				0,  
 				0.6,  
 			},
-			["texture"] = AleaUI.media.default_bar_texture_name3,
+			["texture"] = E.media.default_bar_texture_name3,
 		},
 	},
 	['extraActionButton'] = {

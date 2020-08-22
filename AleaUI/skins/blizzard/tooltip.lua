@@ -7,7 +7,7 @@ local UnitIsTappedByAllThreatList = UnitIsTappedByAllThreatList or function() re
 local UnitIsTapped = UnitIsTapped or UnitIsTappedByAllThreatList
 local UnitIsTappedByPlayer = UnitIsTappedByPlayer or UnitIsTappedByAllThreatList
 
-local E = AleaUI
+local addonName, E = ...
 local L = E.L
 
 local UF = E:Module("UnitFrames")
@@ -356,7 +356,7 @@ function Skins:StyleTooltipsCustom(frame)
 		end
 	end)
 	
-	AleaUI:CreateBackdrop(border, border, {0,0,0,1}, {0.1,0.1,0.1,0.8})
+	E:CreateBackdrop(border, border, {0,0,0,1}, {0.1,0.1,0.1,0.8})
 
 	if f.RightEdge then	f.RightEdge:SetAlpha(0) end
 	if f.LeftEdge then f.LeftEdge:SetAlpha(0) end
@@ -382,14 +382,14 @@ function Skins:StyleTooltipsCustom(frame)
 	end
 	
 	if _G[name.."StatusBar"] then
-		AleaUI:CreateBackdrop(_G[name.."StatusBar"], nil, {0,0,0,1}, {0.1,0.1,0.1,0})
+		E:CreateBackdrop(_G[name.."StatusBar"], nil, {0,0,0,1}, {0.1,0.1,0.1,0})
 		
 		_G[name.."StatusBar"]:SetPoint("TOPLEFT", f, "BOTTOMLEFT", 0, -3)
 		_G[name.."StatusBar"]:SetPoint("TOPRIGHT", f, "BOTTOMRIGHT", 0, -3)
 		_G[name.."StatusBar"]:SetStatusBarTexture("Interface\\AddOns\\AleaUI\\media\\Minimalist")
 		
 		local stfs = _G[name.."StatusBar"]:CreateFontString(nil, "ARTWORK", "GameFontNormal", 1)
-		stfs:SetFont(AleaUI.media.default_font2, 12, "OUTLINE")
+		stfs:SetFont(E.media.default_font2, 12, "OUTLINE")
 		stfs:SetTextColor(1,1,1)
 		stfs:SetPoint("CENTER", _G[name.."StatusBar"], "CENTER")
 		
@@ -437,7 +437,7 @@ end)
 
 do
 	
-	local myparent = CreateFrame("Frame", "AleaUIGameToolTipMopver", AleaUI.UIParent)
+	local myparent = CreateFrame("Frame", "AleaUIGameToolTipMopver", E.UIParent)
 	myparent:SetSize(50, 20)
 
 	local function MoveTT_OnShow(tooltip, parent)
@@ -448,8 +448,8 @@ do
 		tooltip:SetPoint(p3..p4, myparent, p3..p4, 0, 0)		
 	end
 
-	AleaUI:OnInit2(function()
-		AleaUI:Mover(myparent, "GameTooltipMover")
+	E:OnInit2(function()
+		E:Mover(myparent, "GameTooltipMover")
 		hooksecurefunc("GameTooltip_SetDefaultAnchor", MoveTT_OnShow)
 	end)
 end
@@ -461,7 +461,7 @@ do
 		local border = CreateFrame("Frame", nil, _G[name])
 		border:SetAllPoints()
 		border:SetFrameLevel(_G[name]:GetFrameLevel()-1)
-		AleaUI:CreateBackdrop(border, border, {0,0,0,1}, {0.1,0.1,0.1,0.8})		
+		E:CreateBackdrop(border, border, {0,0,0,1}, {0.1,0.1,0.1,0.8})		
 		for i, namePart in ipairs(borders_) do		
 			if _G[name][namePart] then	
 				_G[name][namePart]:SetTexture('')

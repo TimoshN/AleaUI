@@ -1,4 +1,5 @@
-local Skins = AleaUI:Module("Skins")
+local addonName, E = ...
+local Skins = E:Module("Skins")
 local _G = _G
 
 local default_background_color = Skins.default_background_color
@@ -11,11 +12,11 @@ local default_button_border 	= Skins.default_button_border
 local default_border_color_dark = Skins.default_border_color_dark
 
 local varName = 'gemsocketing'
-AleaUI.default_settings.skins[varName] = true
+E.default_settings.skins[varName] = true
 
 local function Skin_GemSocketings()
-	if not AleaUI.db.skins.enableAll then return end
-	if not AleaUI.db.skins[varName] then return end
+	if not E.db.skins.enableAll then return end
+	if not E.db.skins[varName] then return end
 
 	_G['ItemSocketingFrame']:StripTextures()
 	_G['ItemSocketingFrameInset']:StripTextures()
@@ -40,4 +41,4 @@ local function Skin_GemSocketings()
 	end)
 end
 
-AleaUI:OnAddonLoad('Blizzard_ItemSocketingUI', Skin_GemSocketings)
+E:OnAddonLoad('Blizzard_ItemSocketingUI', Skin_GemSocketings)

@@ -1,6 +1,6 @@
 if true then return end
-
-local Skins = AleaUI:Module("Skins")
+local addonName, E = ...
+local Skins = E:Module("Skins")
 local _G = _G
 
 local defr = 0.2
@@ -147,10 +147,10 @@ local function LoadSkin(frame)
 
 		for i=1, 3 do
 			--[[
-			AleaUI:CreateBackdrop(frame.buffFrames[i], frame.buffFrames[i].icon, {0, 0, 0, 1}, {0,0,0,0})
+			E:CreateBackdrop(frame.buffFrames[i], frame.buffFrames[i].icon, {0, 0, 0, 1}, {0,0,0,0})
 			frame.buffFrames[i].icon:SetBorderDrawLayer('OVERLAY')
 		
-			AleaUI:CreateBackdrop(frame.debuffFrames[i], frame.debuffFrames[i].icon, {0, 0, 0, 1}, {0,0,0,0})
+			E:CreateBackdrop(frame.debuffFrames[i], frame.debuffFrames[i].icon, {0, 0, 0, 1}, {0,0,0,0})
 			frame.debuffFrames[i].icon:SetBorderDrawLayer('OVERLAY')
 			]]
 			
@@ -164,9 +164,9 @@ local function LoadSkin(frame)
 			Skins.SetTemplate(frame.debuffFrames[i]._border, 'BORDERED')
 			frame.debuffFrames[i].count:SetParent(frame.debuffFrames[i]._border)
 			
-			frame.buffFrames[i].icon:SetTexCoord(unpack(AleaUI.media.texCoord))
+			frame.buffFrames[i].icon:SetTexCoord(unpack(E.media.texCoord))
 			
-			frame.debuffFrames[i].icon:SetTexCoord(unpack(AleaUI.media.texCoord))
+			frame.debuffFrames[i].icon:SetTexCoord(unpack(E.media.texCoord))
 			frame.debuffFrames[i].border:SetAlpha(0)
 			
 			hooksecurefunc(frame.debuffFrames[i].border, 'SetVertexColor',function(self, r, g, b, a)
@@ -371,6 +371,6 @@ end
 
 if IsAddOnLoaded('Blizzard_CUFProfiles') then
 	ModRaidFrameSettings()
-else AleaUI:OnAddonLoad('Blizzard_CUFProfiles', ModRaidFrameSettings)
+else E:OnAddonLoad('Blizzard_CUFProfiles', ModRaidFrameSettings)
 end
 

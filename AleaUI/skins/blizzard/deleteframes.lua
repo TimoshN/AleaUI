@@ -1,3 +1,4 @@
+local addonName, E = ...
 
 local AleaUI_KillFrame = function(frame)
 	if not _G[frame] then return end
@@ -61,7 +62,7 @@ local framelist = {
 	['PetCastingBarFrame'] = false,	
 }
 
-if AleaUI.IsLegion then
+if E.IsLegion then
 	framelist['PaladinPowerBar'] = nil
 end
 
@@ -79,7 +80,7 @@ local function KillBlizzard()
 	end	
 end
 
-AleaUI:OnInit(KillBlizzard)
+E:OnInit(KillBlizzard)
 --[[
 do
 	local function ToggleAddOn(v)

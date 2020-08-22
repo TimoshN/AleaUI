@@ -1,4 +1,4 @@
-local E = AleaUI
+local addonName, E = ...
 local DT = E:Module('DataText')
 local UF = E:Module("UnitFrames")
 local L = E.L
@@ -152,7 +152,7 @@ local function OnEvent(self, event, ...)
 	end	
 end
 
-local menuFrame = CreateFrame("Frame", "GuildDatatTextRightClickMenu",AleaUI.UIParent, (Lib_EasyMenu and 'Lib_UIDropDownMenuTemplate' or "UIDropDownMenuTemplate") )
+local menuFrame = CreateFrame("Frame", "GuildDatatTextRightClickMenu",E.UIParent, (Lib_EasyMenu and 'Lib_UIDropDownMenuTemplate' or "UIDropDownMenuTemplate") )
 local menuList = {
 	{ text = OPTIONS_MENU, isTitle = true, notCheckable=true},
 	{ text = INVITE, hasArrow = true, notCheckable=true,},
@@ -194,7 +194,7 @@ local function Click(self, btn)
 
 		for i = 1, #guildTable do
 			info = guildTable[i]
-			if info[7] and info[1] ~= AleaUI.myname then
+			if info[7] and info[1] ~= E.myname then
 				local classc, levelc = (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[info[9]], GetQuestDifficultyColor(info[3])
 				if UnitInParty(info[1]) or UnitInRaid(info[1]) then
 					grouped = "|cffaaaaaa*|r"
@@ -237,7 +237,7 @@ local function OnEnter(self, _, noUpdate)
 		DT.tooltip:AddLine(format(guildMotDString, GUILD_MOTD, guildMotD), ttsubh.r, ttsubh.g, ttsubh.b, 1) 
 	end
 	
-	local col =  AleaUI.RGBToHex(ttsubh.r, ttsubh.g, ttsubh.b)
+	local col =  E.RGBToHex(ttsubh.r, ttsubh.g, ttsubh.b)
 	
 	local _, _, standingID, barMin, barMax, barValue = GetGuildFactionInfo()
 	if standingID ~= 8 then -- Not Max Rep

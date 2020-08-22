@@ -1,12 +1,13 @@
-local Skins = AleaUI:Module("Skins")
+local addonName, E = ...
+local Skins = E:Module("Skins")
 
 local varName = 'dressup'
-AleaUI.default_settings.skins[varName] = true
+E.default_settings.skins[varName] = true
 
 local function Skin_DressUp()
 	
-	if not AleaUI.db.skins.enableAll then return end
-	if not AleaUI.db.skins[varName] then return end
+	if not E.db.skins.enableAll then return end
+	if not E.db.skins[varName] then return end
 
 	DressUpFrame:StripTextures()
 	Skins.ThemeFrameRing('DressUpFrame')
@@ -42,4 +43,4 @@ local function Skin_DressUp()
 	Skins.ThemeButton(DressUpFrameOutfitDropDown.SaveButton)
 end
 
-AleaUI:OnInit2(Skin_DressUp)
+E:OnInit2(Skin_DressUp)

@@ -1,4 +1,5 @@
-local Skins = AleaUI:Module("Skins")
+local addonName, E = ...
+local Skins = E:Module("Skins")
 local _G = _G
 
 local default_background_color = Skins.default_background_color
@@ -11,12 +12,12 @@ local default_button_border 	= Skins.default_button_border
 local default_border_color_dark = Skins.default_border_color_dark
 
 local varName = 'archeology'
-AleaUI.default_settings.skins[varName] = true
+E.default_settings.skins[varName] = true
 
-AleaUI:OnAddonLoad("Blizzard_ArchaeologyUI", function()
+E:OnAddonLoad("Blizzard_ArchaeologyUI", function()
 	
-	if not AleaUI.db.skins.enableAll then return end
-	if not AleaUI.db.skins[varName] then return end
+	if not E.db.skins.enableAll then return end
+	if not E.db.skins[varName] then return end
 	
 	ArchaeologyFrame:StripTextures()
 	ArchaeologyFrameInset:StripTextures()
@@ -53,7 +54,7 @@ AleaUI:OnAddonLoad("Blizzard_ArchaeologyUI", function()
 		if artifact then
 			_G["ArchaeologyFrameCompletedPageArtifact"..i.."Border"]:Kill()
 			_G["ArchaeologyFrameCompletedPageArtifact"..i.."Bg"]:Kill()
-			_G["ArchaeologyFrameCompletedPageArtifact"..i.."Icon"]:SetTexCoord(unpack(AleaUI.media.texCoord))
+			_G["ArchaeologyFrameCompletedPageArtifact"..i.."Icon"]:SetTexCoord(unpack(E.media.texCoord))
 			_G["ArchaeologyFrameCompletedPageArtifact"..i.."Icon"].backdrop = CreateFrame("Frame", nil, artifact)
 			Skins.ThemeBackdrop(_G["ArchaeologyFrameCompletedPageArtifact"..i.."Icon"].backdrop)
 			_G["ArchaeologyFrameCompletedPageArtifact"..i.."Icon"].backdrop:SetOutside(_G["ArchaeologyFrameCompletedPageArtifact"..i.."Icon"], 0, 0)
@@ -62,7 +63,7 @@ AleaUI:OnAddonLoad("Blizzard_ArchaeologyUI", function()
 		end
 	end
 
-	ArchaeologyFrameArtifactPageIcon:SetTexCoord(unpack(AleaUI.media.texCoord))
+	ArchaeologyFrameArtifactPageIcon:SetTexCoord(unpack(E.media.texCoord))
 	ArchaeologyFrameArtifactPageIcon.backdrop = CreateFrame("Frame", nil, ArchaeologyFrameArtifactPage)
 	Skins.ThemeBackdrop(ArchaeologyFrameArtifactPageIcon.backdrop)	
 	ArchaeologyFrameArtifactPageIcon.backdrop:SetOutside(ArchaeologyFrameArtifactPageIcon, 0, 0)

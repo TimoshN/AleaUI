@@ -1,4 +1,4 @@
-﻿local E = AleaUI
+﻿local addonName, E = ...
 local TF = E:Module("Tanks")
 local UF = E:Module("UnitFrames")
 
@@ -206,9 +206,9 @@ function TF:GetColor(unit)
 end
 
 
-local mover = CreateFrame("Frame", nil, AleaUI.UIParent)
+local mover = CreateFrame("Frame", nil, E.UIParent)
 mover:SetSize(320,20)
-mover:SetPoint("CENTER", AleaUI.UIParent, "CENTER", 0, 0)
+mover:SetPoint("CENTER", E.UIParent, "CENTER", 0, 0)
 
 function TF:CreateTankFrame(parent, unit, onupdate)
 	
@@ -275,12 +275,12 @@ function TF:CreateTankFrame(parent, unit, onupdate)
 	frame.handler = handler
 	handler.art = frame
 	
-	AleaUI:CreateBackdrop(frame, nil, { 0,0,0,1}, { 0,0,0,1})
+	E:CreateBackdrop(frame, nil, { 0,0,0,1}, { 0,0,0,1})
 	
 	local rightText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal");
 	rightText:SetPoint("RIGHT", frame, "RIGHT", 0, 0)	
 	rightText:SetTextColor(1,1,1)
-	rightText:SetFont(AleaUI.media.default_font, 9, "OUTLINE")
+	rightText:SetFont(E.media.default_font, 9, "OUTLINE")
 	rightText:SetAlpha(1)
 	rightText:SetJustifyH("RIGHT")
 	rightText:SetWordWrap(false)
@@ -290,7 +290,7 @@ function TF:CreateTankFrame(parent, unit, onupdate)
 	leftText:SetPoint("LEFT", frame, "LEFT", 0, 0)
 	leftText:SetPoint("RIGHT", rightText, "LEFT", 0, 0)	
 	leftText:SetTextColor(1,1,1)
-	leftText:SetFont(AleaUI.media.default_font, 9, "OUTLINE")
+	leftText:SetFont(E.media.default_font, 9, "OUTLINE")
 	leftText:SetAlpha(1)
 	leftText:SetJustifyH("LEFT")
 	leftText:SetWordWrap(false)
@@ -432,8 +432,8 @@ local function UpdateForcedTanks()
 	
 	if not enabled then return end
 	
-	if AleaUI.db.Frames.tankMoverFrame.mytanks then
-		for v in gmatch(AleaUI.db.Frames.tankMoverFrame.mytanks, "[^ :\"-]+") do
+	if E.db.Frames.tankMoverFrame.mytanks then
+		for v in gmatch(E.db.Frames.tankMoverFrame.mytanks, "[^ :\"-]+") do
 			force_name[v] = true
 			
 	--		print("T >"..v.."<")
@@ -442,7 +442,7 @@ local function UpdateForcedTanks()
 	TF:GROUP_ROSTER_UPDATE(event, "forced")
 end
 
-function AleaUI:DisableTanksFrames()
+function E:DisableTanksFrames()
 	enabled = false
 	
 	TF:UnregisterEvent("GROUP_ROSTER_UPDATE")
@@ -466,7 +466,7 @@ function AleaUI:DisableTanksFrames()
 	end
 end
 
-function AleaUI:EnableTanksFrames()
+function E:EnableTanksFrames()
 	enabled = true
 	
 	TF:RegisterEvent("GROUP_ROSTER_UPDATE")
@@ -487,9 +487,9 @@ function AleaUI:EnableTanksFrames()
 end
 
 local function InitTankFrames()
-	AleaUI:Mover(mover, "tankMoverFrame")
+	E:Mover(mover, "tankMoverFrame")
 
-	AleaUI.GUI.args.unitframes.args.tanksFrames = {
+	E.GUI.args.unitframes.args.tanksFrames = {
 		name = E.L['Tanks'],
 		order = 1,
 		expand = true,
@@ -497,33 +497,33 @@ local function InitTankFrames()
 		args = {}
 	}
 
-	AleaUI.GUI.args.unitframes.args.tanksFrames.args.Enable = {
+	E.GUI.args.unitframes.args.tanksFrames.args.Enable = {
 		name = E.L['Enable'],
 		order = 1,
 		type = "toggle", width = 'full',
 		set = function(self, value)		
-			AleaUI.db.Frames.tankMoverFrame.enabled = not AleaUI.db.Frames.tankMoverFrame.enabled
+			E.db.Frames.tankMoverFrame.enabled = not E.db.Frames.tankMoverFrame.enabled
 			
-			if AleaUI.db.Frames.tankMoverFrame.enabled then
-				AleaUI:EnableTanksFrames()
+			if E.db.Frames.tankMoverFrame.enabled then
+				E:EnableTanksFrames()
 			else
-				AleaUI:DisableTanksFrames()
+				E:DisableTanksFrames()
 			end
 		end,
 		get = function(self)
-			return AleaUI.db.Frames.tankMoverFrame.enabled
+			return E.db.Frames.tankMoverFrame.enabled
 		end
 	}
 	
-	AleaUI.GUI.args.unitframes.args.tanksFrames.args.unlock = {
+	E.GUI.args.unitframes.args.tanksFrames.args.unlock = {
 		name = E.L['Unlock'],
 		order = 2,
 		type = "execute",
-		set = function(self, value)	AleaUI:UnlockMover("tankMoverFrame") end,
+		set = function(self, value)	E:UnlockMover("tankMoverFrame") end,
 		get = function(self)end
 	}
 	
-	AleaUI.GUI.args.unitframes.args.tanksFrames.args.update = {
+	E.GUI.args.unitframes.args.tanksFrames.args.update = {
 		name = E.L['Refresh'],
 		order = 2,
 		type = "execute",
@@ -531,22 +531,22 @@ local function InitTankFrames()
 		get = function(self)end
 	}
 	
-	AleaUI.GUI.args.unitframes.args.tanksFrames.args.TankList = {
+	E.GUI.args.unitframes.args.tanksFrames.args.TankList = {
 		name = E.L['Tanks'],
 		order = 3, width = "full",
 		type = "editbox",
 		set = function(self, value)			
-			AleaUI.db.Frames.tankMoverFrame.mytanks = value
+			E.db.Frames.tankMoverFrame.mytanks = value
 			UpdateForcedTanks()
 		end,
 		get = function(self) 
-			return AleaUI.db.Frames.tankMoverFrame.mytanks  or ''
+			return E.db.Frames.tankMoverFrame.mytanks  or ''
 		end
 	}
-	if AleaUI.db.Frames.tankMoverFrame.enabled then
-		AleaUI:EnableTanksFrames()
+	if E.db.Frames.tankMoverFrame.enabled then
+		E:EnableTanksFrames()
 	else
-		AleaUI:DisableTanksFrames()
+		E:DisableTanksFrames()
 	end
 	UpdateForcedTanks()
 end
@@ -596,4 +596,4 @@ AleaUI_TEST2_TEST = function()
 	TF:CreateTankFrames("player", 3)
 end
 
-AleaUI:OnInit2(InitTankFrames)
+E:OnInit2(InitTankFrames)

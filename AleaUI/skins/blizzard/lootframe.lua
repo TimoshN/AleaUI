@@ -1,4 +1,5 @@
-local Skins = AleaUI:Module("Skins")
+local addonName, E = ...
+local Skins = E:Module("Skins")
 local _G = _G
 
 local default_background_color = Skins.default_background_color
@@ -14,11 +15,11 @@ local iconWidth = 32
 local nameWidth = 200
 
 local varName = 'lootframe'
-AleaUI.default_settings.skins[varName] = true
+E.default_settings.skins[varName] = true
 
 local function Skin_LootFrame()
-	if not AleaUI.db.skins.enableAll then return end
-	if not AleaUI.db.skins[varName] then return end
+	if not E.db.skins.enableAll then return end
+	if not E.db.skins[varName] then return end
 
 	_G["LootFrame"]:StripTextures()	
 	
@@ -30,7 +31,7 @@ local function Skin_LootFrame()
 	artwork:SetSize(1,1)
 	artwork:SetPoint('TOPLEFT', 0,-57)
 	artwork:SetPoint('BOTTOMRIGHT', 0,0)
-	AleaUI:CreateBackdrop(_G["LootFrame"], artwork,{0, 0, 0, 1}, {0, 0, 0, 0.8})
+	E:CreateBackdrop(_G["LootFrame"], artwork,{0, 0, 0, 1}, {0, 0, 0, 0.8})
 
 	for i=1, LootFrame:GetNumRegions() do
 		local region = select(i, LootFrame:GetRegions());
@@ -69,9 +70,9 @@ local function Skin_LootFrame()
 				local sName, sLink, iRarity, iLevel, iMinLevel, sType, sSubType, iStackCount = GetItemInfo(item);
 			
 				if not sName then
-					AleaUI.Message("#"..ind..". "..item.. ( iLevel and "(ilvl:"..iLevel..")" or ''), "PRINT")
+					E.Message("#"..ind..". "..item.. ( iLevel and "(ilvl:"..iLevel..")" or ''), "PRINT")
 				elseif sLink then
-					AleaUI.Message("#"..ind..". "..sLink.. ( iLevel and "(ilvl:"..iLevel..")" or ''), "PRINT")
+					E.Message("#"..ind..". "..sLink.. ( iLevel and "(ilvl:"..iLevel..")" or ''), "PRINT")
 				end
 			end
 		end
@@ -107,9 +108,9 @@ local function Skin_LootFrame()
 		
 			_G["LootButton"..i]:StripTextures("Interface\\QuestFrame\\UI-QuestItemNameFrame")
 			
-			_G["LootButton"..i.."IconTexture"]:SetTexCoord(unpack(AleaUI.media.texCoord))
+			_G["LootButton"..i.."IconTexture"]:SetTexCoord(unpack(E.media.texCoord))
 			
-			AleaUI:CreateBackdrop(_G["LootButton"..i], _G["LootButton"..i.."IconTexture"], {0, 0, 0, 1}, {0.2, 0.2, 0.2, 1}, "BACKGROUND")
+			E:CreateBackdrop(_G["LootButton"..i], _G["LootButton"..i.."IconTexture"], {0, 0, 0, 1}, {0.2, 0.2, 0.2, 1}, "BACKGROUND")
 			
 			local borderparent = CreateFrame("Frame", nil, _G["LootButton"..i])
 			
@@ -119,7 +120,7 @@ local function Skin_LootFrame()
 
 			_G["LootButton"..i].borderparent = borderparent
 			
-			AleaUI:CreateBackdrop(_G["LootButton"..i], borderparent, {0, 0, 0, 1}, {0.2, 0.2, 0.2, 0.8}, "BACKGROUND")
+			E:CreateBackdrop(_G["LootButton"..i], borderparent, {0, 0, 0, 1}, {0.2, 0.2, 0.2, 0.8}, "BACKGROUND")
 		
 			_G["LootButton"..i]:GetHighlightTexture():SetTexture([[Interface\Buttons\WHITE8x8]])
 			_G["LootButton"..i]:GetHighlightTexture():SetVertexColor(1, 1, 1, 0.3)
@@ -209,7 +210,7 @@ local function Skin_LootFrame()
 	OverflowText:SetJustifyH("LEFT")
 	OverflowText:SetJustifyV("TOP")
 
-	OverflowText:SetText(AleaUI.L["Hit 50-mob limit! Take some, then re-loot for more."])
+	OverflowText:SetText(E.L["Hit 50-mob limit! Take some, then re-loot for more."])
 
 	OverflowText:Hide()
 
@@ -339,4 +340,4 @@ local function Skin_LootFrame()
 	end)
 end
 
-AleaUI:OnInit2(Skin_LootFrame)
+E:OnInit2(Skin_LootFrame)

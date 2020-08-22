@@ -1,12 +1,13 @@
-local Skins = AleaUI:Module("Skins")
+local addonName, E = ...
+local Skins = E:Module("Skins")
 local _G = _G
 
 local varName = 'addonmanager'
-AleaUI.default_settings.skins[varName] = true
+E.default_settings.skins[varName] = true
 
 local function Skin_AddonManager()
-	if not AleaUI.db.skins.enableAll then return end
-	if not AleaUI.db.skins[varName] then return end
+	if not E.db.skins.enableAll then return end
+	if not E.db.skins[varName] then return end
 	
 	AddonList:StripTextures()
 	AddonListInset:StripTextures()
@@ -38,4 +39,4 @@ local function Skin_AddonManager()
 
 end
 
-AleaUI:OnInit2(Skin_AddonManager)
+E:OnInit2(Skin_AddonManager)

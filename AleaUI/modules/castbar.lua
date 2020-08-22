@@ -1,4 +1,4 @@
-﻿local E = AleaUI
+﻿local addonName, E = ...
 local L = E.L
 local CB = E:Module("CastBar")
 local UF = E:Module("UnitFrames")
@@ -589,14 +589,14 @@ local function UpdateSettings(frame, opts, mover)
 	end
 	
 	frame.artBorder:SetBackdrop({
-	  edgeFile = AleaUI:GetBorder(opts.border.texture),
+	  edgeFile = E:GetBorder(opts.border.texture),
 	  edgeSize = opts.border.size, 
 	})
 	frame.artBorder:SetBackdropBorderColor(opts.border.color[1],opts.border.color[2],opts.border.color[3],opts.border.color[4])
 	frame.artBorder:SetPoint("TOPLEFT", frame, "TOPLEFT", opts.border.inset, -opts.border.inset)
 	frame.artBorder:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -opts.border.inset, opts.border.inset)
 
-	frame.artBorder.back:SetTexture(AleaUI:GetTexture(opts.border.background_texture))
+	frame.artBorder.back:SetTexture(E:GetTexture(opts.border.background_texture))
 	frame.artBorder.back:SetVertexColor(opts.border.background_color[1],opts.border.background_color[2],opts.border.background_color[3],opts.border.background_color[4])
 	frame.artBorder.back:SetPoint("TOPLEFT", frame, "TOPLEFT", opts.border.background_inset, -opts.border.background_inset)
 	frame.artBorder.back:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -opts.border.background_inset, opts.border.background_inset)
@@ -609,14 +609,14 @@ local function UpdateSettings(frame, opts, mover)
 		frame:SetSize(w-h-bordersize-bordersize-bordersize, h-bordersize-bordersize)
 		
 		frame.icon.artBorder:SetBackdrop({
-		  edgeFile = AleaUI:GetBorder(opts.border.texture),
+		  edgeFile = E:GetBorder(opts.border.texture),
 		  edgeSize = opts.border.size, 
 		})
 		frame.icon.artBorder:SetBackdropBorderColor(opts.border.color[1],opts.border.color[2],opts.border.color[3],opts.border.color[4])
 		frame.icon.artBorder:SetPoint("TOPLEFT", frame.icon, "TOPLEFT", opts.border.inset, -opts.border.inset)
 		frame.icon.artBorder:SetPoint("BOTTOMRIGHT", frame.icon, "BOTTOMRIGHT", -opts.border.inset, opts.border.inset)
 
-		frame.icon.artBorder.back:SetTexture(AleaUI:GetTexture(opts.border.background_texture))
+		frame.icon.artBorder.back:SetTexture(E:GetTexture(opts.border.background_texture))
 		frame.icon.artBorder.back:SetVertexColor(opts.border.background_color[1],opts.border.background_color[2],opts.border.background_color[3],opts.border.background_color[4])
 		frame.icon.artBorder.back:SetPoint("TOPLEFT", frame.icon, "TOPLEFT", opts.border.background_inset, -opts.border.background_inset)
 		frame.icon.artBorder.back:SetPoint("BOTTOMRIGHT", frame.icon, "BOTTOMRIGHT", -opts.border.background_inset, opts.border.background_inset)
@@ -676,9 +676,9 @@ function UF:CreateCastBar(frame, w, h, drawticks)
 		width = w,
 		height = h,
 		colors = CB.colors,
-		texture = AleaUI.media.default_bar_texture_name1,
-		font = AleaUI.media.default_font_name,
-		fontSize = AleaUI.media.default_font_size,
+		texture = E.media.default_bar_texture_name1,
+		font = E.media.default_font_name,
+		fontSize = E.media.default_font_size,
 		fontOultine = 'OUTLINE',
 	}
 	
@@ -873,7 +873,7 @@ function UF:CreateCastBar(frame, w, h, drawticks)
 	icon:SetSize(h-bordersize-bordersize,h-bordersize-bordersize)
 	icon:SetPoint("TOPRIGHT", f, "TOPLEFT", -bordersize-bordersize-bordersize, 0)
 	icon:SetPoint("BOTTOMRIGHT", f, "BOTTOMLEFT", -bordersize-bordersize-bordersize, 0)
-	icon:SetTexCoord(unpack(AleaUI.media.texCoord))
+	icon:SetTexCoord(unpack(E.media.texCoord))
 	f.icon = icon
 	
 	--[==[

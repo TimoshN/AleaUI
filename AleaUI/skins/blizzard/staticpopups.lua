@@ -1,4 +1,5 @@
-local Skins = AleaUI:Module("Skins")
+local addonName, E = ...
+local Skins = E:Module("Skins")
 local _G = _G
 
 local default_background_color = Skins.default_background_color
@@ -11,7 +12,7 @@ local default_button_border 	= Skins.default_button_border
 local default_border_color_dark = Skins.default_border_color_dark
 
 local varName = 'staticpopups'
-AleaUI.default_settings.skins[varName] = true
+E.default_settings.skins[varName] = true
 
 local DELETE_GOOD_ITEM_PATTERN = DELETE_GOOD_ITEM:gsub('%%s', '.+')
 
@@ -61,8 +62,8 @@ local function Skin_StaticPopup()
 	end)
 
 	for i=1, 4 do
-		if not AleaUI.db.skins.enableAll then return end
-		if not AleaUI.db.skins[varName] then return end
+		if not E.db.skins.enableAll then return end
+		if not E.db.skins[varName] then return end
 
 		Skins.ThemeBackdrop('StaticPopup'..i)
 		
@@ -93,7 +94,7 @@ local function Skin_StaticPopup()
 				text:SetTextColor(1, 1, 1)
 				text:SetJustifyH("LEFT")
 				text:SetWordWrap(false)
-				text:SetText(AleaUI.L['Accept to delete'])
+				text:SetText(E.L['Accept to delete'])
 				text:SetFont((text:GetFont()), 12, 'NONE')
 				
 				btn:SetChecked(false)
@@ -135,4 +136,4 @@ local function Skin_StaticPopup()
 	end
 end
 
-AleaUI:OnInit2(Skin_StaticPopup)
+E:OnInit2(Skin_StaticPopup)

@@ -1,4 +1,4 @@
-﻿local E = AleaUI
+﻿local addonName, E = ...
 local L = E.L
 local AM = E:Module("Alerts")
 
@@ -127,9 +127,9 @@ gametooltip:SetBackdropBorderColor(0,0,0,1)
 gametooltip:SetScale(0.7)
 gametooltip:Show();gametooltip:Hide()
 
-local mover = CreateFrame("Frame", nil, AleaUI.UIParent)
+local mover = CreateFrame("Frame", nil, E.UIParent)
 mover:SetSize(350,20)
-mover:SetPoint("CENTER", AleaUI.UIParent, "CENTER", 0,0)
+mover:SetPoint("CENTER", E.UIParent, "CENTER", 0,0)
 
 local alerts_frames = {}
 local alerts_frames_used = {}
@@ -258,11 +258,7 @@ function ALEAUI_GetAlertFrame(used, tag, text, icon, id, point, reuse)
 	f.background:SetVertexColor(unpack(E.db.alerts.colors[used] or colors[used]))
 	f.icon.texture:SetTexCoord(0,1,0,1)
 	
---	f.text:SetFont(AleaUI.media.default_font, AleaUI.media.default_font_size-4, "OUTLINE")
-	
 	icon = icon or missTexture
-	
---	text = used..'-'..tag..'\n'..text
 	
 	if used == "LFG" then
 		f.text:SetText(text)
@@ -273,24 +269,24 @@ function ALEAUI_GetAlertFrame(used, tag, text, icon, id, point, reuse)
 	elseif used == 'XP' then
 		f.text:SetText(text)
 		f.icon.texture:SetTexture("Interface\\Icons\\xp_icon")
-		f.icon.texture:SetTexCoord(unpack(AleaUI.media.texCoord))
+		f.icon.texture:SetTexCoord(unpack(E.media.texCoord))
 	elseif used == "ITEM" then
 		
 		f.text:SetText(text)
 		f.icon.texture:SetTexture(icon)
-		f.icon.texture:SetTexCoord(unpack(AleaUI.media.texCoord))
+		f.icon.texture:SetTexCoord(unpack(E.media.texCoord))
 		f.item_tolltip = id
 	elseif used == "MONEY" then
 		
 		f.text:SetText(text)
 		f.icon.texture:SetTexture(icon)
-		f.icon.texture:SetTexCoord(unpack(AleaUI.media.texCoord))
+		f.icon.texture:SetTexCoord(unpack(E.media.texCoord))
 		
 	elseif used == 'RESORCES' then
 	
 		f.text:SetText(text)
 		f.icon.texture:SetTexture(icon)
-		f.icon.texture:SetTexCoord(unpack(AleaUI.media.texCoord))
+		f.icon.texture:SetTexCoord(unpack(E.media.texCoord))
 	
 	elseif used == "GARRISON" or used == "GARRISON_BUILD" then
 	
@@ -318,18 +314,18 @@ function ALEAUI_GetAlertFrame(used, tag, text, icon, id, point, reuse)
 		end	
 		f.tolltip = GetAchievementLink(id)
 		f.icon.texture:SetTexture(icon)
-		f.icon.texture:SetTexCoord(unpack(AleaUI.media.texCoord))
+		f.icon.texture:SetTexCoord(unpack(E.media.texCoord))
 	elseif used == "NEW_RECIPE" then
 		
 		f.text:SetText(text)
 		f.icon.texture:SetTexture(icon)
-		f.icon.texture:SetTexCoord(unpack(AleaUI.media.texCoord))
+		f.icon.texture:SetTexCoord(unpack(E.media.texCoord))
 		f.tradeSkillID = id
 		f.recipeID = point
 	else
 		
 		local itemname, itemlink = GetItemInfo(64998)
-		f.icon.texture:SetTexCoord(unpack(AleaUI.media.texCoord))
+		f.icon.texture:SetTexCoord(unpack(E.media.texCoord))
 		f.item_tolltip = itemlink
 		f.icon.texture:SetTexture("Interface\\Icons\\spell_shadow_shadowwordpain")
 		
@@ -369,7 +365,7 @@ end
 
 function AM:CreateAlertFrame()
 	
-	local f = CreateFrame("Frame", nil, AleaUI.UIParent)
+	local f = CreateFrame("Frame", nil, E.UIParent)
 	f:SetSize(E.db.alerts.width, E.db.alerts.height)
 	
 	f:SetFrameStrata("HIGH")
@@ -389,13 +385,13 @@ function AM:CreateAlertFrame()
 	E:CreateBackdrop(f.icon, nil, {0,0,0,1}, {0.2,0.2,0.2,1})
 	
 	f.icon.texture = f.icon:CreateTexture(nil, "ARTWORK")
-	f.icon.texture:SetTexCoord(unpack(AleaUI.media.texCoord))
+	f.icon.texture:SetTexCoord(unpack(E.media.texCoord))
 	f.icon.texture:SetAllPoints()
 	f.icon.texture:SetTexture("Interface\\Icons\\spell_shadow_shadowwordpain")
 	
 	f.text = f:CreateFontString(nil, "OVERLAY")
 	f.text:SetFontObject(GameFontWhite)
-	f.text:SetFont(AleaUI.media.default_font, AleaUI.media.default_font_size, "OUTLINE")
+	f.text:SetFont(E.media.default_font, E.media.default_font_size, "OUTLINE")
 	f.text:SetSize(0,0)
 --	f.text:SetJustifyH("MIDDLE")
 --	f.text:SetJustifyV('TOP')
@@ -697,14 +693,9 @@ function AM:GARRISON_MISSION_FINISHED(event, ...)
 	
 	if InCombatLockdown() then return end
 	
-	if E.IsLegion then
-		local missionIndex, missionID = ...
-		missionInfo = C_Garrison.GetBasicMissionInfo(missionID);
-	else
-		local missionID = ...
-		missionInfo = C_Garrison.GetBasicMissionInfo(missionID);
-	end
-	
+	local missionIndex, missionID = ...
+	missionInfo = C_Garrison.GetBasicMissionInfo(missionID);
+
 	ALEAUI_GetAlertFrame("GARRISON", 'GarrisonMissionFinished1', L['Mission']..' "'..missionInfo.name..'" '.. L["complete."], missionInfo.typeAtlas, 0, 0)
 end
 
@@ -714,9 +705,9 @@ function AM:GARRISON_FOLLOWER_ADDED(event, ...)
 	local color = ITEM_QUALITY_COLORS[quality] or { r = 0, g = 1, b = 0 };
 	
 	if (followerType == LE_FOLLOWER_TYPE_SHIPYARD_6_2 ) then
-		ALEAUI_GetAlertFrame("GARRISON_FOLLOW", 'GarrisonFollowerAdded2',AleaUI.RGBToHex(color.r*255, color.g*255, color.b*255)..L['New ship']..' "'..name..'"', "GarrMission_MissionIcon-Combat", followerID, 0)
+		ALEAUI_GetAlertFrame("GARRISON_FOLLOW", 'GarrisonFollowerAdded2', E.RGBToHex(color.r*255, color.g*255, color.b*255)..L['New ship']..' "'..name..'"', "GarrMission_MissionIcon-Combat", followerID, 0)
 	else
-		ALEAUI_GetAlertFrame("GARRISON_FOLLOW", 'GarrisonFollowerAdded1', AleaUI.RGBToHex(color.r*255, color.g*255, color.b*255)..L['New follower']..' "'..name..'"', "GarrMission_MissionIcon-Combat", followerID, 0)
+		ALEAUI_GetAlertFrame("GARRISON_FOLLOW", 'GarrisonFollowerAdded1', E.RGBToHex(color.r*255, color.g*255, color.b*255)..L['New follower']..' "'..name..'"', "GarrMission_MissionIcon-Combat", followerID, 0)
 	end
 end
 

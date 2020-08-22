@@ -1,5 +1,6 @@
-local DT = AleaUI:Module("DataText")
-local L = AleaUI.L
+local addonName, E = ...
+local DT = E:Module("DataText")
+local L = E.L
 
 local format = string.format
 local sort = table.sort

@@ -1,4 +1,4 @@
-﻿local E = AleaUI
+﻿local addonName, E = ...
 local UF = E:Module("UnitFrames")
 local L = E.L
 

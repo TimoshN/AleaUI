@@ -1,4 +1,5 @@
-local Skins = AleaUI:Module("Skins")
+local addonName, E = ...
+local Skins = E:Module("Skins")
 local _G = _G
 
 local default_background_color = Skins.default_background_color
@@ -13,12 +14,12 @@ local default_border_color_dark = Skins.default_border_color_dark
 local buttons_name = Skins.buttons_name
 
 local varName = 'calendar'
-AleaUI.default_settings.skins[varName] = true
+E.default_settings.skins[varName] = true
 
-AleaUI:OnAddonLoad('Blizzard_Calendar', function()
+E:OnAddonLoad('Blizzard_Calendar', function()
 	
-	if not AleaUI.db.skins.enableAll then return end
-	if not AleaUI.db.skins[varName] then return end
+	if not E.db.skins.enableAll then return end
+	if not E.db.skins[varName] then return end
 		
 	_G['CalendarFrame']:StripTextures()
 	Skins.ThemeBackdrop('CalendarFrame')
@@ -39,7 +40,7 @@ AleaUI:OnAddonLoad('Blizzard_Calendar', function()
 	temp:SetPoint("TOPLEFT", btn, "TOPLEFT", 4, -4)
 	temp:SetPoint("BOTTOMRIGHT", btn, "BOTTOMRIGHT", -4, 4)
 	
-	AleaUI:CreateBackdrop(btn, temp, default_button_border, { 0, 0, 0, 0 })
+	E:CreateBackdrop(btn, temp, default_button_border, { 0, 0, 0, 0 })
 	
 	btn.arrow = btn:CreateFontString()
 	btn.arrow:SetPoint('CENTER', btn, 'CENTER', 3, 0)
@@ -103,7 +104,7 @@ AleaUI:OnAddonLoad('Blizzard_Calendar', function()
 	Skins.ThemeButton('CalendarViewEventDeclineButton')
 	Skins.ThemeButton('CalendarViewEventRemoveButton')
 	
-	CalendarCreateEventIcon:SetTexCoord(unpack(AleaUI.media.texCoord))
+	CalendarCreateEventIcon:SetTexCoord(unpack(E.media.texCoord))
 	CalendarCreateEventIcon.SetTexCoord = function()end
 	
 	CalendarClassButtonContainer:HookScript("OnShow", function()
@@ -181,7 +182,7 @@ AleaUI:OnAddonLoad('Blizzard_Calendar', function()
 	temp1:SetPoint("TOPLEFT", f, "TOPLEFT", 25, -5)
 	temp1:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", -30, 11)
 	
-	CalendarCreateEventIcon:SetTexCoord(unpack(AleaUI.media.texCoord))
+	CalendarCreateEventIcon:SetTexCoord(unpack(E.media.texCoord))
 	CalendarCreateEventIcon.SetTexCoord = function()end
 
 	CalendarCreateEventInviteListSection:StripTextures()

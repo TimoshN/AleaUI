@@ -1,11 +1,12 @@
-﻿local DT = AleaUI:Module('DataText')
-local L = AleaUI.L
+﻿local addonName, E = ...
+local DT = E:Module('DataText')
+local L = E.L
 
 local function Click()
-	if AleaUI.MicroButtonsDataText:IsShown() then
-		AleaUI.MicroButtonsDataText:Hide()
+	if E.MicroButtonsDataText:IsShown() then
+		E.MicroButtonsDataText:Hide()
 	else
-		AleaUI.MicroButtonsDataText:Show()
+		E.MicroButtonsDataText:Show()
 	end
 end
 

@@ -62,13 +62,6 @@ local coordy2 = 22
 return '|TInterface\\ChatFrame\\UI-ChatIcon-ScrollDown-Up:0:0:0:0:32:32:'..coordx1..':'..coordx2..':'..coordy1..':'..coordy2..'|t'
 ]==]
 
-local function SetColorTexture(obj, r,g,b,a)
-	if E.IsLegion then
-		obj:SetColorTexture(r,g,b,a)
-	else
-		obj:SetTexture(r,g,b,a)
-	end
-end
 
 local function SetOutside(obj, anchor, xOffset, yOffset)
 	xOffset = xOffset or 1
@@ -245,14 +238,14 @@ function onDragStop(self)
 end
 	
 function EnableMinimapMoving(obj, settings)
-	if not AleaUI.db.Frames[settings] then
-		AleaUI.db.Frames[settings] = {}
+	if not E.db.Frames[settings] then
+		E.db.Frames[settings] = {}
 	end
 	obj._onupdate = CreateFrame("Frame", nil, obj)
 	obj._onupdate.parent = obj
 	obj.minimapButtonFadeOut = true
 	obj:RegisterForDrag("LeftButton")
-	obj.settings = AleaUI.db.Frames[settings]
+	obj.settings = E.db.Frames[settings]
 	obj:HookScript("OnDragStop", onDragStop)
 	obj:HookScript("OnDragStart", onDragStart)
 	obj:ClearAllPoints()
@@ -331,13 +324,6 @@ local function addapi(object)
 	if not object.EnableMinimapMoving then mt.EnableMinimapMoving = EnableMinimapMoving end
 	if not object.DisableMinimapMoving then mt.DisableMinimapMoving = DisableMinimapMoving end
 	if not object.StyleButton then mt.StyleButton = StyleButton end
-	if not object.SetColorTexture and object.SetTexture then mt.SetColorTexture = SetColorTexture end
-
-	-- if not object.SetBackdrop then 
-	-- 	mt.SetBackdrop = SetBackdrop
-	-- 	mt.SetBackdropColor = SetBackdropColor
-	-- 	mt.SetBackdropBorderColor = SetBackdropBorderColor
-	-- end
 end
 
 local handled = {["Frame"] = true}
@@ -755,7 +741,7 @@ do
 	function E:Module(name)
 	
 		if not modules[name] then
-			modules[name] = CreateFrame("Frame", "AleaUI"..name.."Module")
+			modules[name] = CreateFrame("Frame", addonName..name.."Module")
 			modules[name]:SetScript("OnEvent", function(self, event, ...)
 				if not self[event] then 
 					error('Unused event '..event) 

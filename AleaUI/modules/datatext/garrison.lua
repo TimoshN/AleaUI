@@ -1,12 +1,13 @@
-﻿local DT = AleaUI:Module('DataText')
-local L = AleaUI.L
+﻿local addonName, E = ...
+local DT = E:Module('DataText')
+local L = E.L
 
-if ( AleaUI.isClassic ) then 
+if ( E.isClassic ) then 
 	return 
 end 
 
 local function GetCurrencyIcon(...)
-	if ( AleaUI.isShadowlands ) then 
+	if ( E.isShadowlands ) then 
 		return C_CurrencyInfo.GetCurrencyInfo(...).iconFileID
 	end 
 	return select(3, GetCurrencyInfo(...))

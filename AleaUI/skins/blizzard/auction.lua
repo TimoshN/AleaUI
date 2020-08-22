@@ -1,4 +1,5 @@
-local Skins = AleaUI:Module("Skins")
+local addonName, E = ...
+local Skins = E:Module("Skins")
 local _G = _G
 
 local default_background_color = Skins.default_background_color
@@ -11,12 +12,12 @@ local default_button_border 	= Skins.default_button_border
 local default_border_color_dark = Skins.default_border_color_dark
 
 local varName = 'auction'
-AleaUI.default_settings.skins[varName] = true
+E.default_settings.skins[varName] = true
 
-AleaUI:OnAddonLoad('Blizzard_AuctionUI', function()
+E:OnAddonLoad('Blizzard_AuctionUI', function()
 	
-	if not AleaUI.db.skins.enableAll then return end
-	if not AleaUI.db.skins[varName] then return end
+	if not E.db.skins.enableAll then return end
+	if not E.db.skins[varName] then return end
 
 	AuctionFrame:StripTextures()
 	AuctionFrameBrowse:StripTextures()
@@ -145,7 +146,7 @@ AleaUI:OnAddonLoad('Blizzard_AuctionUI', function()
 		local normal = _G["BrowseButton"..i..'ItemNormalTexture']
 		local name = _G["BrowseButton"..i..'Name']
 		
-		AleaUI:CreateBackdrop(btn, icon, default_button_border, { 0, 0, 0, 0 })
+		E:CreateBackdrop(btn, icon, default_button_border, { 0, 0, 0, 0 })
 		
 		normal:SetTexture(nil)
 		border:SetTexture(nil)
@@ -160,7 +161,7 @@ AleaUI:OnAddonLoad('Blizzard_AuctionUI', function()
 			icon:SetUIBackdropBorderColor(0, 0, 0, 1)
 		end)
 			
-		icon:SetTexCoord(unpack(AleaUI.media.texCoord))
+		icon:SetTexCoord(unpack(E.media.texCoord))
 		name:SetFont(default_font, Skins.default_font_size, 'NONE')
 
 		if button then		
@@ -195,7 +196,7 @@ AleaUI:OnAddonLoad('Blizzard_AuctionUI', function()
 		self.modborder:SetBackdropBorderColor(0, 0, 0, 1)
 		if event == 'NEW_AUCTION_UPDATE' and self:GetNormalTexture() then
 			local Quality = select(4, GetAuctionSellItemInfo())
-			self:GetNormalTexture():SetTexCoord(unpack(AleaUI.media.texCoord))
+			self:GetNormalTexture():SetTexCoord(unpack(E.media.texCoord))
 			self:GetNormalTexture():SetInside()
 			if Quality and Quality > 1 and BAG_ITEM_QUALITY_COLORS[Quality] then
 				self.modborder:SetBackdropBorderColor(BAG_ITEM_QUALITY_COLORS[Quality].r, BAG_ITEM_QUALITY_COLORS[Quality].g, BAG_ITEM_QUALITY_COLORS[Quality].b)
@@ -217,7 +218,7 @@ AleaUI:OnAddonLoad('Blizzard_AuctionUI', function()
 		local normal = _G["AuctionsButton"..i..'ItemNormalTexture']
 		local name = _G["AuctionsButton"..i..'Name']
 		
-		AleaUI:CreateBackdrop(btn, icon, default_button_border, { 0, 0, 0, 0 })
+		E:CreateBackdrop(btn, icon, default_button_border, { 0, 0, 0, 0 })
 		
 		normal:SetTexture(nil)
 		border:SetTexture(nil)
@@ -232,7 +233,7 @@ AleaUI:OnAddonLoad('Blizzard_AuctionUI', function()
 			icon:SetUIBackdropBorderColor(0, 0, 0, 1)
 		end)
 			
-		icon:SetTexCoord(unpack(AleaUI.media.texCoord))
+		icon:SetTexCoord(unpack(E.media.texCoord))
 		name:SetFont(default_font, Skins.default_font_size, 'NONE')
 		
 		if button then		
@@ -251,7 +252,7 @@ AleaUI:OnAddonLoad('Blizzard_AuctionUI', function()
 		local normal = _G["BidButton"..i..'ItemNormalTexture']
 		local name = _G["BidButton"..i..'Name']
 		
-		AleaUI:CreateBackdrop(btn, icon, default_button_border, { 0, 0, 0, 0 })
+		E:CreateBackdrop(btn, icon, default_button_border, { 0, 0, 0, 0 })
 		
 		normal:SetTexture(nil)
 		border:SetTexture(nil)
@@ -265,7 +266,7 @@ AleaUI:OnAddonLoad('Blizzard_AuctionUI', function()
 			icon:SetUIBackdropBorderColor(0, 0, 0, 1)
 		end)
 			
-		icon:SetTexCoord(unpack(AleaUI.media.texCoord))
+		icon:SetTexCoord(unpack(E.media.texCoord))
 		name:SetFont(default_font, Skins.default_font_size, 'NONE')
 		
 		if button then		

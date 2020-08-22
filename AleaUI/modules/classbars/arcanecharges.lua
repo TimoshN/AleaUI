@@ -1,4 +1,4 @@
-﻿local E = AleaUI
+﻿local addonName, E = ...
 
 if not E.IsClass("MAGE") then return end
 local CBF = E:Module("ClassBars")

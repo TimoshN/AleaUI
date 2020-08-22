@@ -1,4 +1,4 @@
-local E = AleaUI
+local addonName, E = ...
 
 local function FixFontShadow(obj)
 	local x, y = obj:GetShadowOffset()

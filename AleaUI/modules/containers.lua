@@ -1,4 +1,4 @@
-local E = AleaUI
+local addonName, E = ...
 local L = E.L
 
 local slotSize = 28
@@ -180,7 +180,7 @@ local function ItemBackdrop(frame)
 			_G[frame:GetName().."IconQuestTexture"]:SetAllPoints(frame)
 		end
 		
-		frame.icon:SetTexCoord(AleaUI.media.texCoord[1],AleaUI.media.texCoord[2],AleaUI.media.texCoord[3],AleaUI.media.texCoord[4])
+		frame.icon:SetTexCoord(E.media.texCoord[1],E.media.texCoord[2],E.media.texCoord[3],E.media.texCoord[4])
 	end
 
 	local bagID, slotID = ( frame.BagID or frame:GetParent():GetID()), frame:GetID() --frame:GetParent():GetID(), frame:GetID()
@@ -704,7 +704,7 @@ function UpdateReagentFrame()
 		reagentitem:SetFrameStrata(frameStrata)
 		reagentitem:SetFrameLevel(frameLevel+8)
 		reagentitem:SetScale(E.db.containers.scale)
-		reagentitem.icon:SetTexCoord(unpack(AleaUI.media.texCoord))
+		reagentitem.icon:SetTexCoord(unpack(E.media.texCoord))
 		_G[reagentitem:GetName().."NormalTexture"]:SetTexture("")
 		
 		ItemBackdrop(reagentitem, bank, "bank")
@@ -815,7 +815,7 @@ function ContainerFrame_GenerateFrame(frame, size, id)
 		itemButton:SetScale(E.db.containers.scale)
 		itemButton:SetFrameStrata(frameStrata)
 		itemButton:SetFrameLevel(frameLevel+4)
-		itemButton.icon:SetTexCoord(AleaUI.media.texCoord[1],AleaUI.media.texCoord[2],AleaUI.media.texCoord[3],AleaUI.media.texCoord[4])		
+		itemButton.icon:SetTexCoord(E.media.texCoord[1],E.media.texCoord[2],E.media.texCoord[3],E.media.texCoord[4])		
 	end
 	frame:SetID(id);
 	frame:Show()

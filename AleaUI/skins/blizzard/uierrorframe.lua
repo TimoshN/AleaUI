@@ -1,13 +1,13 @@
-﻿
+﻿local addonName, E = ...
 local varName = 'uierrorframe'
-AleaUI.default_settings.skins[varName] = true
+E.default_settings.skins[varName] = true
 
 local function Skin_ErrorFrame()
-	if not AleaUI.db.skins.enableAll then return end
-	if not AleaUI.db.skins[varName] then return end
+	if not E.db.skins.enableAll then return end
+	if not E.db.skins[varName] then return end
 
-	if AleaUI.IsLegion then 
-		UIErrorsFrame:SetFont(AleaUI.media.default_font, 12)
+	if E.IsLegion then 
+		UIErrorsFrame:SetFont(E.media.default_font, 12)
 		return 
 	end
 	--[==[
@@ -31,7 +31,7 @@ local function Skin_ErrorFrame()
 		[SPELL_FAILED_TARGET_AURASTATE] = false, --Вы пока не можете это сделать.
 	}
 
-	UIErrorsFrame:SetFont(AleaUI.media.default_font, 12)
+	UIErrorsFrame:SetFont(E.media.default_font, 12)
 
 	local errorevents = CreateFrame("Frame")
 	errorevents:RegisterEvent("UI_ERROR_MESSAGE")
@@ -47,4 +47,4 @@ local function Skin_ErrorFrame()
 end
 
 
-AleaUI:OnInit2(Skin_ErrorFrame)
+E:OnInit2(Skin_ErrorFrame)

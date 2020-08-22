@@ -1,4 +1,4 @@
-﻿local E = AleaUI
+﻿local addonName, E = ...
 local DT = E:Module('DataText')
 local L = E.L
 

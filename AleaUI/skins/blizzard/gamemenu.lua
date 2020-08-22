@@ -1,4 +1,5 @@
-local Skins = AleaUI:Module("Skins")
+local addonName, E = ...
+local Skins = E:Module("Skins")
 local _G = _G
 local default_background_color = Skins.default_background_color
 local default_border_color = Skins.default_border_color
@@ -13,7 +14,7 @@ Skins.ThemeBackdrop('GameMenuFrame')
 	
 GameMenuFrame.Header:StripTextures()
 
-AleaUI:CreateBackdrop(GameMenuFrame, GameMenuFrame.Header, default_border_color, default_background_color, 'ARTWORK', 1)
+E:CreateBackdrop(GameMenuFrame, GameMenuFrame.Header, default_border_color, default_background_color, 'ARTWORK', 1)
 
 Skins.GetFontSting(GameMenuFrame.Header, MAINMENU_BUTTON):SetFont(default_font, Skins.default_font_size, 'NONE')
 
@@ -23,7 +24,7 @@ GameMenuFrame.Header:SetUIBorderDrawLayer('ARTWORK')
 
 Skins.ThemeButton('GameMenuButtonHelp')
 
-if (not AleaUI.isClassic) then 
+if (not E.isClassic) then 
 Skins.ThemeButton('GameMenuButtonStore')
 Skins.ThemeButton('GameMenuButtonWhatsNew')
 end 

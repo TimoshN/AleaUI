@@ -37,7 +37,7 @@ local defaults = {
 		['PLazaGame.RU'] = { enable = true },
 	},
 	["border"] = {
-		["background_texture"] = AleaUI.media.default_bar_texture_name3,
+		["background_texture"] = E.media.default_bar_texture_name3,
 		["size"] = 1,
 		["inset"] = -1,
 		["color"] = {
@@ -53,7 +53,7 @@ local defaults = {
 			0,  
 			0.8,  
 		},
-		["texture"] = AleaUI.media.default_bar_texture_name3,
+		["texture"] = E.media.default_bar_texture_name3,
 	},
 }
 

@@ -5214,7 +5214,7 @@ function NP.OnInit()
 	if NamePlateDriverFrame then
 		DisableBlizzardNamePlates()
 	else
-		AleaUI:OnAddonLoad('Blizzard_NamePlates', DisableBlizzardNamePlates)
+		E:OnAddonLoad('Blizzard_NamePlates', DisableBlizzardNamePlates)
 	end
 
 	NP:UpdateBasePlateSize()

@@ -1,4 +1,4 @@
-﻿local E = AleaUI
+﻿local addonName, E = ...
 local CBF = E:Module("ClassBars")
 
 local class1, class = UnitClass("player")
@@ -10,13 +10,13 @@ local defaults = {
 	height = 10,
 	color = { },
 	border = {
-		["background_texture"] = AleaUI.media.default_bar_texture_name3,
+		["background_texture"] = E.media.default_bar_texture_name3,
 		["size"] = 1,
 		["inset"] = 0,
 		["color"] = { 0, 0,  0,  0, },
 		["background_inset"] = 0,
 		["background_color"] = { 0,  0,  0,  0, },
-		["texture"] = AleaUI.media.default_bar_texture_name3,
+		["texture"] = E.media.default_bar_texture_name3,
 	},
 }
 

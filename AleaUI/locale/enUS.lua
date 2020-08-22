@@ -1,4 +1,5 @@
-local L = AleaUI_GUI.GetTranslate("AleaUI", "enUS", true)
+local addonName, E = ...
+local L = AleaUI_GUI.GetTranslate(addonName, "enUS", true)
 
 L['dead'] = true
 L['offline'] = true

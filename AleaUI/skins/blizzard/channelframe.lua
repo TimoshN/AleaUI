@@ -1,4 +1,5 @@
-local Skins = AleaUI:Module("Skins")
+local addonName, E = ...
+local Skins = E:Module("Skins")
 local _G = _G
 
 local default_background_color = Skins.default_background_color
@@ -13,12 +14,12 @@ local default_border_color_dark = Skins.default_border_color_dark
 local buttons_name = Skins.buttons_name
 
 local varName = 'channels'
-AleaUI.default_settings.skins[varName] = true
+E.default_settings.skins[varName] = true
 
 
 local function LoadSkin()
-    if not AleaUI.db.skins.enableAll then return end
-	if not AleaUI.db.skins[varName] then return end
+    if not E.db.skins.enableAll then return end
+	if not E.db.skins[varName] then return end
         
     
     ChannelFrame:StripTextures()
@@ -59,7 +60,7 @@ local function LoadSkin()
 end
 
 
-AleaUI:OnInit(function()
+E:OnInit(function()
 	if _G["ChannelFrame"] then
 		LoadSkin()
 	else

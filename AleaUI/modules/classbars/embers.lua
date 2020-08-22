@@ -1,4 +1,4 @@
-﻿local E = AleaUI
+﻿local addonName, E = ...
 local CBF = E:Module("ClassBars")
 
 local class1, class = UnitClass("player")
@@ -99,7 +99,7 @@ local function Embers()
 	f.orbs[1].glowIndicator = CreateFrame("Frame", nil, f.orbs[1])
 	f.orbs[1].glowIndicator:SetFrameStrata("LOW")
 	f.orbs[1].glowIndicator:SetBackdrop( {	
- 		edgeFile = "Interface\\AddOns\\\AleaUI\\media\\glow", edgeSize = 3,
+ 		edgeFile = "Interface\\AddOns\\AleaUI\\media\\glow", edgeSize = 3,
  		insets = {left = 5, right = 5, top = 5, bottom = 5},
  	})		
 	f.orbs[1].glowIndicator:SetBackdropBorderColor(unpack(color))

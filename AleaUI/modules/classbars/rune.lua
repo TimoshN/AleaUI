@@ -1,4 +1,4 @@
-﻿local E = AleaUI
+﻿local addonName, E = ...
 local CBF = E:Module("ClassBars")
 
 local class1, class = UnitClass("player")

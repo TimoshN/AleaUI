@@ -1,4 +1,5 @@
-local Skins = AleaUI:Module("Skins")
+local addonName, E = ...
+local Skins = E:Module("Skins")
 local _G = _G
 
 local default_background_color = Skins.default_background_color
@@ -11,11 +12,11 @@ local default_button_border 	= Skins.default_button_border
 local default_border_color_dark = Skins.default_border_color_dark
 
 local varName = 'encounterjournal'
-AleaUI.default_settings.skins[varName] = true
+E.default_settings.skins[varName] = true
 
 local function EncounterJournalStyle()
-	if not AleaUI.db.skins.enableAll then return end
-	if not AleaUI.db.skins[varName] then return end
+	if not E.db.skins.enableAll then return end
+	if not E.db.skins[varName] then return end
 
 	_G['EncounterJournal']:StripTextures()
 	
@@ -112,4 +113,4 @@ local function EncounterJournalStyle()
 	
 	StyleForNavButtons(_G['EncounterJournalNavBar'])
 end
-AleaUI:OnAddonLoad('Blizzard_EncounterJournal', EncounterJournalStyle)
+E:OnAddonLoad('Blizzard_EncounterJournal', EncounterJournalStyle)

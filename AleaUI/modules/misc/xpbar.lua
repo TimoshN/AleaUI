@@ -1,6 +1,6 @@
 -- Config ----------------
 --------------------------
-local E = AleaUI
+local addonName, E = ...
 local L = E.L
 local UF = E:Module("UnitFrames")
 
@@ -134,7 +134,7 @@ xpBar:SetStatusBarTexture(barTex)local _, class = UnitClass("player") local colo
 xpBar:SetStatusBarColor(r, g, b)
 
 xpBar.Text = xpBar:CreateFontString(aName.."ArtifactBarText", "OVERLAY")
-xpBar.Text:SetFont(AleaUI.media.default_font, AleaUI.media.default_font_size, flags)
+xpBar.Text:SetFont(E.media.default_font, E.media.default_font_size, flags)
 xpBar.Text:SetPoint("CENTER", xpBar, "CENTER", 0, 1)
 xpBar.Text:SetAlpha(1)
 
@@ -154,7 +154,7 @@ artifactBar:SetStatusBarTexture(barTex)
 artifactBar:SetStatusBarColor(0.8, 0.8, 0)
 
 artifactBar.Text = artifactBar:CreateFontString(aName.."ArtifactBarText", "OVERLAY")
-artifactBar.Text:SetFont(AleaUI.media.default_font, AleaUI.media.default_font_size, flags)
+artifactBar.Text:SetFont(E.media.default_font, E.media.default_font_size, flags)
 artifactBar.Text:SetPoint("CENTER", artifactBar, "CENTER", 0, 1)
 artifactBar.Text:SetAlpha(1)
 
@@ -177,7 +177,7 @@ honorBar:SetStatusBarTexture(barTex)
 honorBar:SetStatusBarColor(255/255, 156/255, 0)
 
 honorBar.Text = honorBar:CreateFontString(aName.."ArtifactBarText", "OVERLAY")
-honorBar.Text:SetFont(AleaUI.media.default_font, AleaUI.media.default_font_size, flags)
+honorBar.Text:SetFont(E.media.default_font, E.media.default_font_size, flags)
 honorBar.Text:SetPoint("CENTER", honorBar, "CENTER", 0, 1)
 honorBar.Text:SetAlpha(1)
 
@@ -201,7 +201,7 @@ repBar:SetPoint("BOTTOM",backdrop,"BOTTOM", 0, 0)
 repBar:SetStatusBarTexture(barTex)
 
 repBar.Text = repBar:CreateFontString(aName.."ArtifactBarText", "OVERLAY")
-repBar.Text:SetFont(AleaUI.media.default_font, AleaUI.media.default_font_size, flags)
+repBar.Text:SetFont(E.media.default_font, E.media.default_font_size, flags)
 repBar.Text:SetPoint("CENTER", repBar, "CENTER", 0, 1)
 repBar.Text:SetAlpha(1)
 
@@ -226,7 +226,7 @@ mouseFrame:EnableMouse(true)
 -- Level Left Text
 
 local LevelText = xpBar:CreateFontString(aName.."LevelText", "OVERLAY")
-LevelText:SetFont(AleaUI.media.default_font, AleaUI.media.default_font_size, flags)
+LevelText:SetFont(E.media.default_font, E.media.default_font_size, flags)
 LevelText:SetPoint("RIGHT", xpBar, "LEFT", 0, -1)
 
 
@@ -242,7 +242,7 @@ mouseFrame:SetFrameLevel(3)
 
 
 local paragonReputationText = backdrop:CreateFontString(nil, "OVERLAY")
-paragonReputationText:SetFont(AleaUI.media.default_font2, AleaUI.media.default_font_size2, 'NONE')
+paragonReputationText:SetFont(E.media.default_font2, E.media.default_font_size2, 'NONE')
 paragonReputationText:SetPoint("TOPLEFT", mouseFrame, "BOTTOMLEFT", 0, -1)
 paragonReputationText:SetText('Test test test\nTest Test\nteest test')
 paragonReputationText:SetShadowColor(0,0,0,1)
@@ -576,13 +576,13 @@ frame:SetScript("OnEvent", function()
 	C_Timer.After(0.1, updateStatus)
 end)
 
-function AleaUI.UpdateXPBars()
-	AleaUI:Mover(backdrop, "xpbarFrame", 276, 10)
+function E.UpdateXPBars()
+	E:Mover(backdrop, "xpbarFrame", 276, 10)
 	updateStatus()
 end
 
 local function InitXPBar()
-	AleaUI:Mover(backdrop, "xpbarFrame", 276, 10)
+	E:Mover(backdrop, "xpbarFrame", 276, 10)
 
 	updateStatus()
 	
@@ -671,4 +671,4 @@ local function InitXPBar()
 
 end
 
-AleaUI:OnInit(InitXPBar)
+E:OnInit(InitXPBar)

@@ -1,4 +1,4 @@
-﻿local E = AleaUI
+﻿local addonName, E = ...
 local L = E.L
 local UF = E:Module("UnitFrames")
 
@@ -619,7 +619,7 @@ local function CreateAuraFrame(frame)
 	stack:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", 0, 0)
 	stack:SetSize(12*2, 12)
 	stack:SetTextColor(1,1,1,1)
-	stack:SetFont(AleaUI.media.default_font, 10, "OUTLINE")
+	stack:SetFont(E.media.default_font, 10, "OUTLINE")
 	stack:SetJustifyH("RIGHT")
 	stack:SetJustifyV("BOTTOM")
 	stack:SetAlpha(1)

@@ -1,4 +1,4 @@
-﻿local E = AleaUI
+﻿local addonName, E = ...
 local L = E.L
 
 local CombatLogEvent = 'COMBAT_LOG_EVENT_UNFILTERED'
@@ -147,7 +147,7 @@ local function GetTextString(side)
 	i:SetAllPoints()
 	i:SetPoint("CENTER")
 	i:SetColorTexture(1, 0, 1, 1)
-	i:SetTexCoord(unpack(AleaUI.media.texCoord))
+	i:SetTexCoord(unpack(E.media.texCoord))
 
 	local t = f:CreateFontString(nil, "ARTWORK")
 	t:SetPoint(point1, i, point2, x, y)

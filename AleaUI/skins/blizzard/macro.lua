@@ -1,11 +1,12 @@
-local Skins = AleaUI:Module("Skins")
+local addonName, E = ...
+local Skins = E:Module("Skins")
 
 local varName = 'macro'
-AleaUI.default_settings.skins[varName] = true
+E.default_settings.skins[varName] = true
 
-AleaUI:OnAddonLoad('Blizzard_MacroUI', function()
-	if not AleaUI.db.skins.enableAll then return end
-	if not AleaUI.db.skins[varName] then return end
+E:OnAddonLoad('Blizzard_MacroUI', function()
+	if not E.db.skins.enableAll then return end
+	if not E.db.skins[varName] then return end
 
 	MacroFrame:StripTextures()
 	MacroFrameInset:StripTextures()
@@ -49,7 +50,7 @@ AleaUI:OnAddonLoad('Blizzard_MacroUI', function()
 		highlight:SetAllPoints(macroIcon)
 		highlight:SetColorTexture(1, 1, 1, 0.2)
 		
-		macroIcon:SetTexCoord(unpack(AleaUI.media.texCoord))
+		macroIcon:SetTexCoord(unpack(E.media.texCoord))
 		
 		local background = Skins.GetTextureObject(macroButton, [[Interface\Buttons\UI-EmptySlot-Disabled]])
 		background:SetColorTexture(0, 0, 0, 1)
@@ -65,7 +66,7 @@ AleaUI:OnAddonLoad('Blizzard_MacroUI', function()
 		highlight:SetAllPoints(MacroFrameSelectedMacroButtonIcon)
 		highlight:SetColorTexture(1, 1, 1, 0.2)
 		
-	MacroFrameSelectedMacroButtonIcon:SetTexCoord(unpack(AleaUI.media.texCoord))
+	MacroFrameSelectedMacroButtonIcon:SetTexCoord(unpack(E.media.texCoord))
 	
 	MacroPopupNameLeft:SetAlpha(0)
 	MacroPopupNameRight:SetAlpha(0)
@@ -104,7 +105,7 @@ AleaUI:OnAddonLoad('Blizzard_MacroUI', function()
 					highlight:SetAllPoints(macroIcon)
 					highlight:SetColorTexture(1, 1, 1, 0.2)
 					
-					macroIcon:SetTexCoord(unpack(AleaUI.media.texCoord))
+					macroIcon:SetTexCoord(unpack(E.media.texCoord))
 					
 					local background = Skins.GetTextureObject(macroButton, [[Interface\Buttons\UI-EmptySlot-Disabled]])
 					background:SetColorTexture(0, 0, 0, 1)

@@ -1,4 +1,4 @@
-local E = AleaUI
+local addonName, E = ...
 local BF = E:Module('ButtonForge')
 local Skins = E:Module("Skins")
 local L = E.L

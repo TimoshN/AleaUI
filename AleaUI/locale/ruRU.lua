@@ -1,4 +1,5 @@
-﻿local L = AleaUI_GUI.GetTranslate("AleaUI", "ruRU")
+﻿local addonName, E = ...
+local L = AleaUI_GUI.GetTranslate(addonName, "ruRU")
 if not L then return end
 
 L['dead'] = 'мёртв'

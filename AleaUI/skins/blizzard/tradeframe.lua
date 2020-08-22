@@ -1,11 +1,12 @@
-local Skins = AleaUI:Module("Skins")
+local addonName, E = ...
+local Skins = E:Module("Skins")
 
 local varName = 'tradeframe'
-AleaUI.default_settings.skins[varName] = true
+E.default_settings.skins[varName] = true
 
 local function Skin_TradeFrame()
-	if not AleaUI.db.skins.enableAll then return end
-	if not AleaUI.db.skins[varName] then return end
+	if not E.db.skins.enableAll then return end
+	if not E.db.skins[varName] then return end
 
 	TradeFrame:StripTextures()
 	TradeFrameInset:StripTextures()
@@ -80,7 +81,7 @@ local function Skin_TradeFrame()
 	local iconBorder = CreateFrame('Frame', nil, MerchantRepairItemButton)
 	iconBorder:SetFrameLevel(iconBorder:GetParent():GetFrameLevel()+1)
 	iconBorder:SetInside(icon)
-	AleaUI:CreateBackdrop(iconBorder, nil, {0,0,0,1}, {0.1,0.1,0.1,0})
+	E:CreateBackdrop(iconBorder, nil, {0,0,0,1}, {0.1,0.1,0.1,0})
 	
 	local icon = Skins.GetAllTextureObject('MerchantRepairAllButton', [[Interface\MerchantFrame\UI-Merchant-RepairIcons]])
 	icon:SetTexCoord(0.28125+0.025, 0.5625-0.022, 0+0.055, 0.5625-0.013)
@@ -88,7 +89,7 @@ local function Skin_TradeFrame()
 	local iconBorder = CreateFrame('Frame', nil, MerchantRepairAllButton)
 	iconBorder:SetFrameLevel(iconBorder:GetParent():GetFrameLevel()+1)
 	iconBorder:SetInside(icon)
-	AleaUI:CreateBackdrop(iconBorder, nil, {0,0,0,1}, {0.1,0.1,0.1,0})
+	E:CreateBackdrop(iconBorder, nil, {0,0,0,1}, {0.1,0.1,0.1,0})
 	
 	local icon = Skins.GetAllTextureObject('MerchantGuildBankRepairButton', [[Interface\MerchantFrame\UI-Merchant-RepairIcons]])
 	icon:SetTexCoord(0.5625, 0.84375, 0, 0.5625)
@@ -96,10 +97,10 @@ local function Skin_TradeFrame()
 	local iconBorder = CreateFrame('Frame', nil, MerchantGuildBankRepairButton)
 	iconBorder:SetFrameLevel(iconBorder:GetParent():GetFrameLevel()+1)
 	iconBorder:SetInside(icon)
-	AleaUI:CreateBackdrop(iconBorder, nil, {0,0,0,1}, {0.1,0.1,0.1,0})
+	E:CreateBackdrop(iconBorder, nil, {0,0,0,1}, {0.1,0.1,0.1,0})
 end
 
-AleaUI:OnInit2(Skin_TradeFrame)
+E:OnInit2(Skin_TradeFrame)
 
 
 

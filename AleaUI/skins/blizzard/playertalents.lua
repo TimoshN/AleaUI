@@ -1,4 +1,5 @@
-local Skins = AleaUI:Module("Skins")
+local addonName, E = ...
+local Skins = E:Module("Skins")
 local _G = _G
 
 local default_background_color = Skins.default_background_color
@@ -12,15 +13,15 @@ local default_border_color_dark = Skins.default_border_color_dark
 
 local varName1 = 'playertalents'
 local varName2 = 'playerglyphs'
-AleaUI.default_settings.skins[varName1] = true
-AleaUI.default_settings.skins[varName2] = true
+E.default_settings.skins[varName1] = true
+E.default_settings.skins[varName2] = true
 
 do
 	
-	AleaUI:OnAddonLoad('Blizzard_GlyphUI', function()
-		if AleaUI.IsLegion then return end
-		if not AleaUI.db.skins.enableAll then return end
-		if not AleaUI.db.skins[varName2] then return end
+	E:OnAddonLoad('Blizzard_GlyphUI', function()
+		if E.IsLegion then return end
+		if not E.db.skins.enableAll then return end
+		if not E.db.skins[varName2] then return end
 
 		Skins.MassKillTexture('GlyphFrameSide')	
 		
@@ -56,17 +57,17 @@ do
 			
 			button:SetHighlightTexture(highlight)
 			
-			icon:SetTexCoord(unpack(AleaUI.media.texCoord))
+			icon:SetTexCoord(unpack(E.media.texCoord))
 			
 			Skins.ThemeBackdrop(button)
 		end
 		
 	end)
 	
-	AleaUI:OnAddonLoad('Blizzard_TalentUI', function()
+	E:OnAddonLoad('Blizzard_TalentUI', function()
 	
-		if not AleaUI.db.skins.enableAll then return end
-		if not AleaUI.db.skins[varName1] then return end
+		if not E.db.skins.enableAll then return end
+		if not E.db.skins[varName1] then return end
 
 		Skins.ThemeButton('PlayerTalentFramePetSpecializationLearnButton')
 		Skins.ThemeButton('PlayerTalentFrameSpecializationLearnButton')
@@ -103,14 +104,14 @@ do
 		SpecializationBorder:SetSize(420, 410)
 		SpecializationBorder:SetFrameLevel(PlayerTalentFrameSpecialization:GetFrameLevel()+10)
 	--	SpecializationBorder:SetFrameStrata('HIGH')
-		AleaUI:CreateBackdrop(SpecializationBorder, nil, { 0, 0, 0, 1 }, {0,0,0,0})
+		E:CreateBackdrop(SpecializationBorder, nil, { 0, 0, 0, 1 }, {0,0,0,0})
 		SpecializationBorder:SetUIBorderDrawLayer('OVERLAY', 1)
 		
 		local blueTextureArtwork = CreateFrame('Frame', nil, PlayerTalentFrame)
 		blueTextureArtwork:SetSize(210, 410)
 		blueTextureArtwork:SetPoint('TOPLEFT', PlayerTalentFrame, 'TOPLEFT', 5, -24)
 		
-		AleaUI:CreateBackdrop(blueTextureArtwork, nil, default_border_color, default_background_color)
+		E:CreateBackdrop(blueTextureArtwork, nil, default_border_color, default_background_color)
 		
 		blueTextureArtwork:SetUIBorderDrawLayer('BORDER', -1)
 		blueTextureArtwork:SetUIBackgroundDrawLayer('BACKGROUND', -1)
@@ -167,7 +168,7 @@ do
 				_G[name..'IconTexture']:SetUIBackgroundColor(0, 0, 0, 0)
 				_G[name..'IconTexture']:SetUIBackdropBorderColor(0, 0, 0, 1)
 				
-				AleaUI:CreateBackdrop(_G[name], _G[name..'Selection'], { 0, 0, 0, 1 }, {0,0,0,0}, 'ARTWORK')
+				E:CreateBackdrop(_G[name], _G[name..'Selection'], { 0, 0, 0, 1 }, {0,0,0,0}, 'ARTWORK')
 			end
 		end
 		
@@ -202,7 +203,7 @@ do
 		
 		local function SkinTab(tab)
 			tab:DisableDrawLayer('BACKGROUND')
-			tab:GetNormalTexture():SetTexCoord(unpack(AleaUI.media.texCoord))
+			tab:GetNormalTexture():SetTexCoord(unpack(E.media.texCoord))
 			tab:GetNormalTexture():SetSize(20, 20)
 		
 			tab.pushed = true;
@@ -247,10 +248,10 @@ do
 				
 				PlayerTalentFramePVPTalents.Talents['Tier'..a]:StripTextures()
 	
-				button.highlight:SetParent(AleaUI.hidenframe)
-				button.LeftCap:SetParent(AleaUI.hidenframe)
-				button.RightCap:SetParent(AleaUI.hidenframe)			
-				button.Cover:SetParent(AleaUI.hidenframe)
+				button.highlight:SetParent(E.hidenframe)
+				button.LeftCap:SetParent(E.hidenframe)
+				button.RightCap:SetParent(E.hidenframe)			
+				button.Cover:SetParent(E.hidenframe)
 				
 				button.Name:SetDrawLayer('ARTWORK', 5)
 				
@@ -259,16 +260,16 @@ do
 				button.Name:SetShadowColor(0, 0, 0, 1)
 		
 				button.Icon:SetDrawLayer('ARTWORK', 5)
-				button.Icon:SetTexCoord(unpack(AleaUI.media.texCoord))
+				button.Icon:SetTexCoord(unpack(E.media.texCoord))
 				button.knownSelection:SetDrawLayer('ARTWORK', 4)
 				button.knownSelection:SetColorTexture(0, 0.5, 0, 0.5)
 				
-				AleaUI:CreateBackdrop(button, button.Icon, { 0, 0, 0, 1 }, {0,0,0,0}, 'ARTWORK')
+				E:CreateBackdrop(button, button.Icon, { 0, 0, 0, 1 }, {0,0,0,0}, 'ARTWORK')
 				button.Icon:SetUIBorderDrawLayer('ARTWORK', 5)
 				button.Icon:SetUIBackgroundColor(0, 0, 0, 0)
 				button.Icon:SetUIBackdropBorderColor(0, 0, 0, 1)
 				
-				AleaUI:CreateBackdrop(button, button.knownSelection, { 0, 0, 0, 1 }, {0,0,0,0}, 'ARTWORK')
+				E:CreateBackdrop(button, button.knownSelection, { 0, 0, 0, 1 }, {0,0,0,0}, 'ARTWORK')
 			end
 		end
 		
