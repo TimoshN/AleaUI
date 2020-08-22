@@ -46,19 +46,8 @@ end
 
 do
 	local gametooltip = _G['AleaGUIGameToolTip'] or CreateFrame("GameTooltip", "AleaGUIGameToolTip", nil, "GameTooltipTemplate"); -- Tooltip name cannot be nil	
---	gametooltip:SetBackdrop({
---		bgFile = [=[Interface\ChatFrame\ChatFrameBackground]=],
---		edgeFile = [=[Interface\ChatFrame\ChatFrameBackground]=], 
---		edgeSize = 1,
---		insets = {top = 0, left = 0, bottom = 0, right = 0},
---		})
---	gametooltip:SetBackdropColor(unpack(ns.button_bg_color))
---	gametooltip:SetBackdropBorderColor(unpack(ns.button_border_color_ondown))
---	gametooltip:SetWidth(250)
 	gametooltip:Show()
 	gametooltip:Hide()
---	gametooltip:SetMinResize(500, 400)
---	gametooltip:SetMaxResize(250, 1000)
 	gametooltip:SetScale(0.7)
 	
 	
@@ -277,8 +266,8 @@ function ns:Update(addonName)
 
 	ns:GetRightGroupFramesFrame(self, o)
 
-	if ( self.__border ) then 
-		self.__border:SetBackdrop({
+	if ( self.rightSide.__border ) then 
+		self.rightSide.__border:SetBackdrop({
 			bgFile = [[Interface\Buttons\WHITE8x8]],
 			edgeFile = [[Interface\Tooltips\UI-Tooltip-Border]],
 			edgeSize = 16,
@@ -289,10 +278,10 @@ function ns:Update(addonName)
 				bottom = 5,
 			}
 		})
-		self.__border:SetBackdropColor(0, 0, 0, 0.3)
-		self.__border:SetBackdropBorderColor(0.5, 0.5, 0.5, 1)
+		self.rightSide.__border:SetBackdropColor(0, 0, 0, 0.3)
+		self.rightSide.__border:SetBackdropBorderColor(0.5, 0.5, 0.5, 1)
 
-		self.__border = nil
+		self.rightSide.__border = false
 	end
 
 end
@@ -868,10 +857,9 @@ function ns:GetMainFrame()
 
 	local rightSide_border = CreateFrame("Frame", nil, rightSide, BackdropTemplateMixin and 'BackdropTemplate')
 	rightSide_border:SetFrameLevel(rightSide:GetFrameLevel()-1)
-	rightSide_border:SetSize(1,1)
 	rightSide_border:SetPoint("TOPLEFT", rightSide, "TOPLEFT", -5, 5)
 	rightSide_border:SetPoint("BOTTOMRIGHT", rightSide, "BOTTOMRIGHT", 5, -5)
-
+	
 	rightSide.__border = rightSide_border
 
 	f.leftSide = leftSide
