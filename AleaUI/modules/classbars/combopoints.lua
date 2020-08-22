@@ -38,7 +38,7 @@ local function ComboBar()
 			["UPDATE_SHAPESHIFT_FORM"]	= '',
 			["PLAYER_TALENT_UPDATE"]	= '',
 		
-			}
+		}
 
 		f:Show()
 		f:EnableMouse(false)
@@ -55,7 +55,7 @@ local function ComboBar()
 		o:SetMinMaxValues(0,NUM_COMBO)
 		o:GetStatusBarTexture():SetDrawLayer('ARTWORK', -2)
 		
-		o.art = CreateFrame("Frame", nil, o)
+		o.art = CreateFrame("Frame", nil, o, BackdropTemplateMixin and 'BackdropTemplate')
 		o.art:SetFrameLevel(o:GetFrameLevel()-1)
 		o.art:SetBackdrop({
 		  bgFile = [[Interface\Buttons\WHITE8x8]], 
