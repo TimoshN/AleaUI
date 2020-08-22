@@ -16,6 +16,9 @@ local baseNonTargetAlpha = parentToBlizzard and 0.6 or 0.6
 local baseStrata = 'LOW'
 local baseFrameLevel = 5
 
+local hiddenFrame = CreateFrame('Frame')
+	hiddenFrame:Hide()
+
 local _G = _G
 local GetTime = GetTime
 local floor = floor
@@ -776,6 +779,15 @@ function NP:NAME_PLATE_UNIT_ADDED(event, unit)
 	local realFrame = GetNamePlateForUnit(unit)
 
 	if ( realFrame ) then
+		if realFrame.UnitFrame and not realFrame.AleaNP.onShowHooked then
+			realFrame.UnitFrame:SetParent(hiddenFrame)
+			realFrame.UnitFrame:HookScript("OnShow", realFrame.UnitFrame.Hide)
+			realFrame.UnitFrame:Hide()
+
+			realFrame.AleaNP.onShowHooked = true
+		end
+	
+
 		numVisiblePlates = numVisiblePlates + 1
 
 		realFrame.AleaNP.plateNamePlate = nil
@@ -2483,11 +2495,13 @@ end
 
 function NP:CreateNamePlateFrame(frame)
 	
-	local plate = CreateFrame('StatusBar', nil, WorldFrame)
+	local plate = CreateFrame('StatusBar')
 
 	if parentToBlizzard then
 		plate:SetParent(frame)
 		plate:SetIgnoreParentAlpha(true)
+	else 
+		plate:SetParent(WorldFrame)
 	end
 
 	plate.hitbox_overlay = frame:CreateTexture()
@@ -2842,10 +2856,12 @@ function NP:CreateNamePlateFrame(frame)
 	NP:CreateBackdrop(plate.drBar, plate.drBar.icon)
 	]==]
 
-	local FriendlyPlate = CreateFrame('StatusBar', nil, WorldFrame)
+	local FriendlyPlate = CreateFrame('StatusBar')
 	if parentToBlizzard then
 		FriendlyPlate:SetParent(frame)
 		FriendlyPlate:SetIgnoreParentAlpha(true)
+	else 
+		FriendlyPlate:SetParent(WorldFrame)
 	end
 
 	FriendlyPlate:SetSize(40,1)
@@ -2898,13 +2914,6 @@ function NP:CreateNamePlateFrame(frame)
 	NP.CreatedPlates[#NP.CreatedPlates+1] = plate
 
 	frame.AleaNP = plate
-	
-	
-	if frame.UnitFrame and not frame.AleaNP.onShowHooked then
-		frame.UnitFrame:HookScript("OnShow", self.Hide)
-		frame.AleaNP.onShowHooked = true
-	end
-	
 	
 	NP.UpdateSettings(plate)
 end
