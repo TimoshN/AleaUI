@@ -731,6 +731,11 @@ end
 
 local lastNumQuest = -1
 local lastNumQuestComplete = -1
+
+local ignoreQuest = {
+	[57008] = true
+}
+
 function NP:QUEST_LOG_UPDATE(event, ...)
 	questLog = {}
 
@@ -738,9 +743,13 @@ function NP:QUEST_LOG_UPDATE(event, ...)
 	local questCompleteCurrent = 0
 
 	for a=1, GetNumQuestLogEntries() do
-	   local title, level, suggestedGroup, isHeader, isCollapsed, isComplete, frequency, questID = GetQuestLogTitle(a);
+		local title, level, suggestedGroup, isHeader, isCollapsed, isComplete, frequency, questID = GetQuestLogTitle(a);
 
-		if ( questID and questID > 0 ) then
+		
+		--print('T', title, questID)
+
+
+		if ( questID and questID > 0 and not ignoreQuest[questID]) then
 			if isComplete then
 				questCompleteCurrent = questCompleteCurrent + 1
 			else
