@@ -4,10 +4,10 @@ E.L = AleaUI_GUI.GetLocale(addonName)
 local L = E.L
 
 -- DEBUG PRINT --
-function ns.print(text, ...) 
+function E.print(text, ...) 
 	if ( true ) then return end 
 
-	
+
     text = tostring(text)
     for n=1,select('#', ...) do
         local e = select(n, ...)
