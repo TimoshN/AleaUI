@@ -3,20 +3,23 @@ E.L = AleaUI_GUI.GetLocale(addonName)
 
 local L = E.L
 
+-- DEBUG PRINT --
+function ns.print(text, ...) 
+	if ( true ) then return end 
 
--- Legion to BFA
-
-if not ( IsAddonMessagePrefixRegistered ) then
-	IsAddonMessagePrefixRegistered = C_ChatInfo.IsAddonMessagePrefixRegistered
+	
+    text = tostring(text)
+    for n=1,select('#', ...) do
+        local e = select(n, ...)
+        text = text.." "..tostring(e)
+    end
+    local patterns = {"\n", "^.-AddOns\\", ": in function.*$"}
+    local source = debugstack(2,1,0)
+    for i = 1, #patterns do source = gsub(source, patterns[i], "") end
+    text = "["..source.."] - \""..text.."\""
+    return print(text)
 end
 
-if not ( RegisterAddonMessagePrefix ) then
-	RegisterAddonMessagePrefix = C_ChatInfo.RegisterAddonMessagePrefix
-end
-
-if not ( SendAddonMessage ) then
-	SendAddonMessage = C_ChatInfo.SendAddonMessage
-end
 
 local scaler = CreateFrame("Frame")
 scaler:RegisterEvent("VARIABLES_LOADED")
@@ -355,18 +358,17 @@ do
 	local name
 	local string_match = string.match
 	local format = format
-	local SendAddonMessage = SendAddonMessage
 	local tonumber = tonumber
 	local sendmessagethottle = 20
 	local versioncheck = 0
 
-	if not IsAddonMessagePrefixRegistered(addonChannel) then
-		RegisterAddonMessagePrefix(addonChannel)
+	if not C_ChatInfo.IsAddonMessagePrefixRegistered(addonChannel) then
+		C_ChatInfo.RegisterAddonMessagePrefix(addonChannel)
 	end
 
 	function C:AddonMessage(msg, channel)
 		if channel == "GUILD" and IsInGuild() then
-			SendAddonMessage(addonChannel, msg, "GUILD")
+			C_ChatInfo.SendAddonMessage(addonChannel, msg, "GUILD")
 		else
 			local chatType = "PRINT"
 			if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) or IsInRaid(LE_PARTY_CATEGORY_INSTANCE) then
@@ -380,7 +382,7 @@ do
 			if chatType == "PRINT" then
 				
 			else
-				SendAddonMessage(addonChannel, msg, chatType)
+				C_ChatInfo.SendAddonMessage(addonChannel, msg, chatType)
 			end
 		end
 	end
