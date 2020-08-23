@@ -846,7 +846,7 @@ tag_function["[range]"] = function(unit, skip, r1, enemy1, r21)
 			return format("|cff%02x%02x%02x%d-%d|r", 0, 255, 0, r2+1, r)
 		end
 	else
-		return format("|cff%02x%02x%02x%s|r", 100, 100, 100, 'Фазирование')
+		return format("|cff%02x%02x%02x%s|r", 100, 100, 100, '???')
 	end
 end
 
@@ -933,26 +933,26 @@ function UF:EnableTestFrames()
 	
 	if self.health then
 		self.health:SetParent(testParentFrame)
-		self.health.leftText:SetText('hlt')
-		self.health.rightText:SetText('hrt')		
-		self.health.centerText:SetText('hct')
+		self.health.leftText:SetText('Left health')
+		self.health.rightText:SetText('Right health')		
+		self.health.centerText:SetText('Center health')
 		self.health:SetMinMaxValues(1, 100)
 		self.health:SetValue(30)
 	end
 	if self.power then
 		self.power:SetParent(testParentFrame)
-		self.power.leftText:SetText('plt')
-		self.power.rightText:SetText('prt')		
-		self.power.centerText:SetText('pct')
+		self.power.leftText:SetText('Left power')
+		self.power.rightText:SetText('Right power')		
+		self.power.centerText:SetText('Center power')
 		self.power:SetMinMaxValues(1, 100)
 		self.power:SetValue(40)
 	end
 	
 	if self.altpower then
 		self.altpower:SetParent(testParentFrame)
-		self.altpower.leftText:SetText('alt')
-		self.altpower.rightText:SetText('art')		
-		self.altpower.centerText:SetText('act')
+		self.altpower.leftText:SetText('Left altpower')
+		self.altpower.rightText:SetText('Right altpower')		
+		self.altpower.centerText:SetText('Center altpower')
 		self.altpower:SetMinMaxValues(1, 100)
 		self.altpower:SetValue(50)
 	end
@@ -1159,20 +1159,7 @@ do
 	end
 	
 	function UpdateText(f)  -- fontstring обновляет данные строки и даннах
-	--	local tags = f.tags
-	--	print('1', tags)
-		
 		lastFrame = f
-	--	tags = tags:gsub("(%[.-%])", gsubHandler)
-		
-		--for i=1, #f.taglist do
-		--	local tag = f.taglist[i]
-		--	tags = gsub(tags, "%"..tag, f.parent.parent.tag_Cache[tag] or '')
-		--end
-		
-	--	print('2', tags)
-		
-	--	f:SetText(tags)	
 		f:SetText(f.tags:gsub("(%[.-%])", gsubHandler))
 	end
 end
@@ -1839,42 +1826,7 @@ do
 
 	UF.AddAggroBorder = AddAggroBorder
 end
---[==[
-local function UpdatePowerBarColors(self, unit, power, debugg)
-	local normalPower = UnitPowerMax(unit)
-	local altpower = UnitPowerMax(unit, E.PowerType.Alternate)
-	
-	if ( not normalPower or normalPower == 0 ) and ( altpower and altpower > 0 ) then
-		local color = UF:PowerColorRGB(unit, E.PowerType.Alternate)
-		self.altpower:SetStatusBarColor(0, 0, 0, 0)
-		self.altpower.bg:SetTexture(0, 0, 0, 0)
-	
-		self.power:SetStatusBarColor(color[1],color[2],color[3],color[4])
-		self.power.bg:SetTexture(color[1]*0.4, color[2]*0.4, color[3]*0.4, self.power._alpha)
-	else
-		if power == "ALTERNATE" then
-			local color = E.db.unitframes.power_colors["ALTERNATE"]
-			if ( altpower and altpower > 0 ) then
-				self.altpower:SetStatusBarColor(color[1], color[2], color[3], self.altpower._alpha)
-				self.altpower.bg:SetTexture(color[1]*0.4, color[2]*0.4, color[3]*0.4, self.altpower._alpha)			
-				
-				self.altpower.showed = true
-			else
-				self.altpower:SetStatusBarColor(0, 0, 0, 0)
-				self.altpower.bg:SetTexture(0, 0, 0, 0)
-				
-				self.altpower.showed = false
-			end
-		else
-			local color = UF:PowerColorRGB(unit)
-			self.power:SetStatusBarColor(color[1],color[2],color[3],color[4])
-			self.power.bg:SetTexture(color[1]*0.4, color[2]*0.4, color[3]*0.4, self.power._alpha)
-		end
-	end
-	
-	print('T', 'UpdatePowerBars', debugg, unit, self.altpower.showed)
-end
-]==]
+
 local UnitFrameMethods = {}
 UnitFrameMethods[UNIT_HEALTH_EVENT] = function (self, event, unit)
 	if unit ~= ( self.displayerUnit or self.unit ) then return end
@@ -1917,6 +1869,7 @@ UnitFrameMethods[UNIT_HEALTH_EVENT] = function (self, event, unit)
 end
 UnitFrameMethods[UNIT_HEALTH_EVENT] = UnitFrameMethods[UNIT_HEALTH_EVENT]
 UnitFrameMethods['UNIT_MAXHEALTH'] = UnitFrameMethods[UNIT_HEALTH_EVENT]
+
 UnitFrameMethods['UNIT_FACTION'] = function (self, event, unit)
 	if unit ~= ( self.displayerUnit or self.unit ) then return end
 	
@@ -1936,6 +1889,7 @@ UnitFrameMethods['UNIT_FACTION'] = function (self, event, unit)
 	self.health.bg:SetColorTexture(bgcolor[1],bgcolor[2],bgcolor[3], self.health._alpha)		
 	if event then self:EventTextUpdate(event, self.displayerUnit or self.unit) end
 end
+
 UnitFrameMethods['UNIT_POWER_UPDATE'] = function(self, event, unit)
 	if unit ~= ( self.displayerUnit or self.unit ) then return end
 	
