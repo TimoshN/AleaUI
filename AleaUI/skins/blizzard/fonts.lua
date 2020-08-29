@@ -8,6 +8,8 @@ local function FixFontShadow(obj)
 end
 	
 local function SetFont(obj, font, size, style, r, g, b, sr, sg, sb, sox, soy)
+	if not obj then E.print('Unable to find font object') end 
+	
 	obj:SetFont(font, size, style or "")
 	if sr and sg and sb then obj:SetShadowColor(sr, sg, sb) end
 	if sox and soy then obj:SetShadowOffset(sox, soy) end
