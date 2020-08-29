@@ -733,7 +733,9 @@ local lastNumQuest = -1
 local lastNumQuestComplete = -1
 
 local ignoreQuest = {
-	[57008] = true
+	[57008] = true,
+	[56064] = true,
+	[55350] = true,
 }
 
 function NP:QUEST_LOG_UPDATE(event, ...)
