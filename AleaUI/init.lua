@@ -634,8 +634,10 @@ end
 function core:ADDON_LOADED(event, name)
 	if addonName ~= name then return end
 	
-	E:UpdateBlizzardFont()
-	
+	if(E.UpdateBlizzardFont)then 
+		E:UpdateBlizzardFont()
+	end 
+
 	E.myname = UnitName("player") 
 	E.myrealm = GetRealmName()
 	E.myclass = select(2, UnitClass("player"))
