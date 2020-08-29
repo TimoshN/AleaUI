@@ -303,16 +303,6 @@ local function SetResize(object, width, height)
 	end
 end
 
-local function SetBackdrop(object) 
-
-end 
-local function SetBackdropColor(object) 
-
-end 
-local function SetBackdropBorderColor(object) 
-
-end 
-
 local function addapi(object)
 	local mt = getmetatable(object).__index
 	if not object.SetOutside then mt.SetOutside = SetOutside end
