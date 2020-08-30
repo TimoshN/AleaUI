@@ -4,7 +4,7 @@ local AleaUI_KillFrame = function(frame)
 	if not _G[frame] then return end
 
 	if not _G[frame].Kill then
-		print('No kill for ', frame)
+		E.print('No kill for ', frame)
 		return
 	end
 	
@@ -81,27 +81,3 @@ local function KillBlizzard()
 end
 
 E:OnInit(KillBlizzard)
---[[
-do
-	local function ToggleAddOn(v)
-		local f = v and EnableAddOn or DisableAddOn
-		f("Blizzard_CompactRaidFrames")
-		f("Blizzard_CUFProfiles")
-	end
-	
-	local hidenparent = CreateFrame("Frame")
-	hidenparent:RegisterEvent("PLAYER_LOGIN")
-	hidenparent:RegisterEvent("ADDON_LOADED")
-	hidenparent:SetScript("OnEvent", function(self, event, unit)
-		if ( event == "ADDON_LOADED" and unit == "AleaUI" ) or event == "PLAYER_LOGIN" then
-
-			self:UnregisterEvent("PLAYER_LOGIN")
-			self:UnregisterEvent("ADDON_LOADED")
-			
-			if not IsAddOnLoaded("AleaUI-RaidFrames") then
-				ToggleAddOn(true)
-			end
-		end
-	end)
-end
-]]

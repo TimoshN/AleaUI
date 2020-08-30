@@ -4,8 +4,10 @@ local _G = _G
 local L = E.L
 
 local error = function(...)
-
-	print(debugstack(2), ...)
+	print('     ')
+	print(debugstack(2, 3, 2))
+	print(...)
+	print('     ')
 end 
 
 E.default_settings.skins = {

@@ -490,7 +490,7 @@ tag_OnEvents["[range]"] = "POST_UPDATE_FRAME ON_RANGE_CHANGED"
 tag_function["[range]"] = function(unit, skip, r1, enemy1, r21)
 
 	local r, enemy, r2 
-	local phazed = UnitInPhase(unit)
+	local phased = UnitInPhase(unit)
 	
 	if UnitIsUnit('player', unit) then
 		return ''
@@ -517,7 +517,7 @@ tag_function["[range]"] = function(unit, skip, r1, enemy1, r21)
 			return format("|cff%02x%02x%02x%d-%d|r", 0, 255, 0, r2+1, r)
 		end
 	else
-		return format("|cff%02x%02x%02x%s|r", 100, 100, 100, 'Фазирование')
+		return format("|cff%02x%02x%02x%s|r", 100, 100, 100, 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ')
 	end
 end
 

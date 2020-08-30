@@ -5,9 +5,6 @@ local L = E.L
 
 -- DEBUG PRINT --
 function E.print(text, ...) 
-	if ( true ) then return end 
-
-
     text = tostring(text)
     for n=1,select('#', ...) do
         local e = select(n, ...)
@@ -633,7 +630,7 @@ do
 
 	local function trueFunction(...)
 		geterrorhandler()(...)
-		return true;
+		return 'CustomErrorHandler';
 	end
 
 	function E:OnInit(func)
@@ -647,10 +644,6 @@ do
 	function E:InitFrames()
 		for i, func in ipairs(list) do		
 			local status, ret, err = xpcall(func, trueFunction)
-
-			-- print (status)
-			-- print (ret)
-			-- print (err)
 		end		
 		wipe(list)
 	end
@@ -667,10 +660,6 @@ do
 	function E:InitFrames2()
 		for i, func in ipairs(list2) do
 			local status, ret, err = xpcall(func, trueFunction)
-
-			--print (status)
-			--print (ret)
-			--print (err)
 		end	
 		wipe(list2)
 	end
@@ -687,10 +676,6 @@ do
 	function E:InitFrames3()
 		for i, func in ipairs(list3) do		
 			local status, ret, err = xpcall(func, trueFunction)
-
-			--print (status)
-			--print (ret)
-			--print (err)
 		end		
 		wipe(list3)
 	end
@@ -706,10 +691,6 @@ do
 	function E:InitFrames4()
 		for i, func in ipairs(list4) do		
 			local status, ret, err = xpcall(func, trueFunction)
-
-			--print (status)
-			--print (ret)
-			--print (err)
 		end		
 		wipe(list4)
 	end

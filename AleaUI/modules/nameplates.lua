@@ -66,11 +66,7 @@ local UnitShouldDisplayName = UnitShouldDisplayName
 local GetNumQuestLogEntries = C_QuestLog and C_QuestLog.GetNumQuestLogEntries or GetNumQuestLogEntries
 local GetQuestLogTitle = C_QuestLog and C_QuestLog.GetTitleForLogIndex or GetQuestLogTitle
 
-local UNIT_HEALTH_EVENT = 'UNIT_HEALTH_FREQUENT'
-
-if ( E.isShadowlands ) then 
-	UNIT_HEALTH_EVENT = 'UNIT_HEALTH'
-end
+local UNIT_HEALTH_EVENT = E.UNIT_HEALTH_EVENT
 
 local selectedspell
 local selectedname
@@ -143,10 +139,14 @@ local colorToTypeName = {
 
 local spellstringcache = {}
 
-function NP:SpellString(spellid)
+function NP:SpellString(spellid, spellName)
 	if not spellstringcache[spellid] then
 		local name, _, icon = GetSpellInfo(spellid)
-		spellstringcache[spellid] = "\124T"..icon..":10\124t "..name
+		if ( name ) then 
+			spellstringcache[spellid] = "\124T"..icon..":10\124t "..name
+		else 
+			return 'Invalid spellID:'..tostring(spellid or spellName)
+		end
 	end
 
 	return spellstringcache[spellid]
@@ -4834,11 +4834,11 @@ NAMEPLATE_GUI.args.spellList.args.create.args.spelllist = {
 
 		for spellname, params in pairs(E.db.nameplates.spelllist) do
 			if not spellListFilter or spellListFilter == 1 then
-				t[spellname] = NP:SpellString(params.spellID)
+				t[spellname] = NP:SpellString(params.spellID, spellname)
 			elseif spellListFilter == 3 and not params.filter then
-				t[spellname] = NP:SpellString(params.spellID)
+				t[spellname] = NP:SpellString(params.spellID, spellname)
 			elseif spellListFilter == params.filter then
-				t[spellname] = NP:SpellString(params.spellID)
+				t[spellname] = NP:SpellString(params.spellID, spellname)
 			end
 			--t[spellname] = (spellname).." "..( params.size or 1 ).." "..( params.show and "SHOW" or "HIDE" ).." "..(params.spellID or "000000").." "..(params.checkID and "CheckID" or "NoCheckID")
 		end
@@ -5141,7 +5141,7 @@ NAMEPLATE_GUI.args.blackList.args.create.args.namelist = {
 		local t = {}
 
 		for spellname,params in pairs(E.db.nameplates.blacklist) do
-			t[spellname] = NP:SpellString(params.spellID)
+			t[spellname] = NP:SpellString(params.spellID, spellname)
 		end
 
 		return t

@@ -6,23 +6,15 @@ if ( E.isClassic ) then
 	return 
 end 
 
-local function GetCurrencyIcon(...)
-	if ( E.isShadowlands ) then 
-		return C_CurrencyInfo.GetCurrencyInfo(...).iconFileID
-	end 
-	return select(3, GetCurrencyInfo(...))
-end
-
-
 local format = string.format
 local tsort = table.sort
 local GARRISON_CURRENCY = 824
 local APEX_CURRENCY = 823
 local OIL_CURRENCY = 1101
 
-local GARRISON_ICON = format("\124T%s:%d:%d:0:0:64:64:4:60:4:60\124t", GetCurrencyIcon(GARRISON_CURRENCY), 16, 16)
-local OIL_ICON = format("\124T%s:%d:%d:0:0:64:64:4:60:4:60\124t", GetCurrencyIcon(OIL_CURRENCY), 16, 16)
-local APEX_ICON = format("\124T%s:%d:%d:0:0:64:64:4:60:4:60\124t", GetCurrencyIcon(APEX_CURRENCY), 16, 16)
+local GARRISON_ICON = format("\124T%s:%d:%d:0:0:64:64:4:60:4:60\124t", E.GetCurrencyIcon(GARRISON_CURRENCY), 16, 16)
+local OIL_ICON = format("\124T%s:%d:%d:0:0:64:64:4:60:4:60\124t", E.GetCurrencyIcon(OIL_CURRENCY), 16, 16)
+local APEX_ICON = format("\124T%s:%d:%d:0:0:64:64:4:60:4:60\124t", E.GetCurrencyIcon(APEX_CURRENCY), 16, 16)
 
 local function sortFunction(a, b)
 	return a.missionEndTime < b.missionEndTime

@@ -240,10 +240,10 @@ do
 	end)
 	profileData:Hide()
 	profileData:SetBackdrop({
-			bgFile = [=[Interface\ChatFrame\ChatFrameBackground]=],
-			edgeFile = [=[Interface\ChatFrame\ChatFrameBackground]=], --[=[Interface\ChatFrame\ChatFrameBackground]=]
-			edgeSize = 1,
-		})
+		bgFile = [[Interface\ChatFrame\ChatFrameBackground]],
+		edgeFile = [[Interface\ChatFrame\ChatFrameBackground]],
+		edgeSize = 1,
+	})
 	profileData:SetBackdropColor(0 , 0 , 0 , 0.7) --цвет фона
 	profileData:SetBackdropBorderColor(1 , 1 , 1 , 1) --цвет фона
 	

@@ -93,7 +93,7 @@ local function OnEnter(self)
 
 	if ( MAX_WATCHED_TOKENS ) then 
 		for i = 1, MAX_WATCHED_TOKENS do
-			local name, count, extraCurrencyType, icon, itemID = GetBackpackCurrencyInfo(i)
+			local name, count, extraCurrencyType, icon, itemID = E.GetBackpackCurrencyInfo(i)
 			if name and i == 1 then
 				DT.tooltip:AddLine(" ")
 				DT.tooltip:AddLine(CURRENCY)

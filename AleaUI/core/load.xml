@@ -5,4 +5,7 @@
 	<Script file="core.lua"/>
 	<Script file="grid.lua"/>
 	<Script file="throttle.lua"/>
+
+	<Script file="bfa.lua"/>
+	<Script file="shadowlands.lua"/>
 </Ui>

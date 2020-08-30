@@ -188,11 +188,13 @@ E:OnInit(function()
 	end
 	
 	local function SetAtlasTexture(obj, name)
-		local filename, width, height, left, right, top, bottom, tilesHoriz, tilesVert = GetAtlasInfo(name)
+		local info = C_Texture.GetAtlasInfo(name)
 		
-		obj:SetTexture(filename)
-		obj:SetSize(width, height)
-		obj:SetTexCoord(left, right, top, bottom)
+		if ( info ) then 
+			obj:SetTexture(info.filename or info.file)
+			obj:SetSize(info.width, info.height)
+			obj:SetTexCoord(info.leftTexCoord, info.rightTexCoord, info.topTexCoord, info.bottomTexCoord)
+		end
 	end
 	
 	bossKillFrame.artWork.BgBanner_Top = bossKillFrame.artWork:CreateTexture(nil, 'BORDER')

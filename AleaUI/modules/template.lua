@@ -68,17 +68,10 @@ local IsSpellKnown = IsSpellKnown
 local NO = NO
 local RAID_CLASS_COLORS = RAID_CLASS_COLORS
 local CLASS_LOCALIZED = {}
+local UnitInPhase = E.UnitInPhase
 
-local UnitPhaseReason = UnitPhaseReason
-local UnitInPhase = UnitInPhase or function(...)
-	return UnitPhaseReason(...) == 0
-end 
+local UNIT_HEALTH_EVENT = E.UNIT_HEALTH_EVENT
 
-local UNIT_HEALTH_EVENT = 'UNIT_HEALTH_FREQUENT'
-
-if ( E.isShadowlands ) then 
-	UNIT_HEALTH_EVENT = 'UNIT_HEALTH'
-end
 
 for classID = 1, 20 do -- GetNumClasses not supported by wow classic
 	local classInfo = C_CreatureInfo.GetClassInfo(classID)
@@ -817,13 +810,13 @@ tag_OnEvents["[range]"] = "POST_UPDATE_FRAME ON_RANGE_CHANGED"
 tag_function["[range]"] = function(unit, skip, r1, enemy1, r21)
 
 	local r, enemy, r2 
-	local phazed = UnitInPhase(unit)
+	local phased = UnitInPhase(unit)
 	
 	if UnitIsUnit('player', unit) then
 		return ''
 	elseif not UnitIsVisible('player', unit) then 
 		return '??'
-	elseif phazed then
+	elseif phased then
 		if E.db.unitframes.rangeCheck then
 			return ''
 		end
@@ -1760,10 +1753,10 @@ local function UF_OnUpdater1(self, elapsed)
 	if self.elapsed > 0.25 then
 		self.elapsed  = 0
 		
-		local phazed = UnitInPhase(unit)
+		local phased = UnitInPhase(unit)
 		local maxRange = ( E.myclass == 'DRUID' and GetSpecialization() == 1 ) and 45 or 40
 		
-		if phazed and not UnitIsUnit('player', unit) then
+		if phased and not UnitIsUnit('player', unit) then
 			local range, enemy, r2
 		
 			if not E.db.unitframes.rangeCheck then
@@ -2177,7 +2170,7 @@ UnitFrameMethods['UNIT_PHASE'] = function(self, event, unit)
 	
 	self:SetAlpha(alpha)
 	
-	if ( not inPhase) then
+	if ( not inPhase ) then
 		self.centerStatusIcon.texture:SetTexture("Interface\\TargetingFrame\\UI-PhasingIcon");
 		self.centerStatusIcon.texture:SetTexCoord(0.15625, 0.84375, 0.15625, 0.84375);
 		self.centerStatusIcon.border:Show();
@@ -2923,7 +2916,7 @@ do
 		storage[self].al_backdrop:Show()
 	end
 	
-	function E:CreateBackdrop(parent, point, color, backdropcolor, background, size,step)
+	function E:CreateBackdrop(parent, point, color, backdropcolor, background, size, step)
 		point = point or parent
 		
 		if storage[point] then return point end

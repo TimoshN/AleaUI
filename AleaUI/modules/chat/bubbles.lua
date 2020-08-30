@@ -12,6 +12,10 @@ local strlower = string.lower
 local C_ChatBubbles_GetAllChatBubbles = C_ChatBubbles.GetAllChatBubbles
 
 local skinBubbles = function(frame)
+    frame.isSkinnedAleaUI = true
+    frame.isBubble = true
+    frame.isTransparentBubble = true
+
     for i=1, frame:GetNumRegions() do
         local region = select(i, frame:GetRegions())
         
@@ -37,11 +41,33 @@ local skinBubbles = function(frame)
     frame:HookScript("OnShow", function(self)
         self:SetBackdropBorderColor(self.text:GetTextColor())
     end)
-    
+end
+
+local skinBubblesShadowlands = function(frame)
     frame.isSkinnedAleaUI = true
     frame.isBubble = true
     frame.isTransparentBubble = true
-end
+
+    local child = frame:GetChildren()
+
+    child.Tail:SetAlpha(0)
+    
+    child:SetBackdrop({
+        bgFile = 'Interface\\Buttons\\WHITE8x8', 
+        edgeFile ='Interface\\Buttons\\WHITE8x8', 
+        tile = false, tileSize = 0, edgeSize = E.UIParent:GetScale(), 
+        insets = { left = 0, right = 0, top = 0, bottom = 0}
+    })
+
+    child.String:SetFont(STANDARD_TEXT_FONT, 12, 'OUTLINE')
+
+    child:SetBackdropColor(0,0,0,0.8)
+    child:SetBackdropBorderColor(child.String:GetTextColor())
+
+    frame:HookScript("OnShow", function(self)
+        child:SetBackdropBorderColor(child.String:GetTextColor())
+    end)
+end 
 
 local function LoadChatBubbles()
     bubbles.elapsed = -2
@@ -54,7 +80,11 @@ local function LoadChatBubbles()
         
         for i=1, #t do
             if not t[i].isSkinnedAleaUI then
-                skinBubbles(t[i])
+                if ( E.isShadowlands ) then 
+                    skinBubblesShadowlands(t[i])
+                else 
+                    skinBubbles(t[i])
+                end
             end
         end
     end)

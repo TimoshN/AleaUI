@@ -116,121 +116,7 @@ local function InitInspect()
 		[128908] = 72, -- Fury Warrior
 		[128289] = 73, -- Protection Warrior	
 	}
-	--[==[
-	local bonus1relicPattern = ':(1:%d%d%d%d)'
-	local bonus2relicPattern = ':(2:%d%d%d%d:%d%d%d%d)'
-	local bonus3relicPattern = ':(3:%d%d%d%d:%d%d%d%d:%d%d%d%d)'
-	local blankbonus = ':()'
-	local endlinepattern = '$' --'|h['
-	
-	local relicBonuses = {
-		[0] = {
-		
-		},
-		[1] = {
-			bonus3relicPattern..blankbonus..blankbonus..endlinepattern,
-			bonus2relicPattern..blankbonus..blankbonus..endlinepattern,
-			bonus1relicPattern..blankbonus..blankbonus..endlinepattern,
-		},
-		[2] = {
-			bonus3relicPattern..bonus3relicPattern..blankbonus..endlinepattern,	
-			bonus3relicPattern..bonus2relicPattern..blankbonus..endlinepattern,	
-			bonus2relicPattern..bonus2relicPattern..blankbonus..endlinepattern,
-			bonus2relicPattern..bonus3relicPattern..blankbonus..endlinepattern,
 
-			bonus1relicPattern..bonus3relicPattern..blankbonus..endlinepattern,
-			bonus1relicPattern..bonus2relicPattern..blankbonus..endlinepattern,
-			bonus1relicPattern..bonus1relicPattern..blankbonus..endlinepattern,
-			bonus2relicPattern..bonus1relicPattern..blankbonus..endlinepattern,
-			bonus3relicPattern..bonus1relicPattern..blankbonus..endlinepattern,
-		},
-		[3] = {
-			bonus3relicPattern..bonus3relicPattern..bonus3relicPattern..endlinepattern,	
-			
-			bonus2relicPattern..bonus2relicPattern..bonus2relicPattern..endlinepattern,
-			bonus3relicPattern..bonus2relicPattern..bonus2relicPattern..endlinepattern,	
-			bonus2relicPattern..bonus3relicPattern..bonus2relicPattern..endlinepattern,
-			bonus3relicPattern..bonus3relicPattern..bonus2relicPattern..endlinepattern,	
-			bonus2relicPattern..bonus2relicPattern..bonus3relicPattern..endlinepattern,
-			bonus3relicPattern..bonus2relicPattern..bonus3relicPattern..endlinepattern,	
-			bonus2relicPattern..bonus3relicPattern..bonus3relicPattern..endlinepattern,
-
-			bonus1relicPattern..bonus1relicPattern..bonus1relicPattern..endlinepattern,
-			bonus2relicPattern..bonus1relicPattern..bonus1relicPattern..endlinepattern,
-			bonus3relicPattern..bonus1relicPattern..bonus1relicPattern..endlinepattern,	
-			bonus1relicPattern..bonus2relicPattern..bonus1relicPattern..endlinepattern,
-			bonus2relicPattern..bonus2relicPattern..bonus1relicPattern..endlinepattern,
-			bonus3relicPattern..bonus2relicPattern..bonus1relicPattern..endlinepattern,	
-			bonus1relicPattern..bonus3relicPattern..bonus1relicPattern..endlinepattern,
-			bonus2relicPattern..bonus3relicPattern..bonus1relicPattern..endlinepattern,
-			bonus3relicPattern..bonus3relicPattern..bonus1relicPattern..endlinepattern,
-			bonus1relicPattern..bonus1relicPattern..bonus2relicPattern..endlinepattern,
-			bonus2relicPattern..bonus1relicPattern..bonus2relicPattern..endlinepattern,
-			bonus3relicPattern..bonus1relicPattern..bonus2relicPattern..endlinepattern,	
-			bonus1relicPattern..bonus2relicPattern..bonus2relicPattern..endlinepattern,
-			bonus1relicPattern..bonus3relicPattern..bonus2relicPattern..endlinepattern,
-			bonus1relicPattern..bonus1relicPattern..bonus3relicPattern..endlinepattern,
-			bonus2relicPattern..bonus1relicPattern..bonus3relicPattern..endlinepattern,
-			bonus3relicPattern..bonus1relicPattern..bonus3relicPattern..endlinepattern,	
-			bonus1relicPattern..bonus2relicPattern..bonus3relicPattern..endlinepattern,
-			bonus1relicPattern..bonus3relicPattern..bonus3relicPattern..endlinepattern,
-		},
-	
-	}
-	
-	local function GetRelicLinkFromArtifact(artifact, relicIndex)
-		local link = string.match(artifact, '(item:.-)|h')
-
-		local info = { strsplit(':', link) }
-	
-		local offset = 4
-
-		local relic1 = info[offset] and tonumber(info[offset]) or false
-		local relic2 = info[offset+1] and tonumber(info[offset+1]) or false
-		local relic3 = info[offset+2] and tonumber(info[offset+2]) or false
-		
-		
-		local numValues = #info
-		
-		local numRelics = 0
-		
-		if relic1 then
-			numRelics = numRelics + 1
-		end
-		if relic2 then
-			numRelics = numRelics + 1
-		end
-		if relic3 then
-			numRelics = numRelics + 1
-		end
-	
-		local v1, v2, v3
-		
-		for i=1, #relicBonuses[numRelics] do
-			v1, v2, v3 = string.match(link, relicBonuses[numRelics][i])
-			if v1 and v2 and v3 then
-				break
-			end
-		end
-		
-		if relicIndex == 1 then
-			if relic1 and v1 then
-				return format('|Hitem:%d::::::::::::%s:::|h[s]|h', relic1, v1)
-			end
-			return false
-		elseif relicIndex == 2 then
-			if relic2 and v2 then
-				return format('|Hitem:%d::::::::::::%s:::|h[s]|h', relic2, v2)
-			end
-			return false
-		elseif relicIndex == 3 then
-			if relic3 and v3 then
-				return format('|Hitem:%d::::::::::::%s:::|h[s]|h', relic3, v3)
-			end
-			return false
-		end
-	end
-	]==]
 	local function GetItemID(link)		
 		if link then			
 			return tonumber(link:match("item:(%d+):")) or false
@@ -287,21 +173,7 @@ local function InitInspect()
 		elseif GetItemID(GetInventoryItemLink(unit, 18)) and Artifacts[GetItemID(GetInventoryItemLink(unit, 18))or 0] then
 			searchForArtifactID = 18 --GetInventoryItemID(unit, 18)
 		end
-		-- :match("item:(%d+):")
-		--[==[
-		if searchForArtifactID then
-			print('Find artifact', searchForArtifactID, GetItemID(GetInventoryItemLink(unit, searchForArtifactID)),GetInventoryItemLink(unit, searchForArtifactID):gsub('|', '||'))
-			
-			print('1=', GetItemGem(GetInventoryItemLink(unit, searchForArtifactID), 1))
-			print('2=', GetItemGem(GetInventoryItemLink(unit, searchForArtifactID), 2))
-			print('3=', GetItemGem(GetInventoryItemLink(unit, searchForArtifactID), 3))
-		else
-			print('Cant find', 
-				'16 =', GetInventoryItemID(unit, 16), GetInventoryItemLink(unit, 16), GetItemID(GetInventoryItemLink(unit, 16)), 
-				'17 =', GetInventoryItemID(unit, 17), GetInventoryItemLink(unit, 17), GetItemID(GetInventoryItemLink(unit, 17)),   
-				'18 =', GetInventoryItemID(unit, 18), GetInventoryItemLink(unit, 18), GetItemID(GetInventoryItemLink(unit, 18)))
-		end
-		]==]
+
 		for id, enabled in pairs(countToTotalIlvl) do
 			if itemLevelList[id] then			
 				if id == 17 or id == 16 or id == 18 then
@@ -464,28 +336,7 @@ local function InitInspect()
 		end)
 		
 	end
-	
-	--[==[
-	Skins.ThemeItemButton('InspectMainHandSlot', 'MainHand')
-	Skins.ThemeItemButton('InspectSecondaryHandSlot', 'SecondaryHand')
-	Skins.ThemeItemButton('InspectHeadSlot', 'Head')
-	Skins.ThemeItemButton('InspectNeckSlot', 'Neck')
-	Skins.ThemeItemButton('InspectShoulderSlot', 'Shoulder')
-	Skins.ThemeItemButton('InspectBackSlot', 'Chest')
-	Skins.ThemeItemButton('InspectChestSlot', 'Chest')
-	Skins.ThemeItemButton('InspectShirtSlot', 'Shirt')
-	Skins.ThemeItemButton('InspectTabardSlot', 'Tabard')
-	Skins.ThemeItemButton('InspectWristSlot', 'Wrists')
-	Skins.ThemeItemButton('InspectHandsSlot', 'Hands')
-	Skins.ThemeItemButton('InspectWaistSlot', 'Waist')
-	Skins.ThemeItemButton('InspectLegsSlot', 'Legs')
-	Skins.ThemeItemButton('InspectFeetSlot', 'Feet')
-	Skins.ThemeItemButton('InspectFinger0Slot', 'Finger')
-	Skins.ThemeItemButton('InspectFinger1Slot', 'Finger')
-	Skins.ThemeItemButton('InspectTrinket0Slot', 'Trinket')
-	Skins.ThemeItemButton('InspectTrinket1Slot', 'Trinket')
-	]==]
-	
+
 	InspectFrame.AleaUIRelicList = {}
 	
 	for i=1, 3 do

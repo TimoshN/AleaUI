@@ -62,10 +62,7 @@ local GetSpellInfo = GetSpellInfo
 local CooldownFrame_Set = CooldownFrame_Set
 local CooldownFrame_Clear = CooldownFrame_Clear
 
-local UnitPhaseReason = UnitPhaseReason
-local UnitInPhase = UnitInPhase or function(...)
-	return UnitPhaseReason(...) == 0
-end 
+local UnitInPhase = E.UnitInPhase
 
 -------------------------------------
 -- GLOBAL VARIABLES
@@ -79,11 +76,7 @@ local DISTANCE_THRESHOLD_SQUARED = DISTANCE_THRESHOLD_SQUARED or 250*250
 local MAX_INCOMING_HEAL_OVERFLOW = 1 -- 1.05
 local BUFF_STACKS_OVERFLOW = BUFF_STACKS_OVERFLOW or 10
 
-local UNIT_HEALTH_EVENT = 'UNIT_HEALTH_FREQUENT'
-
-if ( E.isShadowlands ) then 
-	UNIT_HEALTH_EVENT = 'UNIT_HEALTH'
-end
+local UNIT_HEALTH_EVENT = E.UNIT_HEALTH_EVENT
 
 -------------------------------------
 -- MODULE VARIABLES
@@ -814,7 +807,7 @@ local UpdateCenterStatusIcon = function(frame)
 			frame.centerStatusIcon.tooltip = INCOMING_SUMMON_TOOLTIP_SUMMON_DECLINED;
 			frame.centerStatusIcon:Show();
 		end
-	elseif ( frame.inDistance and (not UnitInPhase(frame.unit) or UnitIsWarModePhased and UnitIsWarModePhased(frame.unit)) ) then
+	elseif ( frame.inDistance and (not UnitInPhase(frame.unit))) then
 		frame.centerStatusIcon.texture:SetTexture("Interface\\TargetingFrame\\UI-PhasingIcon");
 		frame.centerStatusIcon.texture:SetTexCoord(0.15625, 0.84375, 0.15625, 0.84375);
 		frame.centerStatusIcon.border:Show();
@@ -823,63 +816,6 @@ local UpdateCenterStatusIcon = function(frame)
 		frame.centerStatusIcon:Hide();
 	end
 end
-
---[==[
-	function CompactUnitFrame_UpdateCenterStatusIcon(frame)
-	if ( frame.centerStatusIcon ) then
-		if ( frame.optionTable.displayInOtherGroup and UnitInOtherParty(frame.unit) ) then
-			frame.centerStatusIcon.texture:SetTexture("Interface\\LFGFrame\\LFG-Eye");
-			frame.centerStatusIcon.texture:SetTexCoord(0.125, 0.25, 0.25, 0.5);
-			frame.centerStatusIcon.border:SetTexture("Interface\\Common\\RingBorder");
-			frame.centerStatusIcon.border:Show();
-			frame.centerStatusIcon.tooltip = PARTY_IN_PUBLIC_GROUP_MESSAGE;
-			frame.centerStatusIcon:Show();
-		elseif ( frame.optionTable.displayIncomingResurrect and UnitHasIncomingResurrection(frame.unit) ) then
-			frame.centerStatusIcon.texture:SetTexture("Interface\\RaidFrame\\Raid-Icon-Rez");
-			frame.centerStatusIcon.texture:SetTexCoord(0, 1, 0, 1);
-			frame.centerStatusIcon.border:Hide();
-			frame.centerStatusIcon.tooltip = nil;
-			frame.centerStatusIcon:Show();
-		elseif ( frame.optionTable.displayIncomingSummon and C_IncomingSummon.HasIncomingSummon(frame.unit) ) then
-			local status = C_IncomingSummon.IncomingSummonStatus(frame.unit);
-			if(status == Enum.SummonStatus.Pending) then
-				frame.centerStatusIcon.texture:SetAtlas("Raid-Icon-SummonPending");
-				frame.centerStatusIcon.texture:SetTexCoord(0, 1, 0, 1);
-				frame.centerStatusIcon.border:Hide();
-				frame.centerStatusIcon.tooltip = INCOMING_SUMMON_TOOLTIP_SUMMON_PENDING;
-				frame.centerStatusIcon:Show();
-			elseif( status == Enum.SummonStatus.Accepted ) then
-				frame.centerStatusIcon.texture:SetAtlas("Raid-Icon-SummonAccepted");
-				frame.centerStatusIcon.texture:SetTexCoord(0, 1, 0, 1);
-				frame.centerStatusIcon.border:Hide();
-				frame.centerStatusIcon.tooltip = INCOMING_SUMMON_TOOLTIP_SUMMON_ACCEPTED;
-				frame.centerStatusIcon:Show();
-			elseif( status == Enum.SummonStatus.Declined ) then
-				frame.centerStatusIcon.texture:SetAtlas("Raid-Icon-SummonDeclined");
-				frame.centerStatusIcon.texture:SetTexCoord(0, 1, 0, 1);
-				frame.centerStatusIcon.border:Hide();
-				frame.centerStatusIcon.tooltip = INCOMING_SUMMON_TOOLTIP_SUMMON_DECLINED;
-				frame.centerStatusIcon:Show();
-			end
-		elseif ( frame.optionTable.displayInOtherPhase and frame.inDistance and (not UnitInPhase(frame.unit) or UnitIsWarModePhased(frame.unit)) ) then
-			frame.centerStatusIcon.texture:SetTexture("Interface\\TargetingFrame\\UI-PhasingIcon");
-			frame.centerStatusIcon.texture:SetTexCoord(0.15625, 0.84375, 0.15625, 0.84375);
-			frame.centerStatusIcon.border:Hide();
-			frame.centerStatusIcon.tooltip = PARTY_PHASED_MESSAGE;
-			if ( UnitIsWarModePhased(frame.unit) ) then
-				if C_PvP.IsWarModeDesired() then
-					frame.centerStatusIcon.tooltip = PARTY_PLAYER_WARMODE_DISABLED;
-				else
-					frame.centerStatusIcon.tooltip = PARTY_PLAYER_WARMODE_ENABLED;
-				end
-			end
-			frame.centerStatusIcon:Show();
-		else
-			frame.centerStatusIcon:Hide();
-		end
-	end
-end
-]==]
 
 local function UpdateDistance(frame)
 	local distance, checkedDistance = UnitDistanceSquared(frame.displayedUnit);
