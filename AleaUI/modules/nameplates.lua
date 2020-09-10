@@ -736,6 +736,8 @@ local ignoreQuest = {
 	[57008] = true,
 	[56064] = true,
 	[55350] = true,
+	[56308] = true,
+	[57157] = true,
 }
 
 function NP:QUEST_LOG_UPDATE(event, ...)
