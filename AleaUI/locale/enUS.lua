@@ -72,7 +72,7 @@ L['CHAT_CHANNEL_LFG'] = 'LookingForGroup'
 L["Building(s) Report:"] = true
 L["Mission(s) Report:"] = true
 L["Naval Mission(s) Report:"] = true
-
+L['Mission'] = true
 L['Trigger'] = true
 L["Save"] = true
 L["No bindings set."] = true

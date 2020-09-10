@@ -73,7 +73,7 @@ L['CHAT_CHANNEL_LFG'] = 'ПоискСпутников'
 L["Building(s) Report:"] = 'Постройка:'
 L["Mission(s) Report:"] = 'Задания:'
 L["Naval Mission(s) Report:"] = 'Задания флота:'
-
+L['Mission'] = 'Задание'
 L['Trigger'] = 'Триггер'
 L["Save"] = 'Сохранить'
 L["No bindings set."] = "Нет назначений"
