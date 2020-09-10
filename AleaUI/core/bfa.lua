@@ -22,5 +22,5 @@ function E.GetBackpackCurrencyInfo(...)
 end
 
 function E.UnitInPhase(...)
-    return UnitInPhase(...) or UnitIsWarModePhased(frame.unit)
+    return UnitInPhase(...) or UnitIsWarModePhased(...)
 end 

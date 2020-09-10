@@ -189,20 +189,20 @@ do
 		f:SetHighlightFontObject("GameFontHighlightSmall")
 		f:SetFrameStrata("HIGH")
 		f:SetBackdrop({
-				bgFile = [[Interface\Buttons\WHITE8x8]],
-				edgeFile = [[Interface\Buttons\WHITE8x8]],
-				edgeSize = 1,
-				insets = {top = 0, left = 0, bottom = 0, right = 0},
-					})
+			bgFile = [[Interface\Buttons\WHITE8x8]],
+			edgeFile = [[Interface\Buttons\WHITE8x8]],
+			edgeSize = 1,
+			insets = {top = 0, left = 0, bottom = 0, right = 0},
+		})
 		f:SetBackdropColor(0,0,0,1)
 		f:SetBackdropBorderColor(.3,.3,.3,1)
 		
 		f:SetScript("OnEnter", function(self)
-				self:SetBackdropBorderColor(1,1,1,1) --С†РІРµС‚ РєСЂР°РµРІ
-			end)
-			f:SetScript("OnLeave", function(self)
-				self:SetBackdropBorderColor(.3,.3,.3,1) --С†РІРµС‚ РєСЂР°РµРІ
-			end)
+			self:SetBackdropBorderColor(1,1,1,1) --С†РІРµС‚ РєСЂР°РµРІ
+		end)
+		f:SetScript("OnLeave", function(self)
+			self:SetBackdropBorderColor(.3,.3,.3,1) --С†РІРµС‚ РєСЂР°РµРІ
+		end)
 			
 		local t = f:GetFontString()
 		t:SetFont("Fonts\\ARIALN.TTF", 12, "OUTLINE")
@@ -243,11 +243,11 @@ do
 		textbox:SetJustifyV("CENTER")
 		textbox:SetFrameStrata("HIGH")
 		textbox:SetBackdrop({
-				bgFile = [[Interface\Buttons\WHITE8x8]],
-				edgeFile = [[Interface\Buttons\WHITE8x8]],
-				edgeSize = 1,
-				insets = {top = 0, left = 0, bottom = 0, right = 0},
-					})
+			bgFile = [[Interface\Buttons\WHITE8x8]],
+			edgeFile = [[Interface\Buttons\WHITE8x8]],
+			edgeSize = 1,
+			insets = {top = 0, left = 0, bottom = 0, right = 0},
+		})
 		textbox:SetBackdropColor(0,0,0,1)
 		textbox:SetBackdropBorderColor(1,1,1,0.5)
 		
