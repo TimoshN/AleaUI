@@ -612,7 +612,7 @@ local function Load()
 	
 	local listOfModules = {		 
 		SCENARIO_CONTENT_TRACKER_MODULE,
-		AUTO_QUEST_POPUP_TRACKER_MODULE,
+		--AUTO_QUEST_POPUP_TRACKER_MODULE,
 		QUEST_TRACKER_MODULE,
 		BONUS_OBJECTIVE_TRACKER_MODULE,
 		WORLD_QUEST_TRACKER_MODULE,
@@ -626,26 +626,30 @@ local function Load()
 	--	print('OT:UpdateUsedBlocksWidth', reason)
 		
 		for i=1, #listOfModules do		
-			for id, frame in pairs( listOfModules[i].usedBlocks ) do	
-				
-				local mod = 0
-				if WORLD_QUEST_TRACKER_MODULE == listOfModules[i] then
-					mod = 22
-				end
-				
-				if frame:GetWidth()+mod ~=  ObjectiveTrackerFrame:GetWidth()+mod then
-					frame:SetWidth( ObjectiveTrackerFrame:GetWidth()+mod )
-					--[==[
-					if not frame.bg_test then
-						local bg_test = frame:CreateTexture()
-						bg_test:SetColorTexture(0,0,0,0.2)
-						bg_test:SetOutside(frame)
-						bg_test:SetDrawLayer('BORDER', 0)
-						frame.bg_test = bg_test
+			if(listOfModules[i]) then
+				for id, frame in pairs( listOfModules[i].usedBlocks ) do	
+					
+					local mod = 0
+					if WORLD_QUEST_TRACKER_MODULE == listOfModules[i] then
+						mod = 22
 					end
-					]==]			
-				end
-			end	
+					
+					if frame:GetWidth()+mod ~=  ObjectiveTrackerFrame:GetWidth()+mod then
+						frame:SetWidth( ObjectiveTrackerFrame:GetWidth()+mod )
+						--[==[
+						if not frame.bg_test then
+							local bg_test = frame:CreateTexture()
+							bg_test:SetColorTexture(0,0,0,0.2)
+							bg_test:SetOutside(frame)
+							bg_test:SetDrawLayer('BORDER', 0)
+							frame.bg_test = bg_test
+						end
+						]==]			
+					end
+				end	
+			else 
+				print('Unable to find module for objectiveTracker', i)
+			end
 		end
 		
 		for frame in pairs(stringHooked) do

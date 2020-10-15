@@ -714,53 +714,81 @@ C:RegisterEvent("BN_FRIEND_LIST_SIZE_CHANGED")
 
 function C:UpdateWhispersOwner()
 
-	local _, num = BNGetNumFriends()
+	local num = BNGetNumFriends()
 
 	for i=1, num do
-		local bnetIDAccount, accountName, battleTag, _, characterName, bnetIDGameAccount, client, isOnline, _, isAFK, isDND, _, noteText = BNGetFriendInfo(i)
-		local toon = BNGetNumFriendGameAccounts(i)
-		
-		for j=1, toon do
-			local _, rName, rGame, realmName, realmID, faction, race, class = BNGetFriendGameAccountInfo(i, j)
-			if rGame == "WoW" then
-		--		print('T', rName, characterName, realmName:gsub(' ', ''), battleTag)
-				
-				if db[battleTag] and realmName and realmName ~= '' then
-					local nameChars = rName..'-'..realmName:gsub(' ', '')
-					
-					db[battleTag].chars = db[battleTag].chars or {}
+		local accountInfo = C_BattleNet.GetFriendAccountInfo(i)
+		if accountInfo and accountInfo.gameAccountInfo and accountInfo.gameAccountInfo.isOnline then
+			
+			local numGameAccounts = C_BattleNet.GetFriendNumGameAccounts(i)
 
-					db[battleTag].chars[nameChars] = true
-				--	print('AleaUI:WhisperLog. Find new character', nameChars, 'for', battleTag)
+
+			if numGameAccounts and numGameAccounts > 0 then
+				for y = 1, numGameAccounts do
+					local gameAccountInfo = C_BattleNet.GetFriendGameAccountInfo(i, y)
 					
-					for k,v in pairs( db ) do
-						if k == rName then
+					-- print(accountInfo.bnetAccountID, 
+					-- accountInfo.accountName, 
+					-- accountInfo.battleTag, 
+					-- gameAccountInfo.characterName, 
+					-- gameAccountInfo.gameAccountID, 
+					-- gameAccountInfo.clientProgram, 
+					-- gameAccountInfo.isOnline, 
+					-- accountInfo.isAFK or gameAccountInfo.isGameAFK, 
+					-- accountInfo.isDND or gameAccountInfo.isGameBusy, 
+					-- accountInfo.note, 
+					-- accountInfo.gameAccountInfo.wowProjectID, 
+					-- gameAccountInfo.realmName, 
+					-- gameAccountInfo.factionName, 
+					-- gameAccountInfo.raceName, 
+					-- gameAccountInfo.className, 
+					-- gameAccountInfo.areaName, 
+					-- gameAccountInfo.characterLevel, 
+					-- gameAccountInfo.playerGuid, 
+					-- gameAccountInfo.richPresence, 
+					-- gameAccountInfo.hasFocus)
+
+					if gameAccountInfo.clientProgram == "WoW" then
+					--	print('T', accountInfo.battleTag, gameAccountInfo.clientProgram, gameAccountInfo.realmName, gameAccountInfo.characterName)
+
+						local battleTag = accountInfo.battleTag
+						local realmName = gameAccountInfo.realmName
+						local rName = gameAccountInfo.characterName
+
+						if db[battleTag] and realmName and realmName ~= '' then
+							local nameChars = rName..'-'..realmName:gsub(' ', '')
 							
-							if db[k] and not db[nameChars] then
-								db[nameChars] = db[k]
-								db[k] = {}
-								db[k] = nil
-				--				print('AleaUI:WhisperLog. Transfer log from', k, 'to', nameChars)
+							db[battleTag].chars = db[battleTag].chars or {}
+		
+							db[battleTag].chars[nameChars] = true
+							
+							for k,v in pairs( db ) do
+								if k == rName then
+									
+									if db[k] and not db[nameChars] then
+										db[nameChars] = db[k]
+										db[k] = {}
+										db[k] = nil
+									end
+									
+									if db[nameChars] then
+										db[nameChars].btag = battleTag
+									end
+									
+									break
+								elseif k == nameChars  then
+									if db[nameChars] then
+										db[nameChars].btag = battleTag
+									end
+									
+									break
+								end
 							end
-							
-							if db[nameChars] then
-								db[nameChars].btag = battleTag
-				--				print('AleaUI:WhisperLog. Update btag for', nameChars)
-							end
-							
-							break
-						elseif k == nameChars  then
-							if db[nameChars] then
-								db[nameChars].btag = battleTag
-				--				print('AleaUI:WhisperLog. Update btag for', nameChars)
-							end
-							
-							break
 						end
 					end
-				end
+				end	
 			end
-		end
+		end 
 	end
 end
 
@@ -809,41 +837,9 @@ local function InitChatLogs()
 	end
 	
 	db = AleaUIDB["WhispersLogs"]
-	--[==[	
-	local timestamp = time()	
-	
-	for dir, data in pairs(db) do
-		
-	--	print('T', tDate, ( timestamp - timespamp1 ) > timeOut)
-		if data.types == "whisper" then
-			if ( data.timestamp - timestamp ) > timeOut then	
-				db[dir] = nil
-			end
-		end
-	end
-	]==]	
-		
+
 	C:BN_FRIEND_INFO_CHANGED()
 end
 	
 
 E:OnInit(InitChatLogs)
-
---[[
-	local totalBNet, numBNetOnline = BNGetNumFriends()
-	
-	local trimmedPlayer = Ambiguate(player, "none")
-	local _, num = BNGetNumFriends()
-      for i=1, num do
-		local bnetIDAccount, accountName, battleTag, _, characterName, bnetIDGameAccount, client, isOnline, _, isAFK, isDND, _, noteText = BNGetFriendInfo(i)
-        local toon = BNGetNumFriendGameAccounts(i)
-        for j=1, toon do
-          local _, rName, rGame = BNGetFriendGameAccountInfo(i, j)
-          if rName == trimmedPlayer and rGame == "WoW" then
-            return false, newMsg, player, l, cs, t, flag, channelId, ...; -- Player is a real id friend, allow it
-          end
-        end
-      end
-      return true -- Filter strangers
-	  
-]]
