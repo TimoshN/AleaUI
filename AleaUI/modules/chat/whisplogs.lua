@@ -541,49 +541,49 @@ function C:CHAT_MSG_BN_WHISPER(event, message, sender, ...)
 	if blacklistWords[message] then return end
 	
 	local senderID = select(11, ...)
-	local presenceID, presenceName, battleTag, isBattleTagPresence, toonName, toonID, client, isOnline, lastOnline, isAFK, isDND, messageText, noteText, isRIDFriend, broadcastTime, canSoR = BNGetFriendInfoByID(senderID)
+	local info = C_BattleNet.GetAccountInfoByID(senderID)
 	
 --	print(event, realStr(sender), senderID, presenceID, realStr(presenceName), realStr(battleTag), isBattleTagPresence, realStr(toonName))
 	
-	if not db[battleTag] then 
-		db[battleTag] = {} 
-		db[battleTag].timestamp = 0
-		db[battleTag].types = "bnet"
-		db[battleTag].datas = {}
-		db[battleTag].chars = {}
+	if not db[info.battleTag] then 
+		db[info.battleTag] = {} 
+		db[info.battleTag].timestamp = 0
+		db[info.battleTag].types = "bnet"
+		db[info.battleTag].datas = {}
+		db[info.battleTag].chars = {}
 	end
 	
-	local battleShort = strsplit('#', battleTag)
+	local battleShort = strsplit('#', info.battleTag)
 
 	--  [Кемио] >>: авыва
 	-- 7 >> [Кемио]: авыва
 
-	db[battleTag].new = true
-	db[battleTag].timestamp = time()
-	db[battleTag].datas[#db[battleTag].datas+1] = date("%m/%d/%y %H:%M:%S").." || ["..battleShort..'] >>: '..message
+	db[info.battleTag].new = true
+	db[info.battleTag].timestamp = time()
+	db[info.battleTag].datas[#db[info.battleTag].datas+1] = date("%m/%d/%y %H:%M:%S").." || ["..battleShort..'] >>: '..message
 end
 
 function C:CHAT_MSG_BN_WHISPER_INFORM(event, message, target, ...)
 	if blacklistWords[message] then return end
 	
 	local senderID = select(11, ...)
-	local presenceID, presenceName, battleTag, isBattleTagPresence, toonName, toonID, client, isOnline, lastOnline, isAFK, isDND, messageText, noteText, isRIDFriend, broadcastTime, canSoR = BNGetFriendInfoByID(senderID)
+	local info = C_BattleNet.GetAccountInfoByID(senderID)
 	
 --	print(event, realStr(target), senderID, presenceID, realStr(presenceName), realStr(battleTag), isBattleTagPresence, realStr(toonName))
 	
-	if not db[battleTag] then 
-		db[battleTag] = {} 
-		db[battleTag].timestamp = 0
-		db[battleTag].types = "bnet"
-		db[battleTag].datas = {}
-		db[battleTag].chars = {}
+	if not db[info.battleTag] then 
+		db[info.battleTag] = {} 
+		db[info.battleTag].timestamp = 0
+		db[info.battleTag].types = "bnet"
+		db[info.battleTag].datas = {}
+		db[info.battleTag].chars = {}
 	end
 
-	local battleShort = strsplit('#', battleTag)
+	local battleShort = strsplit('#', info.battleTag)
 	
-	db[battleTag].new = nil
-	db[battleTag].timestamp = time()
-	db[battleTag].datas[#db[battleTag].datas+1] = date("%m/%d/%y %H:%M:%S").." || >> ["..battleShort..']: '..message
+	db[info.battleTag].new = nil
+	db[info.battleTag].timestamp = time()
+	db[info.battleTag].datas[#db[info.battleTag].datas+1] = date("%m/%d/%y %H:%M:%S").." || >> ["..battleShort..']: '..message
 end
 
 function C:CHAT_MSG_WHISPER(event, message, sender, ...)	

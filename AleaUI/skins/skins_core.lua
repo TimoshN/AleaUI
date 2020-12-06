@@ -1681,7 +1681,7 @@ do
 		
 		if button.SetUIBackdropBorderColor then		
 			if quality then
-				if quality >= LE_ITEM_QUALITY_COMMON and BAG_ITEM_QUALITY_COLORS[quality] then
+				if quality >= Enum.ItemQuality.Common and BAG_ITEM_QUALITY_COLORS[quality] then
 					button:SetUIBackdropBorderColor(BAG_ITEM_QUALITY_COLORS[quality].r, BAG_ITEM_QUALITY_COLORS[quality].g, BAG_ITEM_QUALITY_COLORS[quality].b);
 				else
 					button:SetUIBackdropBorderColor(0,0,0,1);

@@ -174,9 +174,9 @@ do
 		
 		if event == 'CHAT_MSG_BN_WHISPER' then
 			local senderID = select(11, ...)
-			local _, _, battleTag,_, _, _, client = BNGetFriendInfoByID(senderID)
+			local info = C_BattleNet.GetAccountInfoByID(senderID)
 		
-			if GetBattleNetFilterStatus(battleTag, client) then
+			if GetBattleNetFilterStatus(info.battleTag, info.gameAccountInfo.clientProgram) then
 				return true
 			end
 		end
@@ -189,21 +189,24 @@ do
 	
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER",function(f, event, msg, author, ...)
 		local senderID = select(11, ...)
-		local _, _, battleTag,_, _, _, client = BNGetFriendInfoByID(senderID)
+		local info = C_BattleNet.GetAccountInfoByID(senderID)
 		
-		if GetBattleNetFilterStatus(battleTag, client) then
+		if GetBattleNetFilterStatus(info.battleTag, info.gameAccountInfo.clientProgram) then
 				return true
 			end
 	
 		return false
 	end)
 	
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER_INFORM",function(f, event, msg, author, ...)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER_INFORM", function(f, event, msg, author, ...)
 		
 		local senderID = select(11, ...)
-		local _, _, battleTag,_, _, _, client = BNGetFriendInfoByID(senderID)
+
+		print('senderID', senderID)
+
+		local info = C_BattleNet.GetAccountInfoByID(senderID)
 	
-		if GetBattleNetFilterStatus(battleTag, client) then
+		if GetBattleNetFilterStatus(info.battleTag, info.gameAccountInfo.clientProgram) then
 			return true
 		end
 	
@@ -235,8 +238,8 @@ do
 		
 		
 	local function GetBattleTagName(id)
-		local _, _, battleTag = BNGetFriendInfoByID(id)
-		local name = battleTag and strsplit('#', battleTag)
+		local info = C_BattleNet.GetAccountInfoByID(id)
+		local name = info.battleTag and strsplit('#', info.battleTag)
 		return name
 	end
 	

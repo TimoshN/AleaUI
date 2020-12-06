@@ -44,7 +44,7 @@ local UnitIsPVPFreeForAll = UnitIsPVPFreeForAll
 local UnitIsPVP = UnitIsPVP
 local GetPVPTimer = GetPVPTimer
 local GetRaidTargetIndex = GetRaidTargetIndex
-local UnitAlternatePowerInfo = UnitAlternatePowerInfo
+local GetUnitPowerBarInfo = GetUnitPowerBarInfo
 local UnitGetIncomingHeals = UnitGetIncomingHeals
 local UnitGetTotalHealAbsorbs = UnitGetTotalHealAbsorbs
 local UnitGetTotalAbsorbs = UnitGetTotalAbsorbs
@@ -1941,12 +1941,12 @@ UnitFrameMethods['UNIT_POWER_UPDATE'] = function(self, event, unit)
 		
 		local curPower = UnitPower(self.displayerUnit or self.unit, powerType)
 		local curAltPower = UnitPower(self.displayerUnit or self.unit, E.PowerType.Alternate)
-		local barType, minap = UnitAlternatePowerInfo(self.displayerUnit or self.unit)
-		
+		local barInfo = GetUnitPowerBarInfo(self.displayerUnit or self.unit)
+
 		self.power:SetMinMaxValues(0, normalPower or 0)
 		self.power:SetValue(curPower or 0)
 		
-		self.altpower:SetMinMaxValues(minap or 0 , altpower or 0)
+		self.altpower:SetMinMaxValues(barInfo.minPower or 0 , altpower or 0)
 		self.altpower:SetValue(curAltPower)		
 
 		local powercolor = UF:PowerColorRGB(self.displayerUnit or self.unit)
@@ -2009,9 +2009,9 @@ UnitFrameMethods['UNIT_POWER_UPDATE'] = function(self, event, unit)
 		status = 1
 		
 		local curAltPower = UnitPower(self.displayerUnit or self.unit, E.PowerType.Alternate)
-		local barType, minap = UnitAlternatePowerInfo(self.displayerUnit or self.unit)
+		local barInfo = GetUnitPowerBarInfo(self.displayerUnit or self.unit)
 		
-		self.power:SetMinMaxValues(minap or 0, altpower or 0)
+		self.power:SetMinMaxValues(barInfo.minPower or 0, altpower or 0)
 		self.power:SetValue(curAltPower or 0)
 		
 		self.altpower:SetMinMaxValues(0 , 0)

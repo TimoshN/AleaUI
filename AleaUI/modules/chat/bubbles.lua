@@ -52,20 +52,20 @@ local skinBubblesShadowlands = function(frame)
 
     child.Tail:SetAlpha(0)
     
-    child:SetBackdrop({
-        bgFile = 'Interface\\Buttons\\WHITE8x8', 
-        edgeFile ='Interface\\Buttons\\WHITE8x8', 
-        tile = false, tileSize = 0, edgeSize = E.UIParent:GetScale(), 
-        insets = { left = 0, right = 0, top = 0, bottom = 0}
-    })
+    -- child:SetBackdrop({
+    --     bgFile = 'Interface\\Buttons\\WHITE8x8', 
+    --     edgeFile ='Interface\\Buttons\\WHITE8x8', 
+    --     tile = false, tileSize = 0, edgeSize = E.UIParent:GetScale(), 
+    --     insets = { left = 0, right = 0, top = 0, bottom = 0}
+    -- })
 
     child.String:SetFont(STANDARD_TEXT_FONT, 12, 'OUTLINE')
 
-    child:SetBackdropColor(0,0,0,0.8)
-    child:SetBackdropBorderColor(child.String:GetTextColor())
+    -- child:SetBackdropColor(0,0,0,0.8)
+    -- child:SetBackdropBorderColor(child.String:GetTextColor())
 
     frame:HookScript("OnShow", function(self)
-        child:SetBackdropBorderColor(child.String:GetTextColor())
+        --child:SetBackdropBorderColor(child.String:GetTextColor())
     end)
 end 
 

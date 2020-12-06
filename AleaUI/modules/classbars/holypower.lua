@@ -22,14 +22,14 @@ local function HolyPower()
 
 	f:SetSize(maxw, maxh)
 	
-	local o = CreateFrame("StatusBar", nil, f)
+	local o = CreateFrame("StatusBar", nil, f, 'BackdropTemplate')
 	o:SetSize(maxw, maxh)
 	o:SetStatusBarTexture([[Interface\Buttons\WHITE8x8]])
 	o:SetPoint("LEFT", f, "LEFT", 0, 0)
 	o:SetStatusBarColor(1,1,0,1)
 	o:SetMinMaxValues(0,HOLYPOWER_NUM_BARS)
 	
-	o.art = CreateFrame("Frame", nil, o)
+	o.art = CreateFrame("Frame", nil, o, 'BackdropTemplate')
 	o.art:SetFrameLevel(o:GetFrameLevel()-1)
 	o.art:SetBackdrop({
 	  bgFile = [[Interface\Buttons\WHITE8x8]], 

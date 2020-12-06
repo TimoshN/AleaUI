@@ -109,14 +109,14 @@ local eventHandlers = {
 		if not GuildFrame and IsInGuild() then 
 			LoadAddOn("Blizzard_GuildUI")
 			UpdateGuildXP() 
-			GuildRoster() 
+			C_GuildInfo.GuildRoster() 
 		end
 	end,
 	-- Guild Roster updated, so rebuild the guild table
 	["GUILD_ROSTER_UPDATE"] = function (self)
 		if(resendRequest) then
 			resendRequest = false;
-			return GuildRoster()
+			return C_GuildInfo.GuildRoster()
 		else
 			BuildGuildTable()
 			UpdateGuildMessage()
@@ -277,7 +277,7 @@ local function OnEnter(self, _, noUpdate)
 	DT.tooltip:Show()
 	
 	if not noUpdate then
-		GuildRoster()
+		C_GuildInfo.GuildRoster()
 	end	
 end
 
