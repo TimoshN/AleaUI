@@ -251,6 +251,15 @@ paragonReputationText:SetJustifyH('LEFT')
 	
 local attept = 3
 
+local function Azerite_ShouldBeVisible()
+	local isMaxLevel = C_AzeriteItem.IsAzeriteItemAtMaxLevel();
+	if isMaxLevel then
+		return false;
+	end
+	local azeriteItem = C_AzeriteItem.FindActiveAzeriteItem();
+	return azeriteItem and azeriteItem:IsEquipmentSlot() and C_AzeriteItem.IsAzeriteItemEnabled(azeriteItem);
+end
+
 local function updateStatus()
 	if E.db.xpbar.minimize then
 		barHeight = 4
@@ -322,7 +331,8 @@ local function updateStatus()
 		end
 	end
 	
-	if E.db.xpbar.enableArtifact and not E.isClassic and not C_ArtifactUI.IsEquippedArtifactMaxed() then
+	if E.db.xpbar.enableArtifact and not E.isClassic and not C_ArtifactUI.IsEquippedArtifactMaxed() and Azerite_ShouldBeVisible() then
+
 
 		local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem(); 
 		
@@ -430,22 +440,25 @@ local function updateStatus()
 		end
 		
 		if ( not E.isClassic ) then
-			local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem(); 
-
-			if azeriteItemLocation then
-				if not IsMaxLevel() then GameTooltip:AddLine(" ") end
-				
-				artifactBar.xp, artifactBar.totalLevelXP = C_AzeriteItem.GetAzeriteItemXPInfo(azeriteItemLocation);
-				artifactBar.currentLevel = C_AzeriteItem.GetPowerLevel(azeriteItemLocation); 
-				artifactBar.xpToNextLevel = artifactBar.totalLevelXP - artifactBar.xp; 
-
-				local itemName, itemLink, _, _, _, _, _, _, _, itemIcon = GetItemInfo(158075)
-
-				GameTooltip:AddLine(L['Artifact']..': '..format('|T%s:14:14:0:0:64:64:4:60:4:60|t', itemIcon or '')..(itemLink or '[Heart of Azeroth]')..' ['..artifactBar.currentLevel..']')
-				GameTooltip:AddLine(string.format(L['Current']..': %d/%d (%d%%)', artifactBar.xp, (artifactBar.totalLevelXP), artifactBar.xp/artifactBar.totalLevelXP*100))
-				GameTooltip:AddLine(string.format(L['VALUE_LEFT']..': %d', artifactBar.xpToNextLevel))
-			end
 			
+			if Azerite_ShouldBeVisible() then
+				local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem(); 
+
+				if azeriteItemLocation then
+					if not IsMaxLevel() then GameTooltip:AddLine(" ") end
+					
+					artifactBar.xp, artifactBar.totalLevelXP = C_AzeriteItem.GetAzeriteItemXPInfo(azeriteItemLocation);
+					artifactBar.currentLevel = C_AzeriteItem.GetPowerLevel(azeriteItemLocation); 
+					artifactBar.xpToNextLevel = artifactBar.totalLevelXP - artifactBar.xp; 
+
+					local itemName, itemLink, _, _, _, _, _, _, _, itemIcon = GetItemInfo(158075)
+
+					GameTooltip:AddLine(L['Artifact']..': '..format('|T%s:14:14:0:0:64:64:4:60:4:60|t', itemIcon or '')..(itemLink or '[Heart of Azeroth]')..' ['..artifactBar.currentLevel..']')
+					GameTooltip:AddLine(string.format(L['Current']..': %d/%d (%d%%)', artifactBar.xp, (artifactBar.totalLevelXP), artifactBar.xp/artifactBar.totalLevelXP*100))
+					GameTooltip:AddLine(string.format(L['VALUE_LEFT']..': %d', artifactBar.xpToNextLevel))
+				end
+			end 
+
 			if E.db.xpbar.enableHonor then
 				GameTooltip:AddLine(" ")
 				GameTooltip:AddLine(PVP..'['..(UnitHonorLevel("player") or 0)..']')

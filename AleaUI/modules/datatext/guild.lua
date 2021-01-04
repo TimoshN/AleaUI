@@ -130,7 +130,7 @@ local eventHandlers = {
 		UpdateGuildXP()
 	end,
 	["PLAYER_GUILD_UPDATE"] = function (self, arg1)
-		GuildRoster()
+		C_GuildInfo.GuildRoster()
 	end,
 	-- our guild message of the day changed
 	["GUILD_MOTD"] = function (self, arg1)

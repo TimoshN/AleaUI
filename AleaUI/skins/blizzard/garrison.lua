@@ -169,6 +169,21 @@ local function StyleGarrisonWindow()
 	Skins.ThemeButton(OrderHallMissionFrame.MissionTab.MissionPage.StartMissionButton)
 	Skins.ThemeButton(OrderHallMissionFrame.MissionTab.ZoneSupportMissionPage.StartMissionButton)
 	Skins.ThemeButton(OrderHallMissionFrameMissions.CombatAllyUI.InProgress.Unassign)
+
+
+	
+	if ( _G["GarrisonLandingPageMinimapButton"] ) then
+		_G["GarrisonLandingPageMinimapButton"]:ClearAllPoints()
+		_G["GarrisonLandingPageMinimapButton"]:SetScale(0.7)
+		_G["GarrisonLandingPageMinimapButton"]:EnableMinimapMoving("garrisonMinimapButton")	
+		E.minimapFader.AddToFading(_G["GarrisonLandingPageMinimapButton"])
+	else 
+		print('No garrison button found')
+	end
+
+	C_Timer.After(0.1, function() 
+		E.minimapFader.InterateChildrend(_G["Minimap"]:GetChildren())
+	end)
 end
 
 E:OnInit(function()

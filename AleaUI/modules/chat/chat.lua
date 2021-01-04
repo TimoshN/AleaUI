@@ -420,9 +420,8 @@ do
 	
 	local function SelectChatFrame(f, button, arg)
 
-		print('SelectChatFrame', button, arg )
-		print('T', (debugstack(1, 1, 1)) )
-
+		E.print('SelectChatFrame', button, arg )
+		
 		if button == "LeftButton" and arg == false then			
 			local id = tonumber(string.match(f:GetName(), "ChatFrame(%d+)Tab"))
 			SELECTED_CHAT_FRAME_ALEA = _G[("ChatFrame%d"):format(id)]

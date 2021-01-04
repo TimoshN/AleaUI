@@ -4,6 +4,8 @@ local _G = _G
 local L = E.L
 
 local error = function(...)
+	if (true) then return end 
+
 	print('     ')
 	print(debugstack(2, 3, 2))
 	print(...)
@@ -247,9 +249,7 @@ function Skins.ChangeButtonBorder(frame, color)
 	if not f.modborder then return end
 	
 	if ( not f.modborder.SetBackdrop) then 
-		print('Error on find SetBackdrop in ChangeButtonBorder')
-		print(debugstack(1,1,1))
-		print('   ')
+		E.print('Error on find SetBackdrop in ChangeButtonBorder')
 		return
 	end 
 
@@ -296,9 +296,7 @@ function Skins.SetTemplate(frame, template)
 	end
 	
 	if ( not f.SetBackdrop) then 
-		print('Error on find SetBackdrop in SetTemplate')
-		print(debugstack(1,1,1))
-		print('     ')
+		E.print('Error on find SetBackdrop in SetTemplate')
 		return
 	end 
 

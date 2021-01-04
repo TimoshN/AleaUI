@@ -288,6 +288,8 @@ minimapFader:SetScript("OnUpdate", function(self, elapsed)
 	end
 end)
 
+E.minimapFader = minimapFader
+
 function minimapFader.mimimapFaderFunc()
 	minimapFader.InterateChildrend(Minimap:GetChildren())
 	minimapFader.elapsed = 0
@@ -372,12 +374,6 @@ local function MoveWatchFrame()
 	E:Mover(_G["Minimap"], "minimapFrames", nil, nil, nil, MinimapPostitonHandler)
 	
 	SelectMinimapButtonPoint()
-
-	if ( _G["GarrisonLandingPageMinimapButton"] ) then
-		_G["GarrisonLandingPageMinimapButton"]:SetScale(0.7)
-		_G["GarrisonLandingPageMinimapButton"]:EnableMinimapMoving("garrisonMinimapButton")	
-		minimapFader.AddToFading(_G["GarrisonLandingPageMinimapButton"])
-	end
 
 	C_Timer.After(0.1, function() 
 		minimapFader.InterateChildrend(_G["Minimap"]:GetChildren())

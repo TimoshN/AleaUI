@@ -138,33 +138,15 @@ local function InsanityBar()
 	end
 	
 	local baseCost = {
-		[8092] = 15,
-		[34914] = 6,
-		[263346] = 30,
-		[205351] = 15,
-	--	[GetSpellInfo(15407)] = 3,
+		[8092] = 8,
+		[34914] = 5,
+		[205351] = 12,
 	}
 	function f:GetSpellCost(spellID)
 		local cost = baseCost[spellID] or 0
 		
-		if spellID == 8092 then			
-			local _, _, _, count = AuraUtil.FindAuraByName((GetSpellInfo(247226)), 'player', "HELPFUL")
-			
-			if count then
-				cost = cost + count
-			end
-		end
 		
-		local modif = 1
-		if AuraUtil.FindAuraByName((GetSpellInfo(193223)), 'player', "HELPFUL") then
-			modif = modif + 1
-		end
-		if AuraUtil.FindAuraByName((GetSpellInfo(10060)), 'player', "HELPFUL") then
-			modif = modif + 0.25
-		end
-		
-	
-		return cost * modif
+		return cost
 	end
 		
 	f.UNIT_DISPLAYPOWER = f.UNIT_POWER_FREQUENT

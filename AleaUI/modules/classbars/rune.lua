@@ -59,7 +59,7 @@ local function DK_Runes()
 		
 		for i=1, NUM_RUNES do
 
-			local o = CreateFrame("StatusBar", nil, f)
+			local o = CreateFrame("StatusBar", nil, f, 'BackdropTemplate')
 			o:SetFrameLevel(f:GetFrameLevel()+1)
 			o:SetSize(maxw/NUM_RUNES-1, 10)
 			o:SetStatusBarTexture([[Interface\Buttons\WHITE8x8]])
@@ -71,7 +71,7 @@ local function DK_Runes()
 			o:SetStatusBarColor(1,1,1,0.5)
 			o:SetMinMaxValues(0,1)
 			
-			o.art = CreateFrame("Frame", nil, o)
+			o.art = CreateFrame("Frame", nil, o, 'BackdropTemplate')
 			o.art:SetFrameLevel(o:GetFrameLevel()-1)
 			o.art:SetBackdrop({
 			  bgFile = [[Interface\Buttons\WHITE8x8]], 

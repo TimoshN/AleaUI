@@ -1106,10 +1106,12 @@ function NP:UpdateFaction()
 	--Ghuun
 	if self.npcID == 141851 then
 		r, g, b = 255/255, 89/255, 240/255
-		
 	--Explosives
 	elseif self.npcID == 120651 then
 		r, g, b = 255/255, 157/255, 0
+	-- ghosts
+	elseif self.npcID == 174773 then 
+		r, g, b = 169/255, 85/255, 227/255
 	elseif self.plateNamePlate then
 		r, g, b = 0.1, 0.6, 0.1
 	elseif self.isPlayer and classColor then
@@ -2512,7 +2514,7 @@ function NP:CreateNamePlateFrame(frame)
 
 	if parentToBlizzard then
 		plate:SetParent(frame)
-		plate:SetIgnoreParentAlpha(true)
+		--plate:SetIgnoreParentAlpha(true)
 	else 
 		plate:SetParent(WorldFrame)
 	end
@@ -3201,7 +3203,7 @@ function NP:CVarUpdate()
 	E:LockCVar('nameplateOverlapH', E.db.nameplates.overlapH)
 	E:LockCVar('nameplateOverlapV', E.db.nameplates.overlapV)
 
-	E:LockCVar('nameplateOccludedAlphaMult', 1.0)
+	E:LockCVar('nameplateOccludedAlphaMult', 0.4)
 end
 
 

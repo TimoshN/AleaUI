@@ -378,6 +378,8 @@ do
         _, r1, _, _, r2 = GetWeaponEnchantInfo()
         rTime = (btn.slotID == 16) and r1 or r2
 
+		if (not rTime) then return end 
+
         btn.rTime = rTime / 1000
         btn.text:SetText(formatTimeRemaining(btn.rTime))
 

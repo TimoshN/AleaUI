@@ -5,6 +5,9 @@ local L = E.L
 
 -- DEBUG PRINT --
 function E.print(text, ...) 
+	if (true) then return end 
+
+
     text = tostring(text)
     for n=1,select('#', ...) do
         local e = select(n, ...)
@@ -206,7 +209,7 @@ function updatePosition(button)
 		x = math.max(-GetRadius()	, math.min(x*diagRadius, GetRadius()	))
 		y = math.max(-GetRadius()	, math.min(y*diagRadius, GetRadius()	))
 	end
-
+	button:ClearAllPoints()
 	button:SetPoint("CENTER", Minimap, "CENTER", x, y)
 end
 
@@ -250,6 +253,13 @@ function EnableMinimapMoving(obj, settings)
 	obj:HookScript("OnDragStart", onDragStart)
 	obj:ClearAllPoints()
 	
+	hooksecurefunc(obj, 'SetPoint', function(self, p1, fr, p2,x,y)
+		print('TTT', x, y)
+
+		if ( p1 ~= 'CENTER' or p2 ~= 'CENTER' ) then 
+			updatePosition(self)
+		end
+	end)
 	updatePosition(obj)
 end
 

@@ -289,22 +289,19 @@ function ALEAUI_GetAlertFrame(used, tag, text, icon, id, point, reuse)
 		f.icon.texture:SetTexCoord(unpack(E.media.texCoord))
 	
 	elseif used == "GARRISON" or used == "GARRISON_BUILD" then
-	
-		local filename, width, height, left, right, top, bottom, tilesHoriz, tilesVert = GetAtlasInfo(icon)
-	
+		local info = C_Texture.GetAtlasInfo(icon)
 	
 		f.text:SetText(text)
 		
-		f.icon.texture:SetTexture(filename)
-		f.icon.texture:SetTexCoord(left, right, top, bottom)
+		f.icon.texture:SetTexture(info.filename or info.file)
+		f.icon.texture:SetTexCoord(info.leftTexCoord, info.rightTexCoord, info.topTexCoord, info.bottomTexCoord)
 	elseif used == "GARRISON_FOLLOW" then
-		local filename, width, height, left, right, top, bottom, tilesHoriz, tilesVert = GetAtlasInfo(icon)
-	
-	
+		local info = C_Texture.GetAtlasInfo(icon)
+
 		f.text:SetText(text)
 		
-		f.icon.texture:SetTexture(filename)
-		f.icon.texture:SetTexCoord(left, right, top, bottom)
+		f.icon.texture:SetTexture(info.filename or info.file)
+		f.icon.texture:SetTexCoord(info.leftTexCoord, info.rightTexCoord, info.topTexCoord, info.bottomTexCoord)
 		f.followerID = id
 	elseif used == "ACH" or used == "CRITERIA" then
 		if point and point > 0 then

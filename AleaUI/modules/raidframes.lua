@@ -4388,7 +4388,7 @@ function RF:GetAutoActivationState()
 			numPlayers, profileType, enemyType = 5, instanceType, "PvP";
 		end
 	elseif ( instanceType == "pvp" ) then
-		if ( IsRatedBattleground() ) then
+		if ( C_PvP.IsRatedBattleground() ) then
 			numPlayers, profileType, enemyType = 10, instanceType, "PvP";
 		else
 			numPlayers, profileType, enemyType = countMap[maxPlayers], instanceType, "PvP";
